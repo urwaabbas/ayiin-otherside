@@ -38,7 +38,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
 
   return (
     <div className="flex flex-col-reverse gap-3 sm:flex-row">
-      <div role="tablist" aria-label="Product views" aria-orientation="vertical" className="scroll-x flex gap-2 sm:flex-col" onKeyDown={onTabKey}>
+      <div role="tablist" aria-label="Product views" className="scroll-x -m-1 flex gap-2 p-1 sm:flex-col" onKeyDown={onTabKey}>
         {IMAGE_VIEWS.map((vw, n) => (
           <button
             key={vw.id}

@@ -40,7 +40,10 @@ export function QuickView({ product: p, initialVariant, onClose }: { product: Pr
   return (
     <dialog
       ref={(d) => {
-        if (d && !d.open) d.showModal();
+        if (d && !d.open) {
+          d.showModal();
+          d.querySelector<HTMLElement>("[data-autofocus]")?.focus();
+        }
       }}
       aria-labelledby={`qv-${p.id}`}
       onClose={onClose}
@@ -58,7 +61,7 @@ export function QuickView({ product: p, initialVariant, onClose }: { product: Pr
             view={view}
             alt={`${p.name} in ${variant.name}`}
             sizes="(min-width: 768px) 520px, 100vw"
-            className="aspect-square w-full animate-fade rounded-[24px]"
+            className="aspect-[5/4] w-full animate-fade rounded-[24px] md:aspect-square"
           />
           <div className="absolute inset-x-6 bottom-6 flex gap-2 md:inset-x-7 md:bottom-7">
             {IMAGE_VIEWS.map((vw) => (
@@ -83,7 +86,7 @@ export function QuickView({ product: p, initialVariant, onClose }: { product: Pr
           <div className="flex items-start justify-between gap-4">
             <p className="text-[13px] text-mute">{p.brand}</p>
             <form method="dialog">
-              <button type="submit" aria-label="Close quick look" className="-mr-2 -mt-2 grid h-10 w-10 place-items-center rounded-full hover:bg-mist">
+              <button type="submit" data-autofocus aria-label="Close quick look" className="-mr-2 -mt-2 grid h-10 w-10 place-items-center rounded-full hover:bg-mist">
                 <Icon name="close" size={18} />
               </button>
             </form>

@@ -94,7 +94,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               product={p}
               variant={variant}
               overlay={
-                <div className="pointer-events-none absolute left-4 top-4 flex flex-wrap gap-2">
+                <div className="pointer-events-none absolute left-4 right-16 top-4 flex flex-wrap gap-2">
                   {insight.verifiedDeal && !business && (
                     <span className="glint inline-flex h-8 items-center gap-1.5 rounded-full bg-lime px-3 text-[12.5px] font-medium">
                       <Icon name="check" size={13} strokeWidth={2.4} /> {insight.label}

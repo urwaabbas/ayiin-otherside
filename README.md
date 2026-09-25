@@ -72,10 +72,13 @@ The identity system is at **`/brand`**. The source files are in `src/components/
 No stock photography is used. Each product is modelled in three.js and lit like a real product shoot: a large jittered softbox key light, a sky-occlusion hemisphere light and a seamless cyclorama sweep. The *in context* view adds a window gobo and a stone plinth. Each image averages 32–40 jittered frames (soft shadows, anti-aliasing, depth of field) in a float buffer, then applies neutral tone mapping.
 
 ```bash
-cd tools/studio && npm install
+cd tools/studio && npm install && npx playwright install chromium
 npm run serve &            # static server on :8765
 npm run manifest           # jobs.json from src/lib/catalog/products.ts
 npm run render             # renders into public/products (skips existing files)
+npm run preview -- sheet.png 360 16 "mug|kind=mug&c=a7b39a&t=efe9e0"   # contact sheet while modelling
 ```
+
+Rendering uses software WebGL by default, so it runs on any machine; set `GPU=1` to use a real GPU. `CHROMIUM_PATH` points at an existing Chromium build. To render in parallel, run `node batch.js 0 2` and `node batch.js 1 2` side by side. Delete an image to have it re-rendered.
 
 All data is demo data. Payments, quotes and approvals are simulated on the client, and orders, lists and carts persist in `localStorage`.

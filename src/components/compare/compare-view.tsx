@@ -149,8 +149,8 @@ export function CompareView() {
                     <button type="button" onClick={() => toggle(p.id)} aria-label={`Remove ${p.name}`} className="absolute right-2 top-2 z-10 grid h-8 w-8 place-items-center rounded-full bg-white/90 shadow-[var(--shadow-hair)]">
                       <Icon name="close" size={14} />
                     </button>
-                    <Link href={`/p/${p.slug}`}>
-                      <ProductImage product={p} className="aspect-[4/3] w-full rounded-2xl" />
+                    <Link href={`/p/${p.slug}`} aria-label={p.name} tabIndex={-1}>
+                      <ProductImage product={p} sizes="(min-width: 1024px) 22vw, 45vw" className="aspect-[4/3] w-full rounded-2xl" />
                     </Link>
                   </div>
                   <Link href={`/p/${p.slug}`} className="mt-3 block text-[15px] font-medium leading-snug hover:underline">

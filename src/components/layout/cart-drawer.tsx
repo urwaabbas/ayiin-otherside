@@ -7,7 +7,7 @@ import { Icon } from "@/components/ui/icon";
 import { ProductImage } from "@/components/product/product-image";
 import { usePrefs } from "@/components/providers";
 import { cartSummary, lineUnitPrice, useHydrated, useShop, useUI, type CartLine } from "@/lib/store";
-import { productById } from "@/lib/catalog/products";
+import { productById, products } from "@/lib/catalog/products";
 import { deliveryLabel, FREE_SHIPPING_THRESHOLD, nextTier } from "@/lib/commerce";
 import { SignalDot } from "@/components/ui/signal";
 import { QtyStepper } from "@/components/ui/qty-stepper";
@@ -104,11 +104,14 @@ export function CartDrawer() {
               </Link>
             </div>
           ) : (
-            <ul className="divide-y divide-line">
-              {lines.map((l) => (
-                <DrawerLine key={l.key} line={l} business={business} />
-              ))}
-            </ul>
+            <>
+              <ul className="divide-y divide-line">
+                {lines.map((l) => (
+                  <DrawerLine key={l.key} line={l} business={business} />
+                ))}
+              </ul>
+              {!business && <PairsWell lines={lines} remaining={remaining} />}
+            </>
           )}
         </div>
 
@@ -164,7 +167,7 @@ function DrawerLine({ line, business }: { line: CartLine; business: boolean }) {
   const nt = line.business ? nextTier(p, line.qty) : undefined;
   return (
     <li className="flex gap-4 py-4">
-      <Link href={`/p/${p.slug}`} onClick={close} className="shrink-0">
+      <Link href={`/p/${p.slug}`} onClick={close} aria-label={p.name} tabIndex={-1} className="shrink-0">
         <ProductImage product={p} variant={variant.id} sizes="96px" className="h-24 w-24 rounded-2xl" />
       </Link>
       <div className="min-w-0 flex-1">
@@ -203,5 +206,49 @@ function DrawerLine({ line, business }: { line: CartLine; business: boolean }) {
         </div>
       </div>
     </li>
+  );
+}
+
+/** A few relevant add-ons — preferring ones that close the gap to free delivery. */
+function PairsWell({ lines, remaining }: { lines: CartLine[]; remaining: number }) {
+  const { fmt } = usePrefs();
+  const addToCart = useShop((s) => s.addToCart);
+  const inCart = new Set(lines.map((l) => l.productId));
+  const cats = new Set(lines.map((l) => productById(l.productId)?.category));
+  const picks = products
+    .filter((p) => !inCart.has(p.id) && !["supplies", "safety", "office"].includes(p.category))
+    .map((p) => ({ p, score: (cats.has(p.category) ? 2 : 0) + (remaining > 0 && p.price >= remaining && p.price <= remaining + 60 ? 2 : 0) + (p.price < 80 ? 1 : 0) }))
+    .sort((a, b) => b.score - a.score || b.p.soldLastWeek - a.p.soldLastWeek)
+    .slice(0, 3)
+    .map((x) => x.p);
+  if (!picks.length) return null;
+  return (
+    <section aria-labelledby="pairs-h" className="mt-2 border-t border-line py-5">
+      <h3 id="pairs-h" className="flex items-baseline justify-between gap-3 text-[14px] font-medium">
+        Pairs well with
+        {remaining > 0 && <span className="text-[12px] font-normal text-mute">Any of these unlocks free delivery</span>}
+      </h3>
+      <ul className="mt-3 space-y-2">
+        {picks.map((p) => (
+          <li key={p.id} className="flex items-center gap-3 rounded-2xl bg-white p-2 pr-3 shadow-[var(--shadow-hair)]">
+            <ProductImage product={p} sizes="56px" className="h-14 w-14 shrink-0 rounded-xl" />
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[13.5px] font-medium">{p.name}</span>
+              <span className="text-[12.5px] text-mute">
+                <span className="num text-ink-2">{fmt(p.price)}</span> · {deliveryLabel(p)}
+              </span>
+            </span>
+            <button
+              type="button"
+              onClick={() => addToCart(p.id, p.variants[0].id, 1, false)}
+              aria-label={`Add ${p.name} to bag`}
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink text-white transition-transform hover:scale-105"
+            >
+              <Icon name="plus" size={16} />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

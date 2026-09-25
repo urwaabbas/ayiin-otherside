@@ -4,7 +4,10 @@ import fs from 'node:fs';
 
 const [out, size, frames, ...items] = process.argv.slice(2);
 const BASE = process.env.STUDIO_URL || 'http://localhost:8765';
-const browser = await chromium.launch({ args: process.env.GPU ? [] : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
+const browser = await chromium.launch({
+  args: process.env.GPU ? [] : ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'],
+  executablePath: process.env.CHROMIUM_PATH || undefined,
+});
 const cells = [];
 for (const item of items) {
   const [label, qs] = item.split('|');

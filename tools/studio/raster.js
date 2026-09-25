@@ -112,7 +112,7 @@ const views = {
   top: { az: -0.2, el: 0.95, fill: 0.64 },
   scene: { az: -0.28, el: 0.14, fill: 0.56 },
 };
-const v = { ...(views[job.view] ?? views.hero), ...(isScene ? {} : built.view?.[job.view] ?? {}) };
+const v = { ...(views[job.view] ?? views.hero), ...(built.view?.[job.view] ?? {}) };
 const radius = size.length() / 2;
 const dist = (radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) / v.fill) * 0.8;
 const target = v.target ? new THREE.Vector3(...v.target) : isScene ? center.clone().add(new THREE.Vector3(0, -0.04 * L, 0)) : center.clone();

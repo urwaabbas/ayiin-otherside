@@ -169,7 +169,7 @@ function Line({ line, business }: { line: CartLine; business: boolean }) {
   const nt = line.business ? nextTier(p, line.qty) : undefined;
   return (
     <li className="flex gap-4 p-5 sm:gap-5 sm:p-6">
-      <Link href={`/p/${p.slug}`} className="shrink-0">
+      <Link href={`/p/${p.slug}`} aria-label={p.name} tabIndex={-1} className="shrink-0">
         <ProductImage product={p} variant={variant.id} sizes="112px" className="h-24 w-24 rounded-2xl sm:h-28 sm:w-28" />
       </Link>
       <div className="min-w-0 flex-1">

@@ -221,7 +221,7 @@ export const BUILDERS = {
     const g = group(base, keys, ledBar);
     g.rotation.x = 0.06;
     g.rotation.y = -0.35;
-    return { object: g, view: { hero: { el: 0.62, fill: 0.84 }, angle: { el: 0.55, fill: 0.84 }, detail: { target: [0.6, 0.15, 0.2], fill: 2.6, el: 0.5 } } };
+    return { object: g, view: { hero: { el: 0.62, fill: 0.84 }, angle: { el: 0.55, fill: 0.84 }, scene: { el: 0.5, fill: 0.78 }, detail: { target: [0.6, 0.15, 0.2], fill: 2.6, el: 0.5 } } };
   },
 
   /* Kova Vista 27" monitor */
@@ -314,7 +314,7 @@ export const BUILDERS = {
     const rail2 = mesh(rbox(7.6, 0.28, 0.3, 0.1), oak, [0, 1.45, -2.5]);
     const g = group(seat, back, armL, armR, legs, rail, rail2);
     g.rotation.y = -0.5;
-    return { object: g, view: { detail: { target: [2.2, 3.0, 2.0], fill: 2.5 } } };
+    return { object: g, view: { detail: { target: [2.2, 3.0, 2.0], fill: 2.5, aperture: 0.01 } } };
   },
 
   /* Ergo task chair */

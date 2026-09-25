@@ -83,15 +83,15 @@ export function ProductCard({
         {badge && (
           <span
             className={clsx(
-              "pointer-events-none absolute left-3 top-3 inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 text-[11.5px] font-medium",
+              "pointer-events-none absolute left-3 top-3 inline-flex h-7 max-w-[calc(100%-4.25rem)] items-center gap-1.5 rounded-full px-2.5 text-[11.5px] font-medium",
               badge.tone === "lime" && "glint bg-lime text-ink",
               badge.tone === "ink" && "bg-ink text-white",
               badge.tone === "blue" && "bg-blue text-ink",
               badge.tone === "white" && "bg-white/90 text-ink shadow-[var(--shadow-hair)] backdrop-blur",
             )}
           >
-            {badge.tone === "lime" && <Icon name="check" size={12} strokeWidth={2.4} />}
-            {badge.label}
+            {badge.tone === "lime" && <Icon name="check" size={12} strokeWidth={2.4} className="shrink-0" />}
+            <span className="truncate">{badge.label}</span>
           </span>
         )}
         <div className="absolute right-3 top-3 flex flex-col gap-2">
@@ -126,7 +126,7 @@ export function ProductCard({
             aria-label={`Quick look at ${p.name}`}
             title="Quick look"
             onClick={() => setQuick(true)}
-            className="grid h-9 w-9 place-items-center rounded-full bg-white/85 text-ink shadow-[var(--shadow-hair)] backdrop-blur transition-all delay-75 duration-300 hover:bg-white lg:translate-x-2 lg:opacity-0 lg:group-hover:translate-x-0 lg:group-hover:opacity-100 lg:focus-visible:translate-x-0 lg:focus-visible:opacity-100"
+            className="hidden h-9 w-9 place-items-center rounded-full bg-white/85 text-ink shadow-[var(--shadow-hair)] backdrop-blur transition-all delay-75 duration-300 hover:bg-white lg:grid lg:translate-x-2 lg:opacity-0 lg:group-hover:translate-x-0 lg:group-hover:opacity-100 lg:focus-visible:translate-x-0 lg:focus-visible:opacity-100"
           >
             <Icon name="eye" size={17} />
           </button>

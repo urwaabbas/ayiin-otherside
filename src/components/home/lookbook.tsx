@@ -21,7 +21,7 @@ export function Lookbook({ index = "03" }: { index?: string }) {
         description="Every product is photographed on the same stage in the same window light, so the colour you see is the colour that arrives."
         action={{ href: "/search", label: "Browse everything" }}
       />
-      <div className="mt-12 grid auto-rows-[210px] grid-cols-2 gap-3 sm:auto-rows-[260px] lg:grid-cols-4 lg:gap-4">
+      <div className="mt-12 grid auto-rows-[220px] grid-cols-2 gap-3 sm:auto-rows-[300px] lg:grid-cols-4 lg:gap-4 xl:auto-rows-[330px]">
         {items.map((p, n) => {
           const big = n === 0;
           return (
@@ -33,9 +33,9 @@ export function Lookbook({ index = "03" }: { index?: string }) {
                   sizes={big ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}
                   className="absolute inset-0 transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
-                <span aria-hidden className="absolute left-1/2 top-[46%] grid h-7 w-7 -translate-x-1/2 -translate-y-1/2 place-items-center">
-                  <span className="absolute inset-0 rounded-full bg-lime/50 motion-safe:animate-ping" />
-                  <span className="relative h-3.5 w-3.5 rounded-full bg-lime shadow-[0_0_0_2px_#0A0B0D]" />
+                <span aria-hidden className="absolute left-[58%] top-[34%] grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 place-items-center">
+                  <span className="absolute inset-0 rounded-full bg-lime/45 motion-safe:animate-ping" />
+                  <span className="relative h-2.5 w-2.5 rounded-full bg-lime shadow-[0_0_0_2px_#0A0B0D]" />
                 </span>
                 <span
                   className={clsx(

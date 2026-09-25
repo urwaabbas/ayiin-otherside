@@ -14,7 +14,8 @@ const [wi, wn] = [+process.argv[2] || 0, +process.argv[3] || 1];
 const jobs = JSON.parse(fs.readFileSync(path.join(here, 'jobs.json'), 'utf8'));
 const mine = jobs.filter((j, i) => !j.copyOf && i % wn === wi);
 
-let browser = await chromium.launch({ args });
+const launch = () => chromium.launch({ args, executablePath: process.env.CHROMIUM_PATH || undefined });
+let browser = await launch();
 let done = 0;
 for (const job of mine) {
   const file = path.join(OUT, job.out + '.webp');
@@ -36,7 +37,7 @@ for (const job of mine) {
     } catch (e) {
       console.log(`[w${wi}] retry ${job.out}: ${e.message.split('\n')[0]}`);
       await browser.close().catch(() => {});
-      browser = await chromium.launch({ args });
+      browser = await launch();
     }
   }
 }

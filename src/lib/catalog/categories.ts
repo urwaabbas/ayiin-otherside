@@ -10,7 +10,7 @@ export const categories: Category[] = [
     tint: "#E9ECF4",
     accent: "#5967FF",
     business: true,
-    subcategories: ["Headphones", "Speakers", "Laptops", "Monitors", "Keyboards", "Phones"],
+    subcategories: ["Headphones", "Speakers", "Laptops", "Monitors", "Phones"],
     guide: {
       title: "What actually matters in audio & tech",
       points: [

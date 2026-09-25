@@ -15,3 +15,5 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 - Persisted client state uses `skipHydration`; gate store-derived UI with `useHydrated()` to avoid hydration mismatches.
 - Anything rendered on both server and client must be deterministic (dates via `src/lib/format.ts` in UTC, SVG trig rounded).
 - Checks: `npm run lint`, `npm run typecheck`, `npm run build`.
+- Product images are studio renders in `public/products/{slug}/{variant}-{view}.webp` (views: hero, angle, detail, scene). Render them with `ProductImage`; regenerate or add products with `tools/studio` (see README).
+- Loading states: use the pieces in `src/components/ui/skeleton.tsx` (every route has a `loading.tsx`).
