@@ -6,12 +6,13 @@ import { useHydrated, useShop } from "@/lib/store";
 import { ProductCard } from "@/components/product/product-card";
 import { Icon } from "@/components/ui/icon";
 import type { Product } from "@/lib/types";
+import { Loading, ProductGridSkeleton } from "@/components/ui/skeleton";
 
 export function WishlistView() {
   const hydrated = useHydrated();
   const ids = useShop((s) => s.wishlist);
   const recent = useShop((s) => s.recent);
-  if (!hydrated) return <div className="mt-10 h-[400px] rounded-[28px] bg-mist" />;
+  if (!hydrated) return <Loading label="Loading saved items" className="mt-10"><ProductGridSkeleton count={4} /></Loading>;
   const items = ids.map(productById).filter(Boolean) as Product[];
   const recentItems = (recent.map(productById).filter(Boolean) as Product[]).filter((p) => !ids.includes(p.id)).slice(0, 4);
   const fallback = [...products].sort((a, b) => b.rating - a.rating).slice(0, 4);

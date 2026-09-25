@@ -4,7 +4,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useEffect, useRef } from "react";
 import { Icon } from "@/components/ui/icon";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { usePrefs } from "@/components/providers";
 import { cartSummary, lineUnitPrice, useHydrated, useShop, useUI, type CartLine } from "@/lib/store";
 import { productById } from "@/lib/catalog/products";
@@ -165,7 +165,7 @@ function DrawerLine({ line, business }: { line: CartLine; business: boolean }) {
   return (
     <li className="flex gap-4 py-4">
       <Link href={`/p/${p.slug}`} onClick={close} className="shrink-0">
-        <ProductArt kind={p.kind} color={variant.color} accent={variant.accent} tint={p.tint} className="h-24 w-24 rounded-2xl" />
+        <ProductImage product={p} variant={variant.id} sizes="96px" className="h-24 w-24 rounded-2xl" />
       </Link>
       <div className="min-w-0 flex-1">
         <div className="flex justify-between gap-3">

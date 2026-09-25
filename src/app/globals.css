@@ -334,6 +334,43 @@
   }
   .reveal[data-in="true"] { opacity: 1; transform: none; }
 
+  /* Shimmer — the Ayiin loading surface. A soft porcelain block with a light sweep. */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background-color: #ecede8;
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.72) 50%, transparent 80%);
+    animation: shimmer 1.5s var(--ease-in-out-soft) infinite;
+  }
+  .shimmer-dark { background-color: #26292f; }
+  .shimmer-dark::after { background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.08) 50%, transparent 80%); }
+  @keyframes shimmer {
+    to { transform: translateX(100%); }
+  }
+
+  /* One-off sweep on signal badges (verified deals, best value) */
+  .glint { position: relative; overflow: hidden; }
+  .glint::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    transform: translateX(-120%) skewX(-18deg);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.75), transparent);
+    animation: glint 4.5s var(--ease-in-out-soft) infinite;
+    animation-delay: var(--glint-delay, 0.6s);
+  }
+  @keyframes glint {
+    0% { transform: translateX(-120%) skewX(-18deg); }
+    22%, 100% { transform: translateX(220%) skewX(-18deg); }
+  }
+
   /* Skeleton sheen */
   .sheen { position: relative; overflow: hidden; }
   .sheen::after {

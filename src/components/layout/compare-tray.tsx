@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import { useHydrated, useShop } from "@/lib/store";
 import { productById } from "@/lib/catalog/products";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 
 /** Floating compare dock — appears once anything is added to compare. */
@@ -30,7 +30,7 @@ export function CompareTray() {
         <ul className="flex -space-x-1.5" aria-label="Products to compare">
           {items.map((p) => (
             <li key={p!.id} className="group relative">
-              <ProductArt kind={p!.kind} color={p!.variants[0].color} accent={p!.variants[0].accent} tint={p!.tint} className="h-10 w-10 rounded-full ring-2 ring-ink" />
+              <ProductImage product={p!} sizes="40px" className="h-10 w-10 rounded-full ring-2 ring-ink" />
               <button
                 type="button"
                 onClick={() => toggle(p!.id)}

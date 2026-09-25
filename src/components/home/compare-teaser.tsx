@@ -4,7 +4,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useState } from "react";
 import { productBySlug } from "@/lib/catalog/products";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { SectionHeader } from "@/components/ui/section";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
@@ -33,7 +33,7 @@ export function CompareTeaser() {
     <div className="grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
       <div>
         <SectionHeader
-          index="05"
+          index="06"
           kicker="Compare without tabs"
           title={<>Only the differences.</>}
           description="Add anything to compare from any page. Ayiin lines up the specs, hides what's identical and marks the strongest option on each line."
@@ -71,7 +71,7 @@ export function CompareTeaser() {
                 {items.map((p) => (
                   <th key={p.id} scope="col" className="p-3 align-bottom font-normal">
                     <Link href={`/p/${p.slug}`} className="group block">
-                      <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="aspect-square w-full rounded-2xl" />
+                      <ProductImage product={p} className="aspect-square w-full rounded-2xl" />
                       <span className="mt-2 block text-[13.5px] font-medium leading-snug group-hover:underline">{p.name}</span>
                     </Link>
                   </th>

@@ -6,7 +6,7 @@ import { categoryBySlug } from "@/lib/catalog/categories";
 import { ProductExperience } from "@/components/pdp/product-experience";
 import { Reviews } from "@/components/pdp/reviews";
 import { Bundle } from "@/components/pdp/bundle";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { PriceHistory } from "@/components/product/price-history";
 import { Money, Price } from "@/components/ui/money";
 import { Icon } from "@/components/ui/icon";
@@ -14,11 +14,18 @@ import { SignalDot } from "@/components/ui/signal";
 import { Eyebrow } from "@/components/ui/signal";
 import { deliveryLabel, priceInsight } from "@/lib/commerce";
 import type { Product } from "@/lib/types";
+import { RecentlyViewed } from "@/components/product/recently-viewed";
+import { productImageSrc } from "@/lib/images";
 
 export async function generateMetadata({ params }: PageProps<"/p/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const p = productBySlug(slug);
-  return p ? { title: p.name, description: p.summary } : { title: "Product not found" };
+  if (!p) return { title: "Product not found" };
+  return {
+    title: p.name,
+    description: p.summary,
+    openGraph: { title: p.name, description: p.summary, images: [{ url: productImageSrc(p), width: 1100, height: 1100, alt: p.name }] },
+  };
 }
 
 function alternatives(p: Product) {
@@ -62,6 +69,7 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
     brand: { "@type": "Brand", name: p.brand },
     sku: p.b2b.sku,
     description: p.summary,
+    image: p.variants.flatMap((v) => [productImageSrc(p, v.id), productImageSrc(p, v.id, "angle")].map((src) => new URL(src, "https://ayiin.com").href)),
     aggregateRating: { "@type": "AggregateRating", ratingValue: p.rating, reviewCount: p.reviewCount },
     offers: { "@type": "Offer", priceCurrency: "USD", price: p.price, availability: p.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock" },
   };
@@ -138,7 +146,7 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {alts.map(({ product: a, label, why }) => (
               <Link key={a.id} href={`/p/${a.slug}`} className="group flex gap-4 rounded-[24px] bg-white p-4 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]">
-                <ProductArt kind={a.kind} color={a.variants[0].color} accent={a.variants[0].accent} tint={a.tint} className="h-28 w-28 shrink-0 rounded-2xl" />
+                <ProductImage product={a} sizes="112px" className="h-28 w-28 shrink-0 rounded-2xl" />
                 <div className="min-w-0 py-1">
                   <span className="inline-flex rounded-full bg-mist px-2.5 py-1 text-[11.5px] font-medium">{label}</span>
                   <p className="mt-2 line-clamp-2 text-[14.5px] font-medium leading-snug group-hover:underline">{a.name}</p>
@@ -209,6 +217,8 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
         <h2 id="reviews-h" className="display mb-10 mt-4 text-[44px] sm:text-[56px]">Only from people who bought it.</h2>
         <Reviews product={p} />
       </section>
+
+      <RecentlyViewed exclude={p.id} index="06" className="mt-24" />
     </div>
   );
 }

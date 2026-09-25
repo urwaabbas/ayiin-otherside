@@ -6,9 +6,10 @@ import { useState } from "react";
 import { productById } from "@/lib/catalog/products";
 import { addBusinessDays, fmtDay, todayUTC } from "@/lib/format";
 import { useHydrated, useShop } from "@/lib/store";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
+import { Loading, SplitSkeleton } from "@/components/ui/skeleton";
 
 export function ConfirmationView() {
   const sp = useSearchParams();
@@ -18,7 +19,7 @@ export function ConfirmationView() {
   const [saved, setSaved] = useState(false);
   const order = orders.find((o) => o.id === sp.get("order")) ?? orders[0];
 
-  if (!hydrated) return <div className="mt-10 h-[500px] rounded-[28px] bg-mist" />;
+  if (!hydrated) return <Loading label="Loading order"><SplitSkeleton rows={2} tall /></Loading>;
   if (!order) {
     return (
       <div className="mt-10 rounded-[32px] bg-white p-12 text-center shadow-[var(--shadow-hair)]">
@@ -94,7 +95,7 @@ export function ConfirmationView() {
               const variant = p.variants.find((v) => v.id === i.variantId) ?? p.variants[0];
               return (
                 <li key={i.productId + i.variantId} className="flex items-center gap-3">
-                  <ProductArt kind={p.kind} color={variant.color} accent={variant.accent} tint={p.tint} className="h-14 w-14 shrink-0 rounded-xl" />
+                  <ProductImage product={p} variant={variant.id} sizes="56px" className="h-14 w-14 shrink-0 rounded-xl" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-[13.5px] font-medium">{p.name}</span>
                     <span className="block text-[12px] text-mute">Qty {i.qty} · {variant.name}</span>

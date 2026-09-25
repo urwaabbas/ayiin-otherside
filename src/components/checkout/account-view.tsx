@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { productById } from "@/lib/catalog/products";
 import { useHydrated, useShop } from "@/lib/store";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
 import { fmtLong } from "@/lib/format";
+import { Loading, Skeleton } from "@/components/ui/skeleton";
 
 export function AccountView() {
   const hydrated = useHydrated();
@@ -34,7 +35,19 @@ export function AccountView() {
       </div>
       <section className="rounded-[28px] bg-white p-6 shadow-[var(--shadow-hair)]">
         <h2 className="text-[18px] font-medium tracking-[-0.02em]">Orders</h2>
-        {!hydrated ? null : orders.length === 0 ? (
+        {!hydrated ? (
+          <Loading label="Loading orders" className="mt-4 space-y-3">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-4 py-2">
+                <Skeleton className="h-12 w-12" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-3.5 w-32" />
+                  <Skeleton className="h-3 w-48" />
+                </div>
+              </div>
+            ))}
+          </Loading>
+        ) : orders.length === 0 ? (
           <p className="mt-3 text-[14px] text-mute">No orders yet on this device. Guest orders can be tracked with your order number and email.</p>
         ) : (
           <ul className="mt-4 divide-y divide-line">
@@ -43,7 +56,7 @@ export function AccountView() {
                 <div className="flex -space-x-2">
                   {o.items.slice(0, 3).map((i) => {
                     const p = productById(i.productId);
-                    return p ? <ProductArt key={i.productId} kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="h-12 w-12 rounded-xl ring-2 ring-white" /> : null;
+                    return p ? <ProductImage key={i.productId} product={p} variant={i.variantId} sizes="48px" className="h-12 w-12 rounded-xl ring-2 ring-white" /> : null;
                   })}
                 </div>
                 <div className="min-w-0 flex-1 text-[14px]">

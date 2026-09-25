@@ -15,7 +15,7 @@ export function BusinessBridge() {
       <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:p-14">
         <div className="flex flex-col justify-between">
           <div>
-            <Eyebrow index="07">Buying for a company?</Eyebrow>
+            <Eyebrow index="08">Buying for a company?</Eyebrow>
             <h2 className="display mt-4 text-[44px] sm:text-[64px]">
               Same marketplace.
               <br />

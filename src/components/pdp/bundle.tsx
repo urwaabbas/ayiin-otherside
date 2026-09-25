@@ -4,7 +4,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useState } from "react";
 import type { Product } from "@/lib/types";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
 import { useShop, useUI } from "@/lib/store";
@@ -33,7 +33,7 @@ export function Bundle({ items }: { items: Product[] }) {
                   className="absolute right-2 top-2 z-10 h-5 w-5 accent-ink"
                   aria-label={`Include ${p.name}`}
                 />
-                <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="aspect-square w-full rounded-2xl" />
+                <ProductImage product={p} className="aspect-square w-full rounded-2xl" />
                 <span className="mt-2 block truncate text-[13px] font-medium">{i === 0 ? "This item" : <Link href={`/p/${p.slug}`} className="hover:underline">{p.name}</Link>}</span>
                 <span className="num text-[13px] text-mute">{fmt(p.price)}</span>
               </label>

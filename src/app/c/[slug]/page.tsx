@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { categoryBySlug } from "@/lib/catalog/categories";
 import { productsByCategory } from "@/lib/catalog/products";
 import { Listing } from "@/components/listing/listing";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 import { getPrefs } from "@/lib/server-prefs";
 
@@ -57,7 +57,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
           </div>
         </div>
         <div className="relative min-w-0 overflow-hidden rounded-[28px]" style={{ background: c.tint }}>
-          <ProductArt kind={hero.kind} color={hero.variants[0].color} accent={hero.variants[0].accent} tint={c.tint} className="absolute -right-10 top-0 h-full w-auto opacity-95" />
+          <ProductImage product={hero} feather preload sizes="(min-width: 1024px) 420px, 60vw" className="absolute -right-10 top-0 aspect-square h-full" />
           <div className="relative max-w-[62%] p-6">
             <p className="eyebrow flex items-center gap-2 !text-ink-2">
               <Icon name="sparkle" size={13} /> Buying guide

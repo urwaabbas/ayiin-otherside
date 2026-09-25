@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { AyiinAppIcon, AyiinLockup, AyiinSymbol, AyiinWordmark, LENS_PATH, SYMBOL_PATH } from "@/components/brand/logo";
 import { Eyebrow, SignalDot } from "@/components/ui/signal";
 import { Icon } from "@/components/ui/icon";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { productBySlug } from "@/lib/catalog/products";
 
 export const metadata: Metadata = {
@@ -31,6 +31,7 @@ function Tile({ label, children, dark, className }: { label: string; children: R
 
 export default function BrandPage() {
   const hp = productBySlug("aurel-anc-over-ear")!;
+  const runner = productBySlug("stride-runner-2")!;
   return (
     <div>
       {/* Hero */}
@@ -258,7 +259,7 @@ export default function BrandPage() {
             <p className="display mt-4 text-[48px]">
               See{" "}
               <span className="relative inline-block h-[0.74em] w-[1.42em] overflow-hidden rounded-full align-[-0.02em]">
-                <ProductArt kind={hp.kind} color={hp.variants[0].color} accent={hp.variants[0].accent} tint={hp.tint} view="pill" className="absolute inset-0 h-full w-full" />
+                <ProductImage product={hp} sizes="96px" zoom={1.35} className="absolute inset-0 h-full w-full" />
               </span>{" "}
               more.
             </p>
@@ -288,8 +289,8 @@ export default function BrandPage() {
           </div>
           <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
             <p className="eyebrow">Studio renders</p>
-            <ProductArt kind="sneaker" color="#F1F0EA" accent="#C8FF3D" tint="#ECEAEF" className="mt-4 aspect-[16/9] w-full rounded-2xl" />
-            <p className="mt-4 text-[13.5px] text-mute">One key light, one shadow, one sweep. Every product, every seller, the same honest stage.</p>
+            <ProductImage product={runner} view="scene" sizes="(min-width: 1024px) 400px, 90vw" className="mt-4 aspect-[16/9] w-full rounded-2xl" />
+            <p className="mt-4 text-[13.5px] text-mute">One softbox, one window, one sweep. Every product, every seller, photographed on the same honest stage.</p>
           </div>
           <div className="panel-ink rounded-[26px] p-7">
             <p className="eyebrow !text-mute-dark">Motion</p>

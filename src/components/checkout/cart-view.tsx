@@ -8,11 +8,12 @@ import { sellerById } from "@/lib/catalog/sellers";
 import { deliveryLabel, FREE_SHIPPING_THRESHOLD, nextTier, TAX_RATE } from "@/lib/commerce";
 import { cartSummary, lineUnitPrice, useHydrated, useShop, useUI, type CartLine } from "@/lib/store";
 import { company } from "@/lib/business";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { QtyStepper } from "@/components/ui/qty-stepper";
 import { SignalDot } from "@/components/ui/signal";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
+import { Loading, SplitSkeleton } from "@/components/ui/skeleton";
 
 export function CartView() {
   const hydrated = useHydrated();
@@ -27,7 +28,7 @@ export function CartView() {
   const [promo, setPromo] = useState("");
   const [promoState, setPromoState] = useState<"idle" | "bad">("idle");
 
-  if (!hydrated) return <div className="mt-10 h-[500px] rounded-[28px] bg-mist" />;
+  if (!hydrated) return <Loading label="Loading bag"><SplitSkeleton /></Loading>;
 
   const sum = cartSummary(cart);
   const shipping = business ? 0 : sum.subtotal >= FREE_SHIPPING_THRESHOLD ? sum.shipping : Math.max(sum.shipping, 5.99);
@@ -169,7 +170,7 @@ function Line({ line, business }: { line: CartLine; business: boolean }) {
   return (
     <li className="flex gap-4 p-5 sm:gap-5 sm:p-6">
       <Link href={`/p/${p.slug}`} className="shrink-0">
-        <ProductArt kind={p.kind} color={variant.color} accent={variant.accent} tint={p.tint} className="h-24 w-24 rounded-2xl sm:h-28 sm:w-28" />
+        <ProductImage product={p} variant={variant.id} sizes="112px" className="h-24 w-24 rounded-2xl sm:h-28 sm:w-28" />
       </Link>
       <div className="min-w-0 flex-1">
         <div className="flex flex-col justify-between gap-1 sm:flex-row sm:gap-4">
@@ -212,7 +213,7 @@ function SavedList({ onMove }: { onMove?: (key: string) => void }) {
           if (!p) return null;
           return (
             <li key={l.key} className={clsx("flex items-center gap-3 rounded-2xl bg-porcelain p-2.5")}>
-              <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="h-14 w-14 shrink-0 rounded-xl" />
+              <ProductImage product={p} sizes="56px" className="h-14 w-14 shrink-0 rounded-xl" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-[13.5px] font-medium">{p.name}</p>
                 <button type="button" onClick={() => move(l.key)} className="text-[12.5px] text-ink-2 underline-offset-2 hover:underline">Move to bag</button>

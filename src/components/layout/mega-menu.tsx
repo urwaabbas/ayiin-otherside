@@ -5,7 +5,7 @@ import { clsx } from "clsx";
 import { useState } from "react";
 import { categories } from "@/lib/catalog/categories";
 import { productsByCategory } from "@/lib/catalog/products";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
 import { deliveryLabel } from "@/lib/commerce";
@@ -103,11 +103,9 @@ export function MegaMenu({ onClose }: { onClose: () => void }) {
           onClick={onClose}
           className="group hidden overflow-hidden rounded-3xl bg-white shadow-[var(--shadow-hair)] lg:block"
         >
-          <ProductArt
-            kind={featured.kind}
-            color={featured.variants[0].color}
-            accent={featured.variants[0].accent}
-            tint={featured.tint}
+          <ProductImage
+            product={featured}
+            sizes="340px"
             className="aspect-[4/3.4] w-full transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
           />
           <div className="p-5">

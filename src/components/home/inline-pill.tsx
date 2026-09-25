@@ -3,7 +3,7 @@
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 import type { Product } from "@/lib/types";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 
 /** An image capsule set into display type — a recurring Ayiin editorial device. */
 export function InlinePill({ items, className, interval = 2600 }: { items: Product[]; className?: string; interval?: number }) {
@@ -22,13 +22,11 @@ export function InlinePill({ items, className, interval = 2600 }: { items: Produ
       )}
     >
       {items.map((p, n) => (
-        <ProductArt
+        <ProductImage
           key={p.id}
-          kind={p.kind}
-          color={p.variants[0].color}
-          accent={p.variants[0].accent}
-          tint={p.tint}
-          view="pill"
+          product={p}
+          sizes="220px"
+          zoom={1.35}
           className={clsx(
             "absolute inset-0 h-full w-full transition-[opacity,transform] duration-[900ms] ease-[var(--ease-out-expo)]",
             n === i ? "scale-100 opacity-100" : "scale-110 opacity-0",

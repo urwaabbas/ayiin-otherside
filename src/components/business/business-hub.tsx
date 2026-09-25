@@ -12,13 +12,14 @@ import { unitPrice } from "@/lib/commerce";
 import { fmtLong, fmtShort } from "@/lib/format";
 import { useHydrated, useShop, useUI, type ProcurementList } from "@/lib/store";
 import { usePrefs } from "@/components/providers";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { QtyStepper } from "@/components/ui/qty-stepper";
 import { QuickOrder } from "@/components/business/quick-order";
 import { ApprovalQueue } from "@/components/business/approval-queue";
 import { SpendChart } from "@/components/business/spend-chart";
 import { listTotal, nextRun, ReorderLists } from "@/components/business/reorder-lists";
+import { Loading, PanelsSkeleton } from "@/components/ui/skeleton";
 
 const TABS: { id: string; label: string; icon: IconName }[] = [
   { id: "overview", label: "Overview", icon: "grid" },
@@ -173,7 +174,7 @@ function QuickTab() {
           <ul className="space-y-2">
             {past.map((p) => (
               <li key={p.id} className="flex items-center gap-3">
-                <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="h-11 w-11 shrink-0 rounded-xl" />
+                <ProductImage product={p} sizes="44px" className="h-11 w-11 shrink-0 rounded-xl" />
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[13.5px] font-medium">{p.name}</span>
                   <span className="num block text-[12px] text-mute">{p.b2b.sku}</span>
@@ -219,7 +220,7 @@ function ListsTab() {
   const [name, setName] = useState("");
   const list = lists.find((l) => l.id === activeId) ?? lists[0];
 
-  if (!hydrated) return <div className="h-[500px] rounded-[26px] bg-mist" />;
+  if (!hydrated) return <Loading label="Loading"><PanelsSkeleton count={4} className="!mt-0 md:grid-cols-2" /></Loading>;
 
   return (
     <div className="space-y-5">
@@ -304,7 +305,7 @@ function ListsTab() {
                       <tr key={i.productId} className="border-t border-line">
                         <td className="py-3 pr-4">
                           <Link href={`/p/${p.slug}`} className="flex items-center gap-3 hover:underline">
-                            <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="h-11 w-11 shrink-0 rounded-xl" />
+                            <ProductImage product={p} sizes="44px" className="h-11 w-11 shrink-0 rounded-xl" />
                             <span>
                               <span className="block font-medium">{p.name}</span>
                               <span className="num block text-[12px] text-mute">{p.b2b.sku} · {p.b2b.unit}</span>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { productById } from "@/lib/catalog/products";
 import { unitPrice } from "@/lib/commerce";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
 import { useHydrated, useShop, useUI, type ProcurementList } from "@/lib/store";
@@ -69,14 +69,7 @@ export function ReorderLists({ limit = 3 }: { limit?: number }) {
                 const p = productById(i.productId);
                 if (!p) return null;
                 return (
-                  <ProductArt
-                    key={i.productId}
-                    kind={p.kind}
-                    color={p.variants.find((v) => v.id === i.variantId)?.color ?? p.variants[0].color}
-                    accent={p.variants[0].accent}
-                    tint={p.tint}
-                    className="h-12 w-12 rounded-xl ring-2 ring-white"
-                  />
+                  <ProductImage key={i.productId} product={p} variant={i.variantId} sizes="48px" className="h-12 w-12 rounded-xl ring-2 ring-white" />
                 );
               })}
             </div>

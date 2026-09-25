@@ -3,7 +3,7 @@ import { productBySlug, products } from "@/lib/catalog/products";
 import { categories } from "@/lib/catalog/categories";
 import { sellerById } from "@/lib/catalog/sellers";
 import { approvals, company, rfqResponses } from "@/lib/business";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { ProductCard } from "@/components/product/product-card";
 import { Eyebrow, SignalDot } from "@/components/ui/signal";
 import { SectionHeader } from "@/components/ui/section";
@@ -185,7 +185,7 @@ export function HomeBusiness() {
                 <p className="mt-2 text-[18px] font-medium tracking-[-0.02em]">200 boxes · Nitrile gloves 4 mil, size M/L</p>
                 <p className="text-[13px] text-mute">Target $9.75/box · Deliver by Oct 6 · Reno, NV</p>
               </div>
-              <ProductArt kind={gloves.kind} color={gloves.variants[0].color} accent={gloves.variants[0].accent} tint={gloves.tint} className="hidden h-16 w-16 rounded-2xl sm:block" />
+              <ProductImage product={gloves} sizes="64px" className="hidden h-16 w-16 rounded-2xl sm:block" />
             </div>
             <ul className="mt-6 space-y-2.5">
               {rfqResponses.map((r, i) => {
@@ -265,11 +265,9 @@ export function HomeBusiness() {
               return (
                 <Reveal key={c.slug} delay={n * 60}>
                   <Link href={`/c/${c.slug}`} className="group block overflow-hidden rounded-[24px]" style={{ background: c.tint }}>
-                    <ProductArt
-                      kind={c.kind}
-                      color={hero.variants[0].color}
-                      accent={hero.variants[0].accent}
-                      tint={c.tint}
+                    <ProductImage
+                      product={hero}
+                      sizes="(min-width: 1024px) 20vw, 50vw"
                       className="aspect-square w-full transition-transform duration-[1000ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
                     />
                     <div className="flex items-center justify-between p-4">

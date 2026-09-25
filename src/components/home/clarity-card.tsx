@@ -4,7 +4,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 import type { Product } from "@/lib/types";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Price } from "@/components/ui/money";
 import { Icon } from "@/components/ui/icon";
 import { SignalDot } from "@/components/ui/signal";
@@ -126,12 +126,11 @@ export function ClarityCard({ items }: { items: Product[] }) {
       <Link href={`/p/${p.slug}`} className="relative block" aria-label={p.name}>
         <div className="relative aspect-[16/11] w-full overflow-hidden">
           {items.map((it, n) => (
-            <ProductArt
+            <ProductImage
               key={it.id}
-              kind={it.kind}
-              color={it.variants[0].color}
-              accent={it.variants[0].accent}
-              tint={it.tint}
+              product={it}
+              preload={n === 0}
+              sizes="(min-width: 1024px) 520px, 92vw"
               className={clsx(
                 "absolute inset-0 h-full w-full transition-all duration-[1100ms] ease-[var(--ease-out-expo)]",
                 n === i ? "scale-100 opacity-100" : "scale-[1.04] opacity-0",

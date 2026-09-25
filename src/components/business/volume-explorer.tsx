@@ -6,7 +6,7 @@ import { useState } from "react";
 import { VOLUME_PRODUCTS, priceOffers } from "@/lib/catalog/offers";
 import { sellerById } from "@/lib/catalog/sellers";
 import { nextTier, tierSavingPct, unitPrice } from "@/lib/commerce";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { readableOn } from "@/lib/color";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
@@ -42,7 +42,7 @@ export function VolumeExplorer() {
               i === pi ? "bg-ink text-white" : "text-ink-2 hover:bg-mist",
             )}
           >
-            <ProductArt kind={vp.kind} color={vp.variants[0].color} accent={vp.variants[0].accent} tint={vp.tint} className="h-9 w-9 rounded-xl" />
+            <ProductImage product={vp} sizes="36px" className="h-9 w-9 rounded-xl" />
             {vp.name.split(/ — |, /)[0]}
           </button>
         ))}

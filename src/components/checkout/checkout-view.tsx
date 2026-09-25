@@ -9,9 +9,10 @@ import { addBusinessDays, relativeDay, todayUTC } from "@/lib/format";
 import { deliveryLabel, FREE_SHIPPING_THRESHOLD, TAX_RATE } from "@/lib/commerce";
 import { cartSummary, lineUnitPrice, useHydrated, useShop } from "@/lib/store";
 import { addresses, company } from "@/lib/business";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
+import { Loading, SplitSkeleton } from "@/components/ui/skeleton";
 
 type Errors = Record<string, string>;
 
@@ -80,7 +81,7 @@ export function CheckoutView() {
   const [card, setCard] = useState("");
   const [exp, setExp] = useState("");
 
-  if (!hydrated) return <div className="mt-10 h-[600px] rounded-[28px] bg-mist" />;
+  if (!hydrated) return <Loading label="Loading checkout"><SplitSkeleton rows={4} tall /></Loading>;
 
   if (placing && cart.length === 0) return <div className="mt-10 grid h-[400px] place-items-center rounded-[28px] bg-white text-[15px] text-mute shadow-[var(--shadow-hair)]">Confirming your order…</div>;
 
@@ -297,7 +298,7 @@ export function CheckoutView() {
               return (
                 <li key={l.key} className="flex items-center gap-3">
                   <span className="relative shrink-0">
-                    <ProductArt kind={p.kind} color={variant.color} accent={variant.accent} tint={p.tint} className="h-14 w-14 rounded-xl" />
+                    <ProductImage product={p} variant={variant.id} sizes="56px" className="h-14 w-14 rounded-xl" />
                     <span className="num absolute -right-1.5 -top-1.5 grid h-5 min-w-5 place-items-center rounded-full bg-ink px-1 text-[10.5px] text-white">{l.qty}</span>
                   </span>
                   <span className="min-w-0 flex-1">

@@ -1,0 +1,63 @@
+import Link from "next/link";
+import { clsx } from "clsx";
+import { productBySlug } from "@/lib/catalog/products";
+import { ProductImage } from "@/components/product/product-image";
+import { SectionHeader } from "@/components/ui/section";
+import { Reveal } from "@/components/ui/reveal";
+import { Price } from "@/components/ui/money";
+import { Icon } from "@/components/ui/icon";
+
+const SCENES = ["aurel-anc-over-ear", "pour-gooseneck-kettle", "stoneware-bud-vases", "night-recovery-oil", "meridian-automatic-38"];
+
+/** Editorial lookbook: every product photographed in the same window-lit room. */
+export function Lookbook({ index = "03" }: { index?: string }) {
+  const items = SCENES.map((s) => productBySlug(s)!).filter(Boolean);
+  return (
+    <>
+      <SectionHeader
+        index={index}
+        kicker="Seen in context"
+        title="Shop the scene."
+        description="Every product is photographed on the same stage in the same window light, so the colour you see is the colour that arrives."
+        action={{ href: "/search", label: "Browse everything" }}
+      />
+      <div className="mt-12 grid auto-rows-[210px] grid-cols-2 gap-3 sm:auto-rows-[260px] lg:grid-cols-4 lg:gap-4">
+        {items.map((p, n) => {
+          const big = n === 0;
+          return (
+            <Reveal key={p.id} delay={n * 70} className={clsx(big && "col-span-2 row-span-2")}>
+              <Link href={`/p/${p.slug}`} className="group relative block h-full overflow-hidden rounded-[26px]" aria-label={`${p.name} — shop the scene`}>
+                <ProductImage
+                  product={p}
+                  view="scene"
+                  sizes={big ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}
+                  className="absolute inset-0 transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
+                />
+                <span aria-hidden className="absolute left-1/2 top-[46%] grid h-7 w-7 -translate-x-1/2 -translate-y-1/2 place-items-center">
+                  <span className="absolute inset-0 rounded-full bg-lime/50 motion-safe:animate-ping" />
+                  <span className="relative h-3.5 w-3.5 rounded-full bg-lime shadow-[0_0_0_2px_#0A0B0D]" />
+                </span>
+                <span
+                  className={clsx(
+                    "absolute bottom-3 left-3 right-3 flex items-center gap-3 rounded-2xl bg-white/88 p-2.5 pr-3.5 shadow-[var(--shadow-hair)] backdrop-blur-md transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1",
+                    big ? "sm:bottom-5 sm:left-5 sm:right-auto sm:max-w-[380px]" : "",
+                  )}
+                >
+                  <ProductImage product={p} sizes="48px" className="hidden h-11 w-11 shrink-0 rounded-xl sm:block" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[13.5px] font-medium">{p.name}</span>
+                    <span className="mt-0.5 flex items-center gap-2 text-[12.5px] text-ink-2">
+                      <Price usd={p.price} size="sm" />
+                      <span className="text-mute">· {p.brand}</span>
+                    </span>
+                  </span>
+                  <Icon name="arrowUpRight" size={16} className="shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </span>
+              </Link>
+            </Reveal>
+          );
+        })}
+      </div>
+    </>
+  );
+}

@@ -4,7 +4,8 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import type { Product } from "@/lib/types";
-import { ProductArt, type ArtView } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
+import { ProductGallery } from "@/components/pdp/gallery";
 import { Rating } from "@/components/product/rating";
 import { PriceHistory } from "@/components/product/price-history";
 import { Price } from "@/components/ui/money";
@@ -20,19 +21,12 @@ import { priceOffers } from "@/lib/catalog/offers";
 import { addBusinessDays, compact, fmtDay, relativeDay, todayUTC } from "@/lib/format";
 import { deliveryLabel, nextTier, priceInsight, stockSignal, tierSavingPct, unitPrice } from "@/lib/commerce";
 
-const VIEWS: { id: ArtView; label: string }[] = [
-  { id: "hero", label: "Front" },
-  { id: "angle", label: "Angle" },
-  { id: "detail", label: "Detail" },
-  { id: "context", label: "In context" },
-];
 
 export function ProductExperience({ product: p, initialQty }: { product: Product; initialQty?: number }) {
   const { mode, fmt } = usePrefs();
   const business = mode === "business";
   const hydrated = useHydrated();
   const [variant, setVariant] = useState(p.variants[0]);
-  const [view, setView] = useState<ArtView>("hero");
   const [qty, setQty] = useState(() => (business ? Math.max(p.b2b.moq, initialQty ?? p.b2b.tiers[1]?.min ?? 1) : 1));
   const [express, setExpress] = useState(false);
   const [listOpen, setListOpen] = useState(false);
@@ -96,39 +90,13 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
         {/* ── Gallery ─────────────────────────────────── */}
         <div className="min-w-0 lg:col-span-7">
           <div className="lg:sticky lg:top-[88px]">
-            <div className="flex flex-col-reverse gap-3 sm:flex-row">
-              <div role="tablist" aria-label="Product views" className="scroll-x flex gap-2 sm:flex-col">
-                {VIEWS.map((vw) => (
-                  <button
-                    key={vw.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={view === vw.id}
-                    aria-label={vw.label}
-                    onClick={() => setView(vw.id)}
-                    className={clsx(
-                      "w-[72px] shrink-0 overflow-hidden rounded-2xl ring-offset-2 ring-offset-porcelain transition-shadow sm:w-[84px]",
-                      view === vw.id ? "ring-[1.5px] ring-ink" : "ring-1 ring-line hover:ring-line-strong",
-                    )}
-                  >
-                    <ProductArt kind={p.kind} color={variant.color} accent={variant.accent} tint={p.tint} view={vw.id} className="aspect-square w-full" />
-                  </button>
-                ))}
-              </div>
-              <div className="relative flex-1 overflow-hidden rounded-[32px] bg-white">
-                <ProductArt
-                  key={`${variant.id}-${view}`}
-                  kind={p.kind}
-                  color={variant.color}
-                  accent={variant.accent}
-                  tint={p.tint}
-                  view={view}
-                  title={`${p.name} in ${variant.name}, ${view} view`}
-                  className="aspect-square w-full animate-fade"
-                />
-                <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+            <ProductGallery
+              product={p}
+              variant={variant}
+              overlay={
+                <div className="pointer-events-none absolute left-4 top-4 flex flex-wrap gap-2">
                   {insight.verifiedDeal && !business && (
-                    <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-lime px-3 text-[12.5px] font-medium">
+                    <span className="glint inline-flex h-8 items-center gap-1.5 rounded-full bg-lime px-3 text-[12.5px] font-medium">
                       <Icon name="check" size={13} strokeWidth={2.4} /> {insight.label}
                     </span>
                   )}
@@ -138,11 +106,8 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                     </span>
                   )}
                 </div>
-                <p className="absolute bottom-4 left-4 rounded-full bg-white/85 px-3 py-1.5 text-[12px] text-ink-2 backdrop-blur">
-                  Studio render · true to colour · {VIEWS.find((x) => x.id === view)?.label}
-                </p>
-              </div>
-            </div>
+              }
+            />
           </div>
         </div>
 
@@ -482,7 +447,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
         inert={!showBar}
       >
         <div className="mx-auto flex max-w-[1520px] items-center gap-3 lg:px-6">
-          <ProductArt kind={p.kind} color={variant.color} accent={variant.accent} tint={p.tint} className="hidden h-11 w-11 rounded-xl sm:block" />
+          <ProductImage product={p} variant={variant.id} sizes="44px" className="hidden h-11 w-11 rounded-xl sm:block" />
           <div className="min-w-0 flex-1">
             <p className="truncate text-[13.5px] font-medium">{p.name}</p>
             <p className="truncate text-[12px] text-mute">

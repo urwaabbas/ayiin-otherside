@@ -4,7 +4,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useState } from "react";
 import type { Product } from "@/lib/types";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Rating } from "@/components/product/rating";
 import { Price } from "@/components/ui/money";
 import { SignalDot } from "@/components/ui/signal";
@@ -34,7 +34,7 @@ export function ProductRow({ product: p }: { product: Product }) {
   return (
     <article className="grid grid-cols-[96px_1fr] gap-4 rounded-[22px] bg-white p-3 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)] sm:grid-cols-[132px_1fr_auto] sm:gap-5">
       <Link href={`/p/${p.slug}${business ? `?qty=${qty}` : ""}`} aria-label={p.name} tabIndex={-1} className="row-span-2 overflow-hidden rounded-2xl sm:row-span-1">
-        <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="aspect-square w-full" />
+        <ProductImage product={p} className="aspect-square w-full" />
       </Link>
       <div className="min-w-0 py-1">
         <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px] text-mute">

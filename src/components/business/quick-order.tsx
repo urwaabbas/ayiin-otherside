@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import { parseQuickOrder } from "@/lib/quick-order";
 import { unitPrice, tierSavingPct } from "@/lib/commerce";
 import { productBySlug } from "@/lib/catalog/products";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
 import { useShop, useUI } from "@/lib/store";
@@ -73,7 +73,7 @@ export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "he
             return (
               <li key={i} className="flex items-center gap-3 rounded-xl px-2 py-2">
                 {p ? (
-                  <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="h-10 w-10 shrink-0 rounded-lg" />
+                  <ProductImage product={p} sizes="40px" className="h-10 w-10 shrink-0 rounded-lg" />
                 ) : (
                   <span className={clsx("grid h-10 w-10 shrink-0 place-items-center rounded-lg", dark ? "bg-graphite-2" : "bg-mist")}>
                     <Icon name="help" size={16} />

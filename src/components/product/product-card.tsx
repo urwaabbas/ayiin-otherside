@@ -4,7 +4,8 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useState } from "react";
 import type { Product } from "@/lib/types";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
+import { QuickView } from "@/components/product/quick-view";
 import { Rating } from "@/components/product/rating";
 import { Icon } from "@/components/ui/icon";
 import { Price } from "@/components/ui/money";
@@ -13,6 +14,8 @@ import { usePrefs } from "@/components/providers";
 import { useHydrated, useShop, useUI } from "@/lib/store";
 import { bestTier, deliveryLabel, priceInsight, stockSignal, tierSavingPct } from "@/lib/commerce";
 import { sellerById } from "@/lib/catalog/sellers";
+
+const CARD_SIZES = "(min-width: 1280px) 300px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 50vw";
 
 export function ProductCard({
   product: p,
@@ -31,6 +34,7 @@ export function ProductCard({
   const business = mode === "business";
   const hydrated = useHydrated();
   const [variant, setVariant] = useState(p.variants[0]);
+  const [quick, setQuick] = useState(false);
   const wished = useShop((s) => s.wishlist.includes(p.id));
   const compared = useShop((s) => s.compare.includes(p.id));
   const toggleWishlist = useShop((s) => s.toggleWishlist);
@@ -65,13 +69,13 @@ export function ProductCard({
     <article className={clsx("group relative flex flex-col", className)}>
       <div className="relative overflow-hidden rounded-[22px] bg-white">
         <Link href={`/p/${p.slug}`} aria-label={p.name} className="block" prefetch={priority ? true : undefined}>
-          <ProductArt
-            kind={p.kind}
-            color={variant.color}
-            accent={variant.accent}
-            tint={p.tint}
-            className="aspect-[4/4.4] w-full transition-transform duration-[900ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.035]"
-          />
+          <span className="relative block aspect-[4/4.4] w-full transition-transform duration-[900ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.035]">
+            <ProductImage product={p} variant={variant.id} preload={priority} sizes={CARD_SIZES} className="absolute inset-0" />
+            {/* second angle on hover (pointer devices only — display:none images are never fetched) */}
+            <span className="absolute inset-0 hidden opacity-0 transition-opacity duration-500 group-hover:opacity-100 [@media(hover:hover)]:block">
+              <ProductImage product={p} variant={variant.id} view="angle" sizes={CARD_SIZES} className="h-full w-full" />
+            </span>
+          </span>
         </Link>
         {rank != null && (
           <span className="display pointer-events-none absolute bottom-3 left-4 text-[56px] leading-none text-ink/90">{String(rank).padStart(2, "0")}</span>
@@ -80,7 +84,7 @@ export function ProductCard({
           <span
             className={clsx(
               "pointer-events-none absolute left-3 top-3 inline-flex h-7 items-center gap-1.5 rounded-full px-2.5 text-[11.5px] font-medium",
-              badge.tone === "lime" && "bg-lime text-ink",
+              badge.tone === "lime" && "glint bg-lime text-ink",
               badge.tone === "ink" && "bg-ink text-white",
               badge.tone === "blue" && "bg-blue text-ink",
               badge.tone === "white" && "bg-white/90 text-ink shadow-[var(--shadow-hair)] backdrop-blur",
@@ -115,6 +119,16 @@ export function ProductCard({
             )}
           >
             <Icon name="compare" size={17} />
+          </button>
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-label={`Quick look at ${p.name}`}
+            title="Quick look"
+            onClick={() => setQuick(true)}
+            className="grid h-9 w-9 place-items-center rounded-full bg-white/85 text-ink shadow-[var(--shadow-hair)] backdrop-blur transition-all delay-75 duration-300 hover:bg-white lg:translate-x-2 lg:opacity-0 lg:group-hover:translate-x-0 lg:group-hover:opacity-100 lg:focus-visible:translate-x-0 lg:focus-visible:opacity-100"
+          >
+            <Icon name="eye" size={17} />
           </button>
         </div>
         <button
@@ -204,6 +218,7 @@ export function ProductCard({
           <Icon name="plus" size={15} /> {business ? "Add to cart" : "Add to bag"}
         </button>
       </div>
+      {quick && <QuickView product={p} initialVariant={variant} onClose={() => setQuick(false)} />}
     </article>
   );
 }

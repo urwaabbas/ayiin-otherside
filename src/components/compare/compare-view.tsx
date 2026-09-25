@@ -7,12 +7,13 @@ import { useEffect, useMemo, useState } from "react";
 import { productById, products } from "@/lib/catalog/products";
 import { sellerById } from "@/lib/catalog/sellers";
 import { deliveryLabel, priceInsight, stockSignal, unitPrice } from "@/lib/commerce";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { Stars } from "@/components/product/rating";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
 import { useHydrated, useShop, useUI } from "@/lib/store";
 import type { Product } from "@/lib/types";
+import { Loading, PanelsSkeleton } from "@/components/ui/skeleton";
 
 type Row = { label: string; group: string; cells: React.ReactNode[]; raw: string[]; best?: number };
 
@@ -41,7 +42,7 @@ export function CompareView() {
 
   const items = useMemo(() => (hydrated ? (stored.map(productById).filter(Boolean) as Product[]) : []), [hydrated, stored]);
 
-  if (!hydrated) return <div className="mt-10 h-[500px] rounded-[28px] bg-mist" />;
+  if (!hydrated) return <Loading label="Loading comparison"><PanelsSkeleton count={4} /></Loading>;
 
   if (items.length === 0) {
     const suggestions = [...products].sort((a, b) => b.soldLastWeek - a.soldLastWeek).slice(0, 4);
@@ -55,7 +56,7 @@ export function CompareView() {
         <div className="mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
           {suggestions.map((p) => (
             <button key={p.id} type="button" onClick={() => toggle(p.id)} className="group rounded-2xl bg-porcelain p-2 text-left text-[13px]">
-              <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="aspect-square w-full rounded-xl" />
+              <ProductImage product={p} className="aspect-square w-full rounded-xl" />
               <span className="mt-2 flex items-center justify-between gap-2 px-1">
                 <span className="truncate">{p.name}</span>
                 <Icon name="plus" size={14} className="shrink-0" />
@@ -149,7 +150,7 @@ export function CompareView() {
                       <Icon name="close" size={14} />
                     </button>
                     <Link href={`/p/${p.slug}`}>
-                      <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="aspect-[4/3] w-full rounded-2xl" />
+                      <ProductImage product={p} className="aspect-[4/3] w-full rounded-2xl" />
                     </Link>
                   </div>
                   <Link href={`/p/${p.slug}`} className="mt-3 block text-[15px] font-medium leading-snug hover:underline">

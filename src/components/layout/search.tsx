@@ -6,7 +6,7 @@ import { clsx } from "clsx";
 import { useEffect, useMemo, useState, type KeyboardEvent, type RefObject } from "react";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { parseIntent, search, TRENDING, EXAMPLE_PROMPTS } from "@/lib/search";
 import { categories } from "@/lib/catalog/categories";
 import { productById } from "@/lib/catalog/products";
@@ -128,7 +128,7 @@ export function SearchPanel({
               <div className="grid grid-cols-4 gap-2">
                 {recentProducts.map((p) => (
                   <Link key={p!.id} href={`/p/${p!.slug}`} onClick={() => onNavigate(`/p/${p!.slug}`)} className="overflow-hidden rounded-xl" title={p!.name}>
-                    <ProductArt kind={p!.kind} color={p!.variants[0].color} accent={p!.variants[0].accent} tint={p!.tint} className="aspect-square w-full" />
+                    <ProductImage product={p!} className="aspect-square w-full" />
                   </Link>
                 ))}
               </div>
@@ -182,7 +182,7 @@ export function SearchPanel({
                       active === idx ? "bg-mist" : "hover:bg-mist",
                     )}
                   >
-                    <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="h-14 w-14 shrink-0 rounded-xl" />
+                    <ProductImage product={p} sizes="56px" className="h-14 w-14 shrink-0 rounded-xl" />
                     <span className="min-w-0 flex-1">
                       <span className="block truncate text-[14.5px] font-medium text-ink">{p.name}</span>
                       <span className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[12.5px] text-mute">

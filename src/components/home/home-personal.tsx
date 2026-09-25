@@ -2,7 +2,7 @@ import Link from "next/link";
 import { productBySlug, products } from "@/lib/catalog/products";
 import { categories } from "@/lib/catalog/categories";
 import { sellers } from "@/lib/catalog/sellers";
-import { ProductArt } from "@/components/product/product-art";
+import { ProductImage } from "@/components/product/product-image";
 import { PriceHistory } from "@/components/product/price-history";
 import { Price } from "@/components/ui/money";
 import { Eyebrow, SignalDot } from "@/components/ui/signal";
@@ -15,6 +15,8 @@ import { InlinePill } from "@/components/home/inline-pill";
 import { ForYou } from "@/components/home/for-you";
 import { CompareTeaser } from "@/components/home/compare-teaser";
 import { BusinessBridge } from "@/components/home/business-bridge";
+import { Lookbook } from "@/components/home/lookbook";
+import { RecentlyViewed } from "@/components/product/recently-viewed";
 import { ProductCard } from "@/components/product/product-card";
 import { priceInsight, deliveryLabel } from "@/lib/commerce";
 import { compact } from "@/lib/format";
@@ -140,12 +142,10 @@ export function HomePersonal() {
                   className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[26px] p-5 sm:p-6"
                   style={{ background: c.tint }}
                 >
-                  <ProductArt
-                    kind={c.kind}
-                    color={hero.variants[0].color}
-                    accent={hero.variants[0].accent}
-                    tint={c.tint}
-                    backdrop={false}
+                  <ProductImage
+                    product={hero}
+                    feather
+                    sizes={big ? "(min-width: 1024px) 40vw, 90vw" : "(min-width: 1024px) 22vw, 45vw"}
                     className={`pointer-events-none absolute transition-transform duration-[1200ms] ease-[var(--ease-out-expo)] group-hover:-translate-y-2 group-hover:scale-[1.04] ${
                       big ? "-bottom-[6%] -right-[6%] aspect-square h-[88%]" : tall ? "-bottom-[4%] -right-[10%] aspect-square w-[108%]" : "-bottom-[8%] -right-[10%] aspect-square h-[58%] sm:-bottom-[10%] sm:-right-[8%] sm:h-[82%]"
                     }`}
@@ -175,13 +175,18 @@ export function HomePersonal() {
         <ForYou />
       </section>
 
-      {/* ── 03 VERIFIED DEALS (ink) ──────────────────────────── */}
+      {/* ── 03 LOOKBOOK ──────────────────────────────────────── */}
+      <section className="shell mt-24 lg:mt-32">
+        <Lookbook index="03" />
+      </section>
+
+      {/* ── 04 VERIFIED DEALS (ink) ──────────────────────────── */}
       <section className="panel-ink relative mt-24 overflow-hidden py-20 lg:mx-3 lg:mt-32 lg:rounded-[36px] lg:py-28">
         <div aria-hidden className="grid-texture-dark pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
         <div className="shell relative">
           <SectionHeader
             tone="dark"
-            index="03"
+            index="04"
             kicker="Honest pricing"
             title={<>Deals you can<br />actually verify.</>}
             description="Every discount is checked against twelve weeks of real prices. If it isn't a genuine low, we simply don't call it a deal."
@@ -197,8 +202,8 @@ export function HomePersonal() {
                   className="group w-[300px] shrink-0 overflow-hidden rounded-[26px] bg-graphite ring-1 ring-graphite-line transition-colors hover:ring-mute-dark sm:w-[340px]"
                 >
                   <div className="relative">
-                    <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="aspect-[4/3] w-full" />
-                    <span className="absolute left-3 top-3 inline-flex h-7 items-center gap-1.5 rounded-full bg-lime px-2.5 text-[11.5px] font-medium text-ink">
+                    <ProductImage product={p} sizes="340px" className="aspect-[4/3] w-full" />
+                    <span className="glint absolute left-3 top-3 inline-flex h-7 items-center gap-1.5 rounded-full bg-lime px-2.5 text-[11.5px] font-medium text-ink">
                       <Icon name="check" size={12} strokeWidth={2.4} /> {ins.label}
                     </span>
                   </div>
@@ -222,10 +227,10 @@ export function HomePersonal() {
         </div>
       </section>
 
-      {/* ── 04 BESTSELLERS ───────────────────────────────────── */}
+      {/* ── 05 BESTSELLERS ───────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
         <SectionHeader
-          index="04"
+          index="05"
           kicker="Social proof, not hype"
           title="What people bought this week."
           description="Ranked by verified purchases in the last seven days — not by who paid for placement."
@@ -240,15 +245,15 @@ export function HomePersonal() {
         </div>
       </section>
 
-      {/* ── 05 COMPARE ───────────────────────────────────────── */}
+      {/* ── 06 COMPARE ───────────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
         <CompareTeaser />
       </section>
 
-      {/* ── 06 SELLERS ───────────────────────────────────────── */}
+      {/* ── 07 SELLERS ───────────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
         <SectionHeader
-          index="06"
+          index="07"
           kicker="Trust, measured"
           title={<>Every seller earns<br />their place.</>}
           description="Identity, inventory, fulfilment and service — four checks before a seller can list, and live scores after."
@@ -305,7 +310,9 @@ export function HomePersonal() {
         </div>
       </section>
 
-      {/* ── 07 BUSINESS BRIDGE ───────────────────────────────── */}
+      <RecentlyViewed className="shell mt-24 lg:mt-32" />
+
+      {/* ── 08 BUSINESS BRIDGE ───────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
         <BusinessBridge />
       </section>
@@ -322,7 +329,7 @@ export function HomePersonal() {
             {pick("premium-copy-paper-a4", "everyday-stoneware-mugs", "trail-bottle-750", "ember-soy-candle").map((p) => (
               <li key={p.id}>
                 <Link href={`/p/${p.slug}`} className="flex items-center gap-3 rounded-2xl bg-white p-2.5 pr-4 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]">
-                  <ProductArt kind={p.kind} color={p.variants[0].color} accent={p.variants[0].accent} tint={p.tint} className="h-14 w-14 shrink-0 rounded-xl" />
+                  <ProductImage product={p} sizes="56px" className="h-14 w-14 shrink-0 rounded-xl" />
                   <span className="min-w-0">
                     <span className="block truncate text-[13.5px] font-medium">{p.name}</span>
                     <span className="mt-0.5 flex items-center gap-1.5 text-[12.5px] text-ink-2">
