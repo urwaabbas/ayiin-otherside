@@ -44,7 +44,18 @@ function alternativeFor(p: Product) {
   return pool[0] ? { product: pool[0], diff: 0, why: "similar, different style" } : null;
 }
 
-export function ClarityCard({ items }: { items: Product[] }) {
+/**
+ * `alternatives` (product id → better option) lets the page supply answers that
+ * don't repeat products shown elsewhere; `null` means none is free to suggest.
+ * Without it, the card works out its own alternative from the full catalogue.
+ */
+function toAlternative(p: Product, product: Product | null) {
+  if (!product) return null;
+  const diff = Math.round(p.price - product.price);
+  return diff > 0 ? { product, diff, why: "" } : { product, diff: 0, why: "similar, different style" };
+}
+
+export function ClarityCard({ items, alternatives }: { items: Product[]; alternatives?: Record<string, Product | null> }) {
   const { fmt } = usePrefs();
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
@@ -54,7 +65,7 @@ export function ClarityCard({ items }: { items: Product[] }) {
   const seller = sellerById(p.sellerId);
   const stock = stockSignal(p);
   const insight = priceInsight(p);
-  const alt = alternativeFor(p);
+  const alt = alternatives ? toAlternative(p, alternatives[p.id] ?? null) : alternativeFor(p);
   const t2 = p.b2b.tiers[1];
 
   useEffect(() => {
@@ -83,6 +94,10 @@ export function ClarityCard({ items }: { items: Product[] }) {
       a: alt ? (
         <Link href={`/p/${alt.product.slug}`} className="link-underline">
           {alt.product.name} — {alt.diff > 0 ? <span className="num">{fmt(alt.diff)} less</span> : alt.why}
+        </Link>
+      ) : alternatives ? (
+        <Link href={`/c/${p.category}`} className="link-underline">
+          Compare similar {p.subcategory.toLowerCase()}
         </Link>
       ) : (
         "This is the top-rated option"

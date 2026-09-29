@@ -3,7 +3,6 @@
 import { clsx } from "clsx";
 import { useMemo, useState } from "react";
 import { useShop } from "@/lib/store";
-import { products } from "@/lib/catalog/products";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
 import { Icon } from "@/components/ui/icon";
@@ -20,7 +19,12 @@ const INTERESTS: { id: string; label: string; match: (p: Product) => boolean }[]
   { id: "travel", label: "Travel", match: (p) => p.useCases.includes("travel") },
 ];
 
-export function ForYou() {
+/**
+ * The page hands For You its own pool of products (none of which appear
+ * elsewhere on the page); interests and "something different" re-rank that
+ * pool, they never pull in products from outside it.
+ */
+export function ForYou({ pool }: { pool: Product[] }) {
   const selected = useShop((s) => s.interests);
   const toggleInterest = useShop((s) => s.toggleInterest);
   const [shuffle, setShuffle] = useState(0);
@@ -31,8 +35,7 @@ export function ForYou() {
   };
 
   const feed = useMemo(() => {
-    const consumer = products.filter((p) => !["supplies", "safety"].includes(p.category) && !["paper", "scanner"].includes(p.kind));
-    const scored = consumer.map((p) => {
+    const scored = pool.map((p) => {
       const hits = INTERESTS.filter((i) => selected.includes(i.id) && i.match(p));
       // Diversity: small deterministic jitter that changes with each "something different" press
       const jitter = ((p.id.charCodeAt(p.id.length - 1) * (shuffle + 3)) % 17) / 10;
@@ -46,10 +49,11 @@ export function ForYou() {
       if ((perCat[s.p.category] ?? 0) >= 2) continue;
       perCat[s.p.category] = (perCat[s.p.category] ?? 0) + 1;
       out.push(s);
-      if (out.length === 8) break;
     }
+    // Top up with anything the diversity cap held back, so the pool is always shown in full.
+    for (const s of scored) if (!out.includes(s)) out.push(s);
     return out;
-  }, [selected, shuffle]);
+  }, [pool, selected, shuffle]);
 
   return (
     <>

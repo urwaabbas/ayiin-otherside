@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
-import { AyiinLockup, AyiinSymbol } from "@/components/brand/logo";
+import { AyiinLogo } from "@/components/brand/ayiin-logo";
 import { Icon } from "@/components/ui/icon";
 import { ModeSwitch } from "@/components/layout/mode-switch";
 import { MegaMenu } from "@/components/layout/mega-menu";
@@ -190,11 +190,11 @@ export function Header() {
               <Icon name="menu" size={22} />
             </button>
 
-            <Link href="/" aria-label="Ayiin home" className="shrink-0">
-              <AyiinLockup
-                tone="ink"
-                lens="ink"
-                className={clsx("transition-[height] duration-500 ease-[var(--ease-out-expo)]", compact ? "h-[22px]" : "h-[22px] lg:h-[27px]")}
+            <Link href="/" aria-label="Ayiin home" className="flex shrink-0 items-center">
+              <AyiinLogo
+                on="light"
+                priority
+                className={clsx("transition-[height] duration-500 ease-[var(--ease-out-expo)]", compact ? "h-8 lg:h-9" : "h-8 lg:h-10")}
               />
             </Link>
 
@@ -565,7 +565,9 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
         )}
       >
         <div className="flex h-[60px] items-center justify-between border-b border-line px-5">
-          <AyiinSymbol tone="ink" lens="ink" tight className="h-6" />
+          <Link href="/" aria-label="Ayiin home" onClick={onClose} className="flex items-center">
+            <AyiinLogo on="light" className="h-8" />
+          </Link>
           <button type="button" aria-label="Close menu" onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft">
             <Icon name="close" size={22} />
           </button>

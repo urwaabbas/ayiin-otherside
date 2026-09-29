@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { AyiinWordmark, AyiinSymbol } from "@/components/brand/logo";
+import { AyiinWordmark } from "@/components/brand/logo";
+import { AyiinLogo } from "@/components/brand/ayiin-logo";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { NewsletterForm } from "@/components/layout/newsletter";
 import type { Mode } from "@/lib/types";
@@ -77,7 +78,9 @@ export function Footer({ mode }: { mode: Mode }) {
         <div className="shell relative pt-16">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_2fr]">
             <div>
-              <AyiinSymbol tone="porcelain" lens="lime" tight className="h-10" />
+              <Link href="/" aria-label="Ayiin home" className="inline-flex items-center">
+                <AyiinLogo on="dark" className="h-12" />
+              </Link>
               <p className="display mt-6 max-w-sm text-[34px] leading-[1.02] text-porcelain">
                 {business ? "Procurement, without the process." : "See more. Doubt less."}
               </p>

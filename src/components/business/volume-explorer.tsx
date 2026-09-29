@@ -4,6 +4,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useState } from "react";
 import { VOLUME_PRODUCTS, priceOffers } from "@/lib/catalog/offers";
+import type { Product } from "@/lib/types";
 import { sellerById } from "@/lib/catalog/sellers";
 import { nextTier, tierSavingPct, unitPrice } from "@/lib/commerce";
 import { ProductImage } from "@/components/product/product-image";
@@ -14,11 +15,11 @@ import { useShop, useUI } from "@/lib/store";
 
 const STOPS = [1, 5, 10, 25, 50, 100, 150, 200, 250, 500, 1000];
 
-export function VolumeExplorer() {
+export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] }) {
   const { fmt } = usePrefs();
   const [pi, setPi] = useState(0);
   const [stop, setStop] = useState(4);
-  const p = VOLUME_PRODUCTS[pi];
+  const p = items[pi];
   const qty = STOPS[stop];
   const unit = unitPrice(p, qty);
   const offers = priceOffers(p, qty);
@@ -30,7 +31,7 @@ export function VolumeExplorer() {
   return (
     <div className="overflow-hidden rounded-[32px] bg-white shadow-[var(--shadow-hair)]">
       <div role="tablist" aria-label="Product" className="scroll-x flex gap-1 border-b border-line p-2">
-        {VOLUME_PRODUCTS.map((vp, i) => (
+        {items.map((vp, i) => (
           <button
             key={vp.id}
             type="button"

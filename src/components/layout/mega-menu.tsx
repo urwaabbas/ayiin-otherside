@@ -5,21 +5,20 @@ import { clsx } from "clsx";
 import { useState } from "react";
 import { categories } from "@/lib/catalog/categories";
 import { productsByCategory } from "@/lib/catalog/products";
-import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
-import { deliveryLabel } from "@/lib/commerce";
+import { priceInsight } from "@/lib/commerce";
 import { SignalDot } from "@/components/ui/signal";
 
 export function MegaMenu({ onClose }: { onClose: () => void }) {
-  const { mode, fmt } = usePrefs();
+  const { mode } = usePrefs();
   const business = mode === "business";
   const ordered = business ? [...categories].sort((a, b) => Number(b.business) - Number(a.business)) : categories;
   const [active, setActive] = useState(ordered[0].slug);
   const cat = categories.find((c) => c.slug === active)!;
   const items = productsByCategory(cat.slug);
-  const featured = [...items].sort((a, b) => b.soldLastWeek - a.soldLastWeek)[0];
   const fastCount = items.filter((p) => p.delivery.max <= 1).length;
+  const dealCount = items.filter((p) => priceInsight(p).verifiedDeal).length;
 
   return (
     <div className="shell grid gap-8 py-8 lg:grid-cols-[260px_1fr_320px]">
@@ -97,29 +96,39 @@ export function MegaMenu({ onClose }: { onClose: () => void }) {
         </div>
       </div>
 
-      {featured && (
-        <Link
-          href={`/p/${featured.slug}`}
-          onClick={onClose}
-          className="group hidden overflow-hidden rounded-3xl bg-white shadow-[var(--shadow-hair)] lg:block"
-        >
-          <ProductImage
-            product={featured}
-            sizes="340px"
-            className="aspect-[4/3.4] w-full transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
-          />
-          <div className="p-5">
-            <p className="eyebrow">Most bought this week</p>
-            <p className="mt-1.5 text-[15px] font-medium leading-snug">{featured.name}</p>
-            <div className="mt-2 flex items-center justify-between text-[13px]">
-              <span className="num font-medium">{fmt(business ? featured.b2b.tiers[featured.b2b.tiers.length - 1].price : featured.price)}{business && <span className="text-mute"> at volume</span>}</span>
-              <span className="inline-flex items-center gap-1.5 text-mute">
-                <SignalDot /> {deliveryLabel(featured)}
-              </span>
+      {/* Category summary. Deliberately product-free: the menu overlays every
+          page, so a featured product here would repeat one already on screen. */}
+      <Link
+        href={`/c/${cat.slug}`}
+        onClick={onClose}
+        className="group relative hidden flex-col justify-between overflow-hidden rounded-3xl p-6 shadow-[var(--shadow-hair)] lg:flex"
+        style={{ background: cat.tint }}
+      >
+        <div>
+          <p className="eyebrow">{business && cat.business ? "Bulk-ready department" : "This department"}</p>
+          <p className="display mt-3 text-[34px] leading-[1.02]">{cat.short}</p>
+        </div>
+        <dl className="mt-8 grid grid-cols-2 gap-x-4 gap-y-5">
+          {[
+            [String(items.length), "edited products"],
+            [String(fastCount), "arrive tomorrow"],
+            [String(dealCount), "verified deals"],
+            [String(cat.subcategories.length), "subcategories"],
+          ].map(([v, l]) => (
+            <div key={l}>
+              <dt className="sr-only">{l}</dt>
+              <dd>
+                <span className="num block text-[28px] font-medium tracking-[-0.03em]">{v}</span>
+                <span className="block text-[12.5px] text-ink-2">{l}</span>
+              </dd>
             </div>
-          </div>
-        </Link>
-      )}
+          ))}
+        </dl>
+        <span className="mt-8 inline-flex items-center gap-2 text-[14px] font-medium">
+          Shop {cat.short.toLowerCase()}
+          <Icon name="arrowRight" size={16} className="transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </Link>
     </div>
   );
 }

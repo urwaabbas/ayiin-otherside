@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { productBySlug, products } from "@/lib/catalog/products";
 import { categories } from "@/lib/catalog/categories";
 import { sellers } from "@/lib/catalog/sellers";
 import { ProductImage } from "@/components/product/product-image";
@@ -19,10 +18,10 @@ import { Lookbook } from "@/components/home/lookbook";
 import { RecentlyViewed } from "@/components/product/recently-viewed";
 import { ProductCard } from "@/components/product/product-card";
 import { priceInsight, deliveryLabel } from "@/lib/commerce";
+import { planPersonalHome } from "@/lib/home-plan";
 import { compact } from "@/lib/format";
 import { readableOn } from "@/lib/color";
-
-const pick = (...slugs: string[]) => slugs.map((s) => productBySlug(s)!).filter(Boolean);
+import { clsx } from "clsx";
 
 export const QUESTIONS = [
   "What should I buy?",
@@ -68,10 +67,8 @@ export function QuestionMarquee({ tone = "light" }: { tone?: "light" | "dark" })
 }
 
 export function HomePersonal() {
-  const clarity = pick("aurel-anc-over-ear", "stride-runner-2", "pour-gooseneck-kettle", "arc-table-lamp");
-  const pill = pick("aurel-anc-over-ear", "arc-table-lamp", "stride-runner-2", "trail-bottle-750", "meridian-automatic-38");
-  const deals = products.filter((p) => priceInsight(p).verifiedDeal).slice(0, 6);
-  const bestsellers = [...products].sort((a, b) => b.soldLastWeek - a.soldLastWeek).filter((p) => !["supplies", "safety", "office"].includes(p.category)).slice(0, 4);
+  // Every product on this page comes from one plan, so none appears twice.
+  const { clarity, pill, alternatives, tiles, forYou, lookbook, deals, bestsellers, compare, bridge, delivery, renderedIds } = planPersonalHome();
 
   return (
     <>
@@ -94,7 +91,7 @@ export function HomePersonal() {
             <AskForm className="mt-8 max-w-[680px] animate-rise [animation-delay:320ms]" />
           </div>
           <div className="animate-rise [animation-delay:260ms] lg:col-span-5 xl:col-span-4">
-            <ClarityCard items={clarity} />
+            <ClarityCard items={clarity} alternatives={alternatives} />
           </div>
         </div>
 
@@ -131,8 +128,7 @@ export function HomePersonal() {
         />
         <div className="mt-12 grid auto-rows-[180px] grid-cols-2 gap-3 sm:auto-rows-[220px] lg:grid-cols-4 lg:gap-4">
           {categories.map((c, n) => {
-            const items = products.filter((p) => p.category === c.slug);
-            const hero = items[0];
+            const hero = tiles[c.slug];
             const big = n === 0;
             const tall = n === 3;
             return (
@@ -142,14 +138,14 @@ export function HomePersonal() {
                   className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[26px] p-5 sm:p-6"
                   style={{ background: c.tint }}
                 >
-                  <ProductImage
+                  {hero && <ProductImage
                     product={hero}
                     feather
                     sizes={big ? "(min-width: 1024px) 40vw, 90vw" : "(min-width: 1024px) 22vw, 45vw"}
                     className={`pointer-events-none absolute transition-transform duration-[1200ms] ease-[var(--ease-out-expo)] group-hover:-translate-y-2 group-hover:scale-[1.04] ${
                       big ? "-bottom-[6%] -right-[6%] aspect-square h-[88%]" : tall ? "-bottom-[4%] -right-[10%] aspect-square w-[108%]" : "-bottom-[8%] -right-[10%] aspect-square h-[58%] sm:-bottom-[10%] sm:-right-[8%] sm:h-[82%]"
                     }`}
-                  />
+                  />}
                   <div className="relative">
                     <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink/60">{String(n + 1).padStart(2, "0")}</span>
                     <h3 className={`display mt-2 ${big ? "text-[40px] sm:text-[64px]" : "text-[20px] sm:max-w-[62%] sm:text-[30px] lg:max-w-[58%]"} ${tall ? "sm:!max-w-full" : ""}`}>{c.name}</h3>
@@ -171,17 +167,21 @@ export function HomePersonal() {
       </section>
 
       {/* ── 02 FOR YOU ───────────────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
-        <ForYou />
-      </section>
+      {forYou.length > 0 && (
+        <section className="shell mt-24 lg:mt-32">
+          <ForYou pool={forYou} />
+        </section>
+      )}
 
       {/* ── 03 LOOKBOOK ──────────────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
-        <Lookbook index="03" />
-      </section>
+      {lookbook.length > 0 && (
+        <section className="shell mt-24 lg:mt-32">
+          <Lookbook index="03" items={lookbook} />
+        </section>
+      )}
 
       {/* ── 04 VERIFIED DEALS (ink) ──────────────────────────── */}
-      <section className="panel-ink relative mt-24 overflow-hidden py-20 lg:mx-3 lg:mt-32 lg:rounded-[36px] lg:py-28">
+      {deals.length > 0 && <section className="panel-ink relative mt-24 overflow-hidden py-20 lg:mx-3 lg:mt-32 lg:rounded-[36px] lg:py-28">
         <div aria-hidden className="grid-texture-dark pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
         <div className="shell relative">
           <SectionHeader
@@ -225,10 +225,10 @@ export function HomePersonal() {
             })}
           </div>
         </div>
-      </section>
+      </section>}
 
       {/* ── 05 BESTSELLERS ───────────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
+      {bestsellers.length > 0 && <section className="shell mt-24 lg:mt-32">
         <SectionHeader
           index="05"
           kicker="Social proof, not hype"
@@ -236,19 +236,21 @@ export function HomePersonal() {
           description="Ranked by verified purchases in the last seven days — not by who paid for placement."
           action={{ href: "/search?sort=popular", label: "See the full chart" }}
         />
-        <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
+        <div className={clsx("mt-12 grid grid-cols-2 gap-x-4 gap-y-10", bestsellers.length >= 4 ? "lg:grid-cols-4" : "lg:max-w-[calc(50%-8px)]")}>
           {bestsellers.map((p, n) => (
             <Reveal key={p.id} delay={n * 80}>
               <ProductCard product={p} rank={n + 1} reason={`${compact(p.soldLastWeek)} bought this week`} />
             </Reveal>
           ))}
         </div>
-      </section>
+      </section>}
 
       {/* ── 06 COMPARE ───────────────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
-        <CompareTeaser />
-      </section>
+      {compare.length > 1 && (
+        <section className="shell mt-24 lg:mt-32">
+          <CompareTeaser items={compare} />
+        </section>
+      )}
 
       {/* ── 07 SELLERS ───────────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
@@ -310,15 +312,17 @@ export function HomePersonal() {
         </div>
       </section>
 
-      <RecentlyViewed className="shell mt-24 lg:mt-32" />
+      <RecentlyViewed exclude={renderedIds} className="shell mt-24 lg:mt-32" />
 
       {/* ── 08 BUSINESS BRIDGE ───────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
-        <BusinessBridge />
-      </section>
+      {bridge && (
+        <section className="shell mt-24 lg:mt-32">
+          <BusinessBridge product={bridge} />
+        </section>
+      )}
 
       {/* ── Last word: delivery promise ──────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
+      {delivery.length > 0 && <section className="shell mt-24 lg:mt-32">
         <div className="grid items-end gap-8 lg:grid-cols-2">
           <h2 className="display text-[44px] sm:text-[64px]">
             Order by 5pm.
@@ -326,7 +330,7 @@ export function HomePersonal() {
             <span className="text-mute">Know the day it lands.</span>
           </h2>
           <ul className="grid gap-3 sm:grid-cols-2">
-            {pick("premium-copy-paper-a4", "everyday-stoneware-mugs", "trail-bottle-750", "ember-soy-candle").map((p) => (
+            {delivery.map((p) => (
               <li key={p.id}>
                 <Link href={`/p/${p.slug}`} className="flex items-center gap-3 rounded-2xl bg-white p-2.5 pr-4 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]">
                   <ProductImage product={p} sizes="56px" className="h-14 w-14 shrink-0 rounded-xl" />
@@ -341,7 +345,7 @@ export function HomePersonal() {
             ))}
           </ul>
         </div>
-      </section>
+      </section>}
     </>
   );
 }

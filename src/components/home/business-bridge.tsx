@@ -4,11 +4,10 @@ import Link from "next/link";
 import { usePrefs } from "@/components/providers";
 import { Icon } from "@/components/ui/icon";
 import { Eyebrow } from "@/components/ui/signal";
-import { productBySlug } from "@/lib/catalog/products";
+import type { Product } from "@/lib/types";
 
-export function BusinessBridge() {
+export function BusinessBridge({ product: gloves }: { product: Product }) {
   const { setMode, fmt } = usePrefs();
-  const gloves = productBySlug("nitrile-gloves-4mil")!;
   const max = gloves.b2b.tiers[0].price;
   return (
     <div className="relative overflow-hidden rounded-[36px] bg-blue-soft">

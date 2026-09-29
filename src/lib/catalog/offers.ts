@@ -51,6 +51,7 @@ export function priceOffers(p: Product, qty: number) {
     .sort((a, b) => Number(b.eligible) - Number(a.eligible) || a.total - b.total);
 }
 
-export const VOLUME_PRODUCTS = ["nitrile-gloves-4mil", "premium-copy-paper-a4", "double-wall-cartons-12x10x8", "ergo-task-chair-pro"].map(
+export const VOLUME_PRODUCT_SLUGS = ["nitrile-gloves-4mil", "premium-copy-paper-a4", "double-wall-cartons-12x10x8", "ergo-task-chair-pro"];
+export const VOLUME_PRODUCTS = VOLUME_PRODUCT_SLUGS.map(
   (s) => productBySlug(s)!,
 );

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { clsx } from "clsx";
 import { useState } from "react";
-import { productBySlug } from "@/lib/catalog/products";
+import type { Product } from "@/lib/types";
 import { ProductImage } from "@/components/product/product-image";
 import { SectionHeader } from "@/components/ui/section";
 import { Icon } from "@/components/ui/icon";
@@ -12,10 +12,10 @@ import { deliveryLabel } from "@/lib/commerce";
 
 type Row = { label: string; values: (string | number)[]; best?: number; format?: "money" };
 
-export function CompareTeaser() {
+/** `items` are the three products the spec rows below describe (see COMPARE_SLUGS). */
+export function CompareTeaser({ items }: { items: Product[] }) {
   const { fmt } = usePrefs();
   const [diffOnly, setDiffOnly] = useState(true);
-  const items = [productBySlug("aurel-anc-over-ear")!, productBySlug("aurel-buds-pro")!, productBySlug("halo-speaker-mini")!];
   const rows: Row[] = [
     { label: "Price", values: items.map((p) => p.price), best: 2, format: "money" },
     { label: "Noise cancelling", values: ["Adaptive, −38 dB", "Adaptive", "—"], best: 0 },

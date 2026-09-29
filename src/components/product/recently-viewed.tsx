@@ -9,11 +9,16 @@ import { Price } from "@/components/ui/money";
 import { useHydrated, useShop } from "@/lib/store";
 import { deliveryLabel } from "@/lib/commerce";
 
-/** "Pick up where you left off" — the last products this device looked at. Renders nothing until there is history. */
-export function RecentlyViewed({ exclude, index, className }: { exclude?: string; index?: string; className?: string }) {
+/**
+ * "Pick up where you left off" — the last products this device looked at.
+ * `exclude` takes the product ids already on the page, so nothing repeats.
+ * Renders nothing until there are at least two to show.
+ */
+export function RecentlyViewed({ exclude, index, className }: { exclude?: string | readonly string[]; index?: string; className?: string }) {
   const hydrated = useHydrated();
   const recent = useShop((s) => s.recent);
-  const items = hydrated ? (recent.filter((id) => id !== exclude).map(productById).filter(Boolean).slice(0, 8) as Product[]) : [];
+  const skip = new Set(typeof exclude === "string" ? [exclude] : exclude);
+  const items = hydrated ? (recent.filter((id) => !skip.has(id)).map(productById).filter(Boolean).slice(0, 8) as Product[]) : [];
   if (items.length < 2) return null;
   return (
     <section aria-labelledby="recent-h" className={className}>

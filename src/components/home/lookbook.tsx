@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { clsx } from "clsx";
-import { productBySlug } from "@/lib/catalog/products";
+import type { Product } from "@/lib/types";
 import { ProductImage } from "@/components/product/product-image";
 import { SectionHeader } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { Price } from "@/components/ui/money";
 import { Icon } from "@/components/ui/icon";
 
-const SCENES = ["aurel-anc-over-ear", "pour-gooseneck-kettle", "stoneware-bud-vases", "night-recovery-oil", "meridian-automatic-38"];
-
-/** Editorial lookbook: every product photographed in the same window-lit room. */
-export function Lookbook({ index = "03" }: { index?: string }) {
-  const items = SCENES.map((s) => productBySlug(s)!).filter(Boolean);
+/**
+ * Editorial lookbook: every product photographed in the same window-lit room.
+ * Lays out 3–5 scenes: one large scene, with the rest sharing the other half.
+ */
+export function Lookbook({ index = "03", items }: { index?: string; items: Product[] }) {
+  const rest = items.length - 1;
   return (
     <>
       <SectionHeader
@@ -25,7 +26,11 @@ export function Lookbook({ index = "03" }: { index?: string }) {
         {items.map((p, n) => {
           const big = n === 0;
           return (
-            <Reveal key={p.id} delay={n * 70} className={clsx(big && "col-span-2 row-span-2")}>
+            <Reveal
+              key={p.id}
+              delay={n * 70}
+              className={clsx(big && "col-span-2 row-span-2", !big && rest === 2 && "lg:col-span-2", !big && rest === 3 && n === 3 && "col-span-2")}
+            >
               <Link href={`/p/${p.slug}`} className="group relative block h-full overflow-hidden rounded-[26px]" aria-label={`${p.name} — shop the scene`}>
                 <ProductImage
                   product={p}

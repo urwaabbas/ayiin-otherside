@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { productBySlug, products } from "@/lib/catalog/products";
 import { categories } from "@/lib/catalog/categories";
 import { sellerById } from "@/lib/catalog/sellers";
 import { approvals, company, rfqResponses } from "@/lib/business";
@@ -17,13 +16,12 @@ import { VolumeExplorer } from "@/components/business/volume-explorer";
 import { ReorderLists } from "@/components/business/reorder-lists";
 import { ApprovalQueue } from "@/components/business/approval-queue";
 
-const pick = (...slugs: string[]) => slugs.map((s) => productBySlug(s)!);
+import { planBusinessHome } from "@/lib/home-plan";
 
 export function HomeBusiness() {
-  const pill = pick("double-wall-cartons-12x10x8", "ergo-task-chair-pro", "nitrile-gloves-4mil", "premium-copy-paper-a4", "kova-book-14-air");
-  const bulk = products.filter((p) => p.tags.includes("bulk")).sort((a, b) => b.soldLastWeek - a.soldLastWeek).slice(0, 8);
+  // Every product on this page comes from one plan, so none appears twice.
+  const { pill, volume, rfq: gloves, tiles, bulk } = planBusinessHome();
   const available = company.creditLimit - company.creditUsed;
-  const gloves = productBySlug("nitrile-gloves-4mil")!;
 
   return (
     <>
@@ -131,7 +129,7 @@ export function HomeBusiness() {
           action={{ href: "/business?tab=lists", label: "All lists" }}
         />
         <div className="mt-12">
-          <ReorderLists />
+          <ReorderLists thumbnails={false} />
         </div>
       </section>
 
@@ -144,7 +142,7 @@ export function HomeBusiness() {
           description="Slide to your quantity. See the unit price at each tier and the landed cost from every verified supplier stocking the item — lead time and reliability included."
         />
         <div className="mt-12">
-          <VolumeExplorer />
+          <VolumeExplorer items={volume} />
         </div>
       </section>
 
@@ -185,7 +183,7 @@ export function HomeBusiness() {
                 <p className="mt-2 text-[18px] font-medium tracking-[-0.02em]">200 boxes · Nitrile gloves 4 mil, size M/L</p>
                 <p className="text-[13px] text-mute">Target $9.75/box · Deliver by Oct 6 · Reno, NV</p>
               </div>
-              <ProductImage product={gloves} sizes="64px" className="hidden h-16 w-16 rounded-2xl sm:block" />
+              {gloves && <ProductImage product={gloves} sizes="64px" className="hidden h-16 w-16 rounded-2xl sm:block" />}
             </div>
             <ul className="mt-6 space-y-2.5">
               {rfqResponses.map((r, i) => {
@@ -261,15 +259,19 @@ export function HomeBusiness() {
           {categories
             .filter((c) => c.business)
             .map((c, n) => {
-              const hero = products.find((p) => p.category === c.slug && p.kind === c.kind) ?? products.find((p) => p.category === c.slug)!;
+              const hero = tiles[c.slug];
               return (
                 <Reveal key={c.slug} delay={n * 60}>
                   <Link href={`/c/${c.slug}`} className="group block overflow-hidden rounded-[24px]" style={{ background: c.tint }}>
-                    <ProductImage
-                      product={hero}
-                      sizes="(min-width: 1024px) 20vw, 50vw"
-                      className="aspect-square w-full transition-transform duration-[1000ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
-                    />
+                    {hero ? (
+                      <ProductImage
+                        product={hero}
+                        sizes="(min-width: 1024px) 20vw, 50vw"
+                        className="aspect-square w-full transition-transform duration-[1000ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
+                      />
+                    ) : (
+                      <div aria-hidden className="aspect-square w-full" />
+                    )}
                     <div className="flex items-center justify-between p-4">
                       <span className="text-[15px] font-medium">{c.name}</span>
                       <Icon name="arrowUpRight" size={16} />
@@ -282,7 +284,7 @@ export function HomeBusiness() {
       </section>
 
       {/* ── 06 BULK BESTSELLERS ──────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
+      {bulk.length > 0 && <section className="shell mt-24 lg:mt-32">
         <SectionHeader
           index="06"
           kicker="What companies restock most"
@@ -296,7 +298,7 @@ export function HomeBusiness() {
             </Reveal>
           ))}
         </div>
-      </section>
+      </section>}
     </>
   );
 }
