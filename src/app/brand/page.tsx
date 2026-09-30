@@ -32,7 +32,7 @@ const COLORS: { name: string; hex: string; role: string; share: number; ink: boo
 function Tile({ label, children, dark, className }: { label: string; children: React.ReactNode; dark?: boolean; className?: string }) {
   return (
     <figure className={`flex flex-col overflow-hidden rounded-[26px] ${dark ? "bg-ink" : "bg-white shadow-[var(--shadow-hair)]"} ${className ?? ""}`}>
-      <div className="grid flex-1 place-items-center p-10">{children}</div>
+      <div className="grid flex-1 place-items-center p-10 short:p-[clamp(14px,3vh,40px)]">{children}</div>
       <figcaption className={`border-t px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] ${dark ? "border-graphite-line text-mute-dark" : "border-line text-mute"}`}>{label}</figcaption>
     </figure>
   );
@@ -46,9 +46,9 @@ export default function BrandPage() {
       {/* Hero */}
       <section className="shell pt-6 lg:pt-10">
         <Eyebrow index="Brand">Intelligent Commerce · Identity system v2.0</Eyebrow>
-        <div className="mt-8 grid items-end gap-10 lg:grid-cols-[1fr_1.1fr]">
+        <div className="mt-8 grid items-end gap-10 lg:grid-cols-[1fr_1.1fr] short:mt-[clamp(12px,2.4vh,32px)]">
           <div>
-            <h1 className="display text-[64px] sm:text-[112px]">Sunlit A.</h1>
+            <h1 className="display text-[64px] sm:text-[112px] short:text-[clamp(56px,11vh,112px)]">Sunlit A.</h1>
             <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-ink-2">
               A bold, forward-leaning <em>A</em> in a warm orange-to-yellow gradient, followed by charcoal lettering whose two i&apos;s carry the same sunlit dots. The gradient is where the whole palette comes from; the charcoal sets every neutral.
             </p>
@@ -60,7 +60,7 @@ export default function BrandPage() {
               ))}
             </div>
           </div>
-          <div className="panel-ink relative grid aspect-[4/3] place-items-center overflow-hidden rounded-[36px] bg-graphite">
+          <div className="panel-ink relative grid aspect-[4/3] place-items-center overflow-hidden rounded-[36px] bg-graphite short:aspect-auto short:h-[clamp(240px,calc(100svh-var(--hdr)-150px),520px)]">
             <div aria-hidden className="grid-texture-dark absolute inset-0" />
             <AyiinLogo on="dark" className="relative h-[34%]" />
           </div>
@@ -93,8 +93,8 @@ export default function BrandPage() {
       {/* Logo system */}
       <section className="shell mt-24">
         <Eyebrow index="02">Logo system</Eyebrow>
-        <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[52px]">One logo, every surface.</h2>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[clamp(36px,6.4vh,52px)]">One logo, every surface.</h2>
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 short:mt-[clamp(14px,3vh,40px)]">
           <Tile label="1 · Logo — for light surfaces" className="lg:col-span-2">
             <AyiinLogo on="light" className="h-20" />
           </Tile>
@@ -135,7 +135,7 @@ export default function BrandPage() {
       <section className="shell mt-24 grid gap-8 lg:grid-cols-2">
         <div>
           <Eyebrow index="03">On dark</Eyebrow>
-          <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[52px]">Same warmth, after dark.</h2>
+          <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[clamp(36px,6.4vh,52px)]">Same warmth, after dark.</h2>
           <p className="mt-5 max-w-lg text-[16px] leading-relaxed text-ink-2">
             On graphite the lettering turns near-white and the gradient stays exactly as it is — the footer, business panels and dark sections are the same brand, not a second one.
           </p>
@@ -150,9 +150,9 @@ export default function BrandPage() {
       {/* Color */}
       <section className="shell mt-24">
         <Eyebrow index="04">Colour</Eyebrow>
-        <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[52px]">Midnight and sunlight.</h2>
+        <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[clamp(36px,6.4vh,52px)]">Midnight and sunlight.</h2>
         <p className="mt-4 max-w-xl text-[16px] text-mute">Built against the logo: its sunlit amber sits on midnight navy, its exact opposite on the colour wheel, so the brand glows. Clean whites carry the products; amber marks what matters.</p>
-        <div className="mt-8 flex h-4 overflow-hidden rounded-full shadow-[var(--shadow-hair)]" aria-label="Usage ratio: 55% cloud, 20% white, 20% navy, 5% amber">
+        <div className="mt-8 short:mt-[clamp(12px,2.4vh,32px)] flex h-4 overflow-hidden rounded-full shadow-[var(--shadow-hair)]" aria-label="Usage ratio: 55% cloud, 20% white, 20% navy, 5% amber">
           {COLORS.filter((c) => c.share).map((c) => (
             <span key={c.name} style={{ background: c.hex, width: `${c.share}%` }} title={`${c.name} ${c.share}%`} />
           ))}
@@ -162,10 +162,10 @@ export default function BrandPage() {
           <span>20% white</span>
           <span>20% navy · 5% amber</span>
         </div>
-        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 short:mt-[clamp(12px,2.4vh,32px)]">
           {COLORS.map((c) => (
             <div key={c.name} className="overflow-hidden rounded-[22px] bg-white shadow-[var(--shadow-hair)]">
-              <div className="flex h-32 items-end p-4 short:h-20" style={{ background: c.fill ?? c.hex, color: c.ink ? C.ink : C.porcelain }}>
+              <div className="flex h-32 items-end p-4 short:h-[clamp(44px,8vh,80px)] short:p-3" style={{ background: c.fill ?? c.hex, color: c.ink ? C.ink : C.porcelain }}>
                 <span className="num text-[13px]">{c.hex}</span>
               </div>
               <div className="p-4">
@@ -181,18 +181,18 @@ export default function BrandPage() {
       <section className="shell mt-24">
         <Eyebrow index="05">Typography</Eyebrow>
         <div className="mt-6 grid gap-4 lg:grid-cols-3">
-          <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)] lg:col-span-2">
+          <div className="rounded-[26px] bg-white p-7 short:p-[clamp(14px,2.6vh,28px)] shadow-[var(--shadow-hair)] lg:col-span-2">
             <p className="eyebrow">Display · Funnel Display 400, −4.5% tracking</p>
             <p className="display mt-4 text-[64px] sm:text-[96px]">Doubt less.</p>
             <p className="display mt-2 text-[36px] text-mute">Editorial scale. Weight through size, not bold.</p>
           </div>
           <div className="grid gap-4">
-            <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
+            <div className="rounded-[26px] bg-white p-7 short:p-[clamp(14px,2.6vh,28px)] shadow-[var(--shadow-hair)]">
               <p className="eyebrow">Interface · Geist</p>
               <p className="mt-3 text-[22px] font-medium tracking-[-0.02em]">Aurel ANC Over-Ear Headphones</p>
               <p className="mt-1 text-[14px] text-mute">Readable product titles, calm metadata.</p>
             </div>
-            <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
+            <div className="rounded-[26px] bg-white p-7 short:p-[clamp(14px,2.6vh,28px)] shadow-[var(--shadow-hair)]">
               <p className="eyebrow">Data · Geist Mono, tabular</p>
               <p className="num mt-3 text-[22px]">$1,249.00 · 99.1% · AY-KOV-1028</p>
               <p className="mt-1 text-[14px] text-mute">Prices, SKUs and scores line up.</p>
@@ -204,18 +204,18 @@ export default function BrandPage() {
       {/* Signature elements */}
       <section className="shell mt-24">
         <Eyebrow index="06">Signature elements</Eyebrow>
-        <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[52px]">Recognisable without the logo.</h2>
-        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
+        <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[clamp(36px,6.4vh,52px)]">Recognisable without the logo.</h2>
+        <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3 short:mt-[clamp(14px,3vh,40px)]">
+          <div className="rounded-[26px] bg-white p-7 short:p-[clamp(14px,2.6vh,28px)] shadow-[var(--shadow-hair)]">
             <p className="eyebrow">The signal dot</p>
             <p className="mt-5 flex items-center gap-2.5 text-[15px]">
               <SignalDot live /> Arrives tomorrow · 214 in stock
             </p>
             <p className="mt-4 text-[13.5px] text-mute">A ringed amber point marks anything live and verified: delivery, deals, trust.</p>
           </div>
-          <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
+          <div className="rounded-[26px] bg-white p-7 short:p-[clamp(14px,2.6vh,28px)] shadow-[var(--shadow-hair)]">
             <p className="eyebrow">Inline image capsules</p>
-            <p className="display mt-4 text-[48px]">
+            <p className="display mt-4 text-[48px] short:mt-2 short:text-[clamp(32px,5.5vh,48px)]">
               See{" "}
               <span className="relative inline-block h-[0.74em] w-[1.42em] overflow-hidden rounded-full align-[-0.02em]">
                 <ProductImage product={hp} sizes="96px" zoom={1.35} className="absolute inset-0 h-full w-full" />
@@ -224,14 +224,14 @@ export default function BrandPage() {
             </p>
             <p className="mt-4 text-[13.5px] text-mute">Product imagery set into display type — editorial, never decorative.</p>
           </div>
-          <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
+          <div className="rounded-[26px] bg-white p-7 short:p-[clamp(14px,2.6vh,28px)] shadow-[var(--shadow-hair)]">
             <p className="eyebrow">Numbered chapters</p>
             <div className="mt-5">
               <Eyebrow index="03">Honest pricing</Eyebrow>
             </div>
             <p className="mt-4 text-[13.5px] text-mute">Every section is a chapter with an index. The page reads like a well-made magazine.</p>
           </div>
-          <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
+          <div className="rounded-[26px] bg-white p-7 short:p-[clamp(14px,2.6vh,28px)] shadow-[var(--shadow-hair)]">
             <p className="eyebrow">Clarity rows</p>
             <dl className="mt-4 divide-y divide-line border-y border-line text-[13.5px]">
               {[
@@ -246,12 +246,12 @@ export default function BrandPage() {
               ))}
             </dl>
           </div>
-          <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
+          <div className="rounded-[26px] bg-white p-7 short:p-[clamp(14px,2.6vh,28px)] shadow-[var(--shadow-hair)]">
             <p className="eyebrow">Studio renders</p>
-            <ProductImage product={runner} view="scene" sizes="(min-width: 1024px) 400px, 90vw" className="mt-4 aspect-[16/9] w-full rounded-2xl" />
+            <ProductImage product={runner} view="scene" sizes="(min-width: 1024px) 400px, 90vw" className="mt-4 aspect-[16/9] w-full rounded-2xl short:aspect-auto short:h-[clamp(56px,calc(100vh-560px),180px)] short:mt-2" />
             <p className="mt-4 text-[13.5px] text-mute">One softbox, one window, one sweep. Every product, every seller, photographed on the same honest stage.</p>
           </div>
-          <div className="panel-ink rounded-[26px] p-7">
+          <div className="panel-ink rounded-[26px] p-7 short:p-[clamp(14px,2.6vh,28px)]">
             <p className="eyebrow !text-mute-dark">Motion</p>
             <ul className="mt-4 space-y-2 font-mono text-[12px] text-mute-dark">
               <li><span className="text-porcelain">ease-out-expo</span> · cubic-bezier(.16,1,.3,1)</li>

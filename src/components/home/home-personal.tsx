@@ -74,22 +74,22 @@ export function HomePersonal() {
     <>
       {/* ── HERO — a midnight band, so the amber logo and CTAs glow ── */}
       <div className="surface-night">
-      <section className="shell pt-6 sm:pt-10 lg:pt-12 short:pt-8">
+      <section className="shell pt-6 sm:pt-10 lg:pt-[clamp(20px,4vh,48px)]">
         <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7 xl:col-span-8 short:col-span-7">
             <Eyebrow index="Ayiin" className="animate-fade">
               Intelligent commerce<span className="hidden sm:inline"> · 2.4M products · 18,400 verified sellers</span>
             </Eyebrow>
-            <h1 className="display mt-6 text-[clamp(58px,9.4vw,142px)] text-balance short:mt-5 short:text-[clamp(58px,14.5vh,128px)]">
+            <h1 className="display mt-6 text-[clamp(58px,9.4vw,142px)] text-balance lg:mt-[clamp(12px,2.4vh,24px)] lg:text-[clamp(56px,min(9.4vw,15vh),142px)]">
               <span className="block animate-rise">
                 See more. <InlinePill items={pill} />
               </span>{" "}
               <span className="block animate-rise [animation-delay:120ms]">Doubt <span className="text-brand-gradient">less.</span></span>
             </h1>
-            <p className="mt-7 max-w-[560px] animate-rise text-[17px] leading-relaxed text-ink-2 [animation-delay:220ms] sm:text-[19px] short:mt-5 short:text-[17px]">
+            <p className="mt-7 max-w-[560px] animate-rise text-[17px] leading-relaxed text-ink-2 [animation-delay:220ms] sm:text-[19px] lg:mt-[clamp(12px,2.8vh,28px)] lg:text-[clamp(16px,2.1vh,19px)]">
               Every product on Ayiin answers the questions that matter — real price history, an exact delivery date, the seller&apos;s record, and whether there&apos;s a better option — before you have to ask.
             </p>
-            <AskForm className="mt-8 max-w-[680px] animate-rise [animation-delay:320ms] short:mt-6" />
+            <AskForm className="mt-8 max-w-[680px] animate-rise [animation-delay:320ms] lg:mt-[clamp(14px,3.2vh,32px)]" />
           </div>
           <div className="surface-day animate-rise [animation-delay:260ms] lg:col-span-5 xl:col-span-4 short:col-span-5">
             <ClarityCard items={clarity} alternatives={alternatives} />
@@ -131,7 +131,7 @@ export function HomePersonal() {
           description="Eight edited departments, each with a buying guide that tells you what actually matters — and what doesn't."
           action={{ href: "/search", label: "Browse everything" }}
         />
-        <div className="mt-12 grid auto-rows-[180px] grid-cols-2 gap-3 sm:auto-rows-[220px] lg:grid-cols-4 lg:gap-4 short:mt-8 short:auto-rows-[clamp(130px,calc((100vh-330px)/3),220px)]">
+        <div className="mt-12 grid auto-rows-[180px] grid-cols-2 gap-3 sm:auto-rows-[220px] lg:grid-cols-4 lg:gap-4 short:mt-[clamp(16px,3.4vh,32px)] short:auto-rows-[clamp(96px,calc((100vh-300px)/3),220px)]">
           {categories.map((c, n) => {
             const hero = tiles[c.slug];
             const big = n === 0;
@@ -140,7 +140,7 @@ export function HomePersonal() {
               <Reveal key={c.slug} delay={n * 60} className={big ? "col-span-2 row-span-2" : n === 3 ? "row-span-2" : ""}>
                 <Link
                   href={`/c/${c.slug}`}
-                  className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[26px] p-5 sm:p-6 short:p-4"
+                  className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[26px] p-5 sm:p-6 short:p-[clamp(12px,2vh,16px)]"
                   style={{ background: c.tint }}
                 >
                   {hero && <ProductImage
@@ -153,7 +153,7 @@ export function HomePersonal() {
                   />}
                   <div className="relative short:z-10">
                     <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink/60">{String(n + 1).padStart(2, "0")}</span>
-                    <h3 className={`display mt-2 ${big ? "text-[40px] sm:text-[64px] short:text-[52px]" : "text-[20px] sm:max-w-[62%] sm:text-[30px] lg:max-w-[58%] short:text-[24px]"} ${tall ? "sm:!max-w-full" : ""}`}>{c.name}</h3>
+                    <h3 className={`display mt-2 ${big ? "text-[40px] sm:text-[64px] short:text-[clamp(36px,7vh,52px)]" : "text-[20px] sm:max-w-[62%] sm:text-[30px] lg:max-w-[58%] short:text-[clamp(18px,3.4vh,24px)]"} ${tall ? "sm:!max-w-full" : ""}`}>{c.name}</h3>
                     {big && <p className="mt-3 max-w-[300px] text-[15px] text-ink-2">{c.blurb}</p>}
                   </div>
                   <div className="relative flex items-center gap-2 text-[12.5px] text-ink-2">
@@ -186,7 +186,7 @@ export function HomePersonal() {
       )}
 
       {/* ── 04 VERIFIED DEALS (ink) ──────────────────────────── */}
-      {deals.length > 0 && <section className="panel-ink relative mt-24 overflow-hidden py-20 lg:mx-3 lg:mt-32 lg:rounded-[36px] lg:py-28 short:py-10">
+      {deals.length > 0 && <section className="panel-ink relative mt-24 overflow-hidden py-20 lg:mx-3 lg:mt-32 lg:rounded-[36px] lg:py-28 short:py-[clamp(24px,5vh,40px)]">
         <div aria-hidden className="grid-texture-dark pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
         <div className="shell relative">
           <SectionHeader
@@ -197,7 +197,7 @@ export function HomePersonal() {
             description="Every discount is checked against twelve weeks of real prices. If it isn't a genuine low, we simply don't call it a deal."
             action={{ href: "/search?deal=1", label: "All verified deals" }}
           />
-          <div className="scroll-x -mx-[var(--gutter)] mt-12 flex gap-4 px-[var(--gutter)] pb-2 short:mt-8">
+          <div className="scroll-x -mx-[var(--gutter)] mt-12 flex gap-4 px-[var(--gutter)] pb-2 short:mt-[clamp(16px,3.4vh,32px)]">
             {deals.map((p) => {
               const ins = priceInsight(p);
               return (
@@ -207,7 +207,7 @@ export function HomePersonal() {
                   className="group w-[300px] shrink-0 overflow-hidden rounded-[26px] bg-graphite ring-1 ring-graphite-line transition-colors hover:ring-mute-dark sm:w-[340px]"
                 >
                   <div className="relative">
-                    <ProductImage product={p} sizes="340px" className="aspect-[4/3] w-full short:aspect-[2/1]" />
+                    <ProductImage product={p} sizes="340px" className="aspect-[4/3] w-full short:aspect-auto short:h-[clamp(110px,calc(100vh-510px),170px)]" />
                     <span className="glint absolute left-3 top-3 inline-flex h-7 items-center gap-1.5 rounded-full bg-brand px-2.5 text-[11.5px] font-medium text-ink">
                       <Icon name="check" size={12} strokeWidth={2.4} /> {ins.label}
                     </span>
@@ -241,7 +241,7 @@ export function HomePersonal() {
           description="Ranked by verified purchases in the last seven days — not by who paid for placement."
           action={{ href: "/search?sort=popular", label: "See the full chart" }}
         />
-        <div className={clsx("mt-12 grid grid-cols-2 gap-x-4 gap-y-10 short:mt-8", bestsellers.length >= 4 ? "lg:grid-cols-4" : "lg:max-w-[calc(50%-8px)]")}>
+        <div className={clsx("mt-12 grid grid-cols-2 gap-x-4 gap-y-10 short:mt-[clamp(16px,3.4vh,32px)]", bestsellers.length >= 4 ? "lg:grid-cols-4" : "lg:max-w-[calc(50%-8px)]")}>
           {bestsellers.map((p, n) => (
             <Reveal key={p.id} delay={n * 80}>
               <ProductCard product={p} rank={n + 1} reason={`${compact(p.soldLastWeek)} bought this week`} frame={RAIL_FRAME} />
@@ -265,10 +265,10 @@ export function HomePersonal() {
           title={<>Every seller earns<br />their place.</>}
           description="Identity, inventory, fulfilment and service — four checks before a seller can list, and live scores after."
         />
-        <div className="mt-12 grid gap-4 lg:grid-cols-[1fr_2fr]">
-          <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
+        <div className="mt-12 grid gap-4 lg:grid-cols-[1fr_2fr] short:mt-[clamp(16px,3.4vh,32px)]">
+          <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)] short:p-[clamp(16px,3vh,28px)]">
             <p className="eyebrow">The Ayiin Verified check</p>
-            <ol className="mt-5 space-y-5">
+            <ol className="mt-5 space-y-5 short:mt-[clamp(10px,2vh,20px)] short:space-y-[clamp(10px,2vh,20px)]">
               {[
                 ["Identity", "Business registration, ownership and bank details verified."],
                 ["Inventory", "Stock levels synced live — no phantom listings."],
@@ -287,7 +287,7 @@ export function HomePersonal() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {sellers.filter((s) => !s.business || s.id === "northform" || s.id === "atelier-mesa").slice(0, 4).map((s) => (
-              <div key={s.id} className="flex flex-col justify-between rounded-[26px] bg-white p-6 shadow-[var(--shadow-hair)]">
+              <div key={s.id} className="flex flex-col justify-between rounded-[26px] bg-white p-6 short:p-[clamp(16px,3vh,24px)] shadow-[var(--shadow-hair)]">
                 <div className="flex items-center gap-3">
                   <span className="num grid h-11 w-11 place-items-center rounded-full text-[13px] font-medium" style={{ background: s.color, color: readableOn(s.color) }}>
                     {s.initials}

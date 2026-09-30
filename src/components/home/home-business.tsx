@@ -27,30 +27,30 @@ export function HomeBusiness() {
     <>
       {/* ── HERO — Business sits on the deepest navy: same brand, darker room ── */}
       <div className="surface-night bg-midnight">
-      <section className="shell pt-6 sm:pt-10 lg:pt-12 short:pt-8">
+      <section className="shell pt-6 sm:pt-10 lg:pt-[clamp(20px,4vh,48px)]">
         <div className="grid items-start gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
             <Eyebrow index="Ayiin Business" className="animate-fade">
               Procurement<span className="hidden sm:inline short:hidden"> for 12,000+ companies · Net terms · Multi-supplier quotes</span>
             </Eyebrow>
-            <h1 className="display mt-6 text-[clamp(54px,8.4vw,128px)] short:mt-4 short:text-[clamp(54px,9.5vh,115px)]">
+            <h1 className="display mt-6 text-[clamp(54px,8.4vw,128px)] lg:mt-[clamp(10px,2vh,24px)] lg:text-[clamp(50px,min(8.4vw,10.5vh),128px)]">
               <span className="block animate-rise">Procure in</span>{" "}
               <span className="block animate-rise [animation-delay:100ms]">minutes, not</span>{" "}
               <span className="block animate-rise [animation-delay:200ms]">
                 <InlinePill items={pill} /> <span className="text-brand-gradient">weeks.</span>
               </span>
             </h1>
-            <p className="mt-7 max-w-[560px] animate-rise text-[17px] leading-relaxed text-ink-2 [animation-delay:280ms] sm:text-[19px] short:mt-4 short:text-[17px]">
+            <p className="mt-7 max-w-[560px] animate-rise text-[17px] leading-relaxed text-ink-2 [animation-delay:280ms] sm:text-[19px] lg:mt-[clamp(10px,2.6vh,28px)] lg:text-[clamp(16px,2.1vh,19px)]">
               Paste a list, get live volume pricing from verified suppliers, route it for approval and pay on terms — in one place, for your whole team.
             </p>
-            <div className="mt-8 max-w-[680px] animate-rise [animation-delay:340ms] short:mt-5">
+            <div className="mt-8 max-w-[680px] animate-rise [animation-delay:340ms] lg:mt-[clamp(12px,2.8vh,32px)]">
               <QuickOrder variant="hero" />
             </div>
           </div>
 
           {/* Account card */}
           <aside aria-label="Company account" className="animate-rise [animation-delay:260ms] lg:col-span-5">
-            <div className="panel-ink relative overflow-hidden rounded-[32px] p-6 sm:p-7 short:p-6">
+            <div className="panel-ink relative overflow-hidden rounded-[32px] p-6 sm:p-7 lg:p-[clamp(18px,2.8vh,28px)]">
               <div aria-hidden className="grid-texture-dark pointer-events-none absolute inset-0 opacity-70 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
               <div className="relative">
                 <div className="flex items-center justify-between">
@@ -68,14 +68,14 @@ export function HomeBusiness() {
                   </Link>
                 </div>
 
-                <div className="mt-7 short:mt-5">
+                <div className="mt-7 lg:mt-[clamp(12px,2.6vh,28px)]">
                   <div className="flex items-end justify-between">
                     <p className="text-[12.5px] text-mute-dark">Available credit</p>
                     <p className="num text-[12.5px] text-mute-dark">
                       of <Money usd={company.creditLimit} />
                     </p>
                   </div>
-                  <p className="display mt-1 text-[52px] leading-none">
+                  <p className="display mt-1 text-[52px] leading-none lg:text-[clamp(38px,6vh,52px)]">
                     <Money usd={available} mono={false} />
                   </p>
                   <div className="mt-3 h-2 overflow-hidden rounded-full bg-graphite">
@@ -84,7 +84,7 @@ export function HomeBusiness() {
                   <p className="mt-2 text-[12px] text-mute-dark">Next invoice due Oct 4 · Autopay off</p>
                 </div>
 
-                <div className="mt-7 short:mt-5">
+                <div className="mt-7 lg:mt-[clamp(12px,2.6vh,28px)]">
                   <div className="mb-2 flex items-center justify-between">
                     <p className="eyebrow !text-mute-dark">Waiting on you</p>
                     <Link href="/business?tab=approvals" className="text-[12.5px] text-brand hover:underline">
@@ -133,7 +133,7 @@ export function HomeBusiness() {
           description="Save any cart as a procurement list, then reorder it instantly or put it on a schedule. Prices update to today's contract rate automatically."
           action={{ href: "/business?tab=lists", label: "All lists" }}
         />
-        <div className="mt-12 short:mt-8">
+        <div className="mt-12 short:mt-[clamp(16px,3.4vh,32px)]">
           <ReorderLists thumbnails={false} />
         </div>
       </section>
@@ -146,7 +146,7 @@ export function HomeBusiness() {
           title={<>Every price break,<br />every supplier, visible.</>}
           description="Slide to your quantity. See the unit price at each tier and the landed cost from every verified supplier stocking the item — lead time and reliability included."
         />
-        <div className="mt-12 short:mt-8">
+        <div className="mt-12 short:mt-[clamp(16px,3.4vh,32px)]">
           <VolumeExplorer items={volume} />
         </div>
       </section>
@@ -233,15 +233,15 @@ export function HomeBusiness() {
           title={<>Control without<br />the bureaucracy.</>}
           description="Everyone buys what they need. Rules decide what needs a second look. Finance gets clean invoices."
         />
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3 short:mt-8 short:grid-cols-4">
+        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3 short:mt-[clamp(16px,3.4vh,32px)] short:grid-cols-4">
           {FEATURES.map((f, i) => (
             <Reveal key={f.title} delay={i * 60} className={f.wide ? (i === 0 ? "lg:col-span-2" : "lg:col-span-2 short:col-span-1") : ""}>
-              <div className={`relative flex h-full flex-col rounded-[26px] p-6 sm:p-7 short:p-5 ${f.dark ? "panel-ink" : "bg-white shadow-[var(--shadow-hair)]"}`}>
+              <div className={`relative flex h-full flex-col rounded-[26px] p-6 sm:p-7 short:p-[clamp(14px,2.4vh,20px)] ${f.dark ? "panel-ink" : "bg-white shadow-[var(--shadow-hair)]"}`}>
                 <span className={`grid h-11 w-11 place-items-center rounded-2xl short:absolute short:right-5 short:top-5 short:h-9 short:w-9 short:rounded-xl ${f.dark ? "bg-graphite text-brand" : "bg-mist"}`}>
                   <Icon name={f.icon} size={20} />
                 </span>
                 <p className="mt-5 text-[18px] font-medium tracking-[-0.02em] short:mt-0 short:pr-11 short:text-[17px]">{f.title}</p>
-                <p className={`mt-1.5 text-[14px] leading-relaxed ${f.dark ? "text-mute-dark" : "text-mute"}`}>{f.body}</p>
+                <p className={`mt-1.5 text-[14px] leading-relaxed short:text-[clamp(12.5px,1.9vh,14px)] short:leading-snug ${f.dark ? "text-mute-dark" : "text-mute"}`}>{f.body}</p>
                 {f.chips && (
                   <div className="mt-5 flex flex-wrap gap-2 short:mt-3">
                     {f.chips.map((c) => (
@@ -260,7 +260,7 @@ export function HomeBusiness() {
       {/* ── 05 CATEGORIES ────────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
         <SectionHeader index="05" kicker="Bulk-ready" title="Stock the whole operation." action={{ href: "/search?bulk=1", label: "All bulk categories" }} />
-        <div className="mt-12 grid grid-cols-2 gap-3 lg:grid-cols-5 short:mt-8">
+        <div className="mt-12 grid grid-cols-2 gap-3 lg:grid-cols-5 short:mt-[clamp(16px,3.4vh,32px)]">
           {categories
             .filter((c) => c.business)
             .map((c, n) => {
@@ -296,7 +296,7 @@ export function HomeBusiness() {
           title="Bulk bestsellers."
           description="Shown with your contract and volume pricing. List price, MOQ and case pack are always visible."
         />
-        <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 short:mt-8">
+        <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 short:mt-[clamp(16px,3.4vh,32px)]">
           {bulk.map((p, i) => (
             <Reveal key={p.id} delay={(i % 4) * 70}>
               <ProductCard product={p} frame={RAIL_FRAME} />
