@@ -65,13 +65,6 @@ export function planPersonalHome() {
   const compare = shelf.take(COMPARE_SLUGS.length, { prefer: COMPARE_SLUGS, fallback: false });
   const bridge = shelf.takeOne({ prefer: [BRIDGE_SLUG], fallback: false });
 
-  // 2 · Hero: the clarity carousel.
-  const clarity = shelf.take(3, {
-    prefer: ["stride-runner-2", "pour-gooseneck-kettle", "arc-table-lamp"],
-    where: isConsumer,
-    maxPerCategory: 1,
-  });
-
   // 3 · Rails, top to bottom.
   const tiles = takeCategoryTiles(
     shelf,
@@ -92,19 +85,10 @@ export function planPersonalHome() {
   const bestsellers = shelf.takeGrid(2, { min: 2, step: 2, where: isHousehold, rank: bySales });
   const delivery = shelf.takeGrid(4, { min: 2, step: 2 });
 
-  // 4 · Text-only references: the clarity card's "better option" answer.
-  // Takes only what is still free; the card has a fallback line otherwise.
-  const alternatives: Record<string, Product | null> = {};
-  for (const p of clarity) {
-    alternatives[p.id] =
-      shelf.takeOne({ where: (x) => x.category === p.category && x.price < p.price, rank: (a, b) => b.rating - a.rating }) ??
-      shelf.takeOne({ where: (x) => x.category === p.category });
-  }
-
   // For You filters across every shopper product when an interest is picked.
   const catalog = products.filter(isConsumer);
 
-  return { compare, bridge, clarity, catalog, tiles, forYou, lookbook, deals, bestsellers, delivery, alternatives, renderedIds: [...shelf.renderedIds] };
+  return { compare, bridge, catalog, tiles, forYou, lookbook, deals, bestsellers, delivery, renderedIds: [...shelf.renderedIds] };
 }
 
 export type BusinessPlan = ReturnType<typeof planBusinessHome>;

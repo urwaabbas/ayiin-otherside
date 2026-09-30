@@ -142,7 +142,7 @@ export function HeroFlashlight({ products, children }: { products: Product[]; ch
       {/* Scrim: keeps the headline column calm wherever the light is */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgb(11_26_56/0.72)_0%,rgb(11_26_56/0.45)_40%,rgb(11_26_56/0)_60%)] max-lg:bg-[linear-gradient(180deg,rgb(11_26_56/0.85)_0%,rgb(11_26_56/0.55)_55%,rgb(11_26_56/0.85)_100%)]"
+        className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_48%_62%_at_50%_50%,rgb(11_26_56/0.82)_0%,rgb(11_26_56/0.55)_55%,rgb(11_26_56/0)_100%)] max-lg:bg-[linear-gradient(180deg,rgb(11_26_56/0.85)_0%,rgb(11_26_56/0.55)_55%,rgb(11_26_56/0.85)_100%)]"
       />
 
       {children}

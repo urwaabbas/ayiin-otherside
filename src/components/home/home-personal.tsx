@@ -8,7 +8,6 @@ import { Eyebrow, SignalDot } from "@/components/ui/signal";
 import { SectionHeader } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
 import { Icon } from "@/components/ui/icon";
-import { ClarityCard } from "@/components/home/clarity-card";
 import { AskForm } from "@/components/home/ask-form";
 import { HeroFlashlight } from "@/components/home/hero-flashlight";
 import { ForYou } from "@/components/home/for-you";
@@ -68,7 +67,7 @@ export function QuestionMarquee({ tone = "light" }: { tone?: "light" | "dark" })
 
 export function HomePersonal() {
   // Every product on this page comes from one plan, so none appears twice.
-  const { clarity, catalog, alternatives, tiles, forYou, lookbook, deals, bestsellers, compare, bridge, delivery, renderedIds } = planPersonalHome();
+  const { catalog, tiles, forYou, lookbook, deals, bestsellers, compare, bridge, delivery, renderedIds } = planPersonalHome();
 
   return (
     <>
@@ -76,25 +75,20 @@ export function HomePersonal() {
       <div className="surface-night">
       <HeroFlashlight products={catalog}>
       <section className="shell pb-10 pt-6 sm:pt-10 lg:pb-[clamp(12px,1.6vh,28px)] lg:pt-[clamp(20px,4vh,48px)]">
-        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-7 xl:col-span-8 short:col-span-7">
-            <Eyebrow index="Ayiin" className="animate-fade">
-              Intelligent commerce<span className="hidden sm:inline"> · 2.4M products · 18,400 verified sellers</span>
-            </Eyebrow>
-            <h1 className="display mt-6 text-[clamp(58px,9.4vw,142px)] text-balance lg:mt-[clamp(12px,2.4vh,24px)] lg:text-[clamp(56px,min(9.4vw,15vh),142px)]">
-              <span className="block animate-rise">
-                See more.
-              </span>{" "}
-              <span className="block animate-rise [animation-delay:120ms]">Doubt <span className="text-brand-gradient">less.</span></span>
-            </h1>
-            <p className="mt-7 max-w-[560px] animate-rise text-[17px] leading-relaxed text-ink-2 [animation-delay:220ms] sm:text-[19px] lg:mt-[clamp(12px,2.8vh,28px)] lg:text-[clamp(16px,2.1vh,19px)]">
-              Every product on Ayiin answers the questions that matter — real price history, an exact delivery date, the seller&apos;s record, and whether there&apos;s a better option — before you have to ask.
-            </p>
-            <AskForm className="mt-8 max-w-[680px] animate-rise [animation-delay:320ms] lg:mt-[clamp(14px,3.2vh,32px)]" />
-          </div>
-          <div className="surface-day animate-rise [animation-delay:260ms] lg:col-span-5 xl:col-span-4 short:col-span-5">
-            <ClarityCard items={clarity} alternatives={alternatives} />
-          </div>
+        <div className="mx-auto flex max-w-[980px] flex-col items-center text-center lg:py-[clamp(8px,3vh,40px)]">
+          <Eyebrow index="Ayiin" className="animate-fade justify-center">
+            Intelligent commerce<span className="hidden sm:inline"> · 2.4M products · 18,400 verified sellers</span>
+          </Eyebrow>
+          <h1 className="display mt-6 text-[clamp(58px,9.4vw,142px)] text-balance lg:mt-[clamp(12px,2.4vh,24px)] lg:text-[clamp(56px,min(9.4vw,15vh),142px)]">
+            <span className="block animate-rise">See more.</span>{" "}
+            <span className="block animate-rise [animation-delay:120ms]">
+              Doubt <span className="text-brand-gradient">less.</span>
+            </span>
+          </h1>
+          <p className="mt-7 max-w-[620px] animate-rise text-[17px] leading-relaxed text-ink-2 [animation-delay:220ms] sm:text-[19px] lg:mt-[clamp(12px,2.8vh,28px)] lg:text-[clamp(16px,2.1vh,19px)]">
+            Every product on Ayiin answers the questions that matter — real price history, an exact delivery date, the seller&apos;s record, and whether there&apos;s a better option — before you have to ask.
+          </p>
+          <AskForm className="mt-8 w-full max-w-[680px] animate-rise text-left [animation-delay:320ms] lg:mt-[clamp(14px,3.2vh,32px)] [&>div:last-child]:justify-center" />
         </div>
       </section>
       </HeroFlashlight>
