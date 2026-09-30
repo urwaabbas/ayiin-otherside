@@ -139,7 +139,7 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
       </div>
 
       <Link href={`/p/${p.slug}`} className="relative block" aria-label={p.name}>
-        <div className="relative aspect-[16/11] w-full overflow-hidden">
+        <div className="relative aspect-[16/11] w-full overflow-hidden short:aspect-[16/6.5]">
           {items.map((it, n) => (
             <ProductImage
               key={it.id}
@@ -159,21 +159,21 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
         </span>
       </Link>
 
-      <div className="p-5 sm:p-6">
+      <div className="p-5 sm:p-6 short:py-4">
         <div key={p.id} className="animate-fade">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-[12.5px] text-mute">{p.brand}</p>
-              <h3 className="mt-0.5 text-[18px] font-medium leading-tight tracking-[-0.02em]">{p.name}</h3>
+              <h3 className="mt-0.5 text-[18px] font-medium leading-tight tracking-[-0.02em] short:text-[17px]">{p.name}</h3>
             </div>
             <div className="text-right">
               <Price usd={p.price} size="lg" />
               {insight.verifiedDeal && <p className="mt-1 whitespace-nowrap text-[11.5px] font-medium text-brand-deep">✓ {insight.label}</p>}
             </div>
           </div>
-          <dl className="mt-4 divide-y divide-line border-t border-line">
+          <dl className="mt-4 divide-y divide-line border-t border-line short:mt-3">
             {rows.map((r, n) => (
-              <div key={r.q} className="grid animate-rise grid-cols-[118px_1fr] items-baseline gap-3 py-2.5 text-[13.5px]" style={{ animationDelay: `${120 + n * 70}ms` }}>
+              <div key={r.q} className="grid animate-rise grid-cols-[118px_1fr] items-baseline gap-3 py-2.5 text-[13.5px] short:py-[5px]" style={{ animationDelay: `${120 + n * 70}ms` }}>
                 <dt className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.12em] text-mute">
                   <Icon name={r.icon} size={13} className="shrink-0 translate-y-[1px]" />
                   {r.q}

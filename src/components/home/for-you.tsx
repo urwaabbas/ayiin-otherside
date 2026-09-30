@@ -4,7 +4,7 @@ import { clsx } from "clsx";
 import { useMemo, useState } from "react";
 import { useShop } from "@/lib/store";
 import type { Product } from "@/lib/types";
-import { ProductCard } from "@/components/product/product-card";
+import { ProductCard, RAIL_FRAME } from "@/components/product/product-card";
 import { Icon } from "@/components/ui/icon";
 import { SectionHeader } from "@/components/ui/section";
 
@@ -63,7 +63,7 @@ export function ForYou({ pool }: { pool: Product[] }) {
         title={<>Tuned to you.<br />Never on a loop.</>}
         description="Tell Ayiin what you're into. Every recommendation explains itself, no category repeats more than twice, and you can always ask for something different."
       />
-      <div className="mt-10 flex flex-wrap items-center gap-2">
+      <div className="mt-10 flex flex-wrap items-center gap-2 short:mt-6">
         <span className="eyebrow mr-2">Your interests</span>
         {INTERESTS.map((i) => (
           <button key={i.id} type="button" aria-pressed={selected.includes(i.id)} onClick={() => toggle(i.id)} className="chip">
@@ -75,11 +75,12 @@ export function ForYou({ pool }: { pool: Product[] }) {
           <Icon name="repeat" size={14} /> Show me something different
         </button>
       </div>
-      <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
+      <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 short:mt-6">
         {feed.map(({ p, hits }, n) => (
           <div key={`${p.id}`} className="animate-rise" style={{ animationDelay: `${n * 50}ms` }}>
             <ProductCard
               product={p}
+              frame={RAIL_FRAME}
               reason={hits.length ? `Because you like ${hits.map((h) => h.label).slice(0, 2).join(" & ")}` : shuffle ? "Something different" : "Highly rated this month"}
             />
           </div>

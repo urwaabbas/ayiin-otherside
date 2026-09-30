@@ -93,7 +93,7 @@ export default function BrandPage() {
       {/* Logo system */}
       <section className="shell mt-24">
         <Eyebrow index="02">Logo system</Eyebrow>
-        <h2 className="display mt-4 text-[44px] sm:text-[64px]">One logo, every surface.</h2>
+        <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[52px]">One logo, every surface.</h2>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <Tile label="1 · Logo — for light surfaces" className="lg:col-span-2">
             <AyiinLogo on="light" className="h-20" />
@@ -135,7 +135,7 @@ export default function BrandPage() {
       <section className="shell mt-24 grid gap-8 lg:grid-cols-2">
         <div>
           <Eyebrow index="03">On dark</Eyebrow>
-          <h2 className="display mt-4 text-[44px] sm:text-[64px]">Same warmth, after dark.</h2>
+          <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[52px]">Same warmth, after dark.</h2>
           <p className="mt-5 max-w-lg text-[16px] leading-relaxed text-ink-2">
             On graphite the lettering turns near-white and the gradient stays exactly as it is — the footer, business panels and dark sections are the same brand, not a second one.
           </p>
@@ -150,7 +150,7 @@ export default function BrandPage() {
       {/* Color */}
       <section className="shell mt-24">
         <Eyebrow index="04">Colour</Eyebrow>
-        <h2 className="display mt-4 text-[44px] sm:text-[64px]">Midnight and sunlight.</h2>
+        <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[52px]">Midnight and sunlight.</h2>
         <p className="mt-4 max-w-xl text-[16px] text-mute">Built against the logo: its sunlit amber sits on midnight navy, its exact opposite on the colour wheel, so the brand glows. Clean whites carry the products; amber marks what matters.</p>
         <div className="mt-8 flex h-4 overflow-hidden rounded-full shadow-[var(--shadow-hair)]" aria-label="Usage ratio: 55% cloud, 20% white, 20% navy, 5% amber">
           {COLORS.filter((c) => c.share).map((c) => (
@@ -165,7 +165,7 @@ export default function BrandPage() {
         <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {COLORS.map((c) => (
             <div key={c.name} className="overflow-hidden rounded-[22px] bg-white shadow-[var(--shadow-hair)]">
-              <div className="flex h-32 items-end p-4" style={{ background: c.fill ?? c.hex, color: c.ink ? C.ink : C.porcelain }}>
+              <div className="flex h-32 items-end p-4 short:h-20" style={{ background: c.fill ?? c.hex, color: c.ink ? C.ink : C.porcelain }}>
                 <span className="num text-[13px]">{c.hex}</span>
               </div>
               <div className="p-4">
@@ -204,7 +204,7 @@ export default function BrandPage() {
       {/* Signature elements */}
       <section className="shell mt-24">
         <Eyebrow index="06">Signature elements</Eyebrow>
-        <h2 className="display mt-4 text-[44px] sm:text-[64px]">Recognisable without the logo.</h2>
+        <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[52px]">Recognisable without the logo.</h2>
         <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
             <p className="eyebrow">The signal dot</p>

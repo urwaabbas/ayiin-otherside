@@ -18,18 +18,25 @@ import { sellerById } from "@/lib/catalog/sellers";
 
 const CARD_SIZES = "(min-width: 1280px) 300px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 50vw";
 
+/** Card frame for home rails: on laptop-height screens the image shrinks so the whole row
+ *  (image, price, delivery) fits one screen; everywhere else it keeps the 4:4.4 stage. */
+export const RAIL_FRAME = "aspect-[4/4.4] short:aspect-auto short:h-[clamp(190px,calc(100vh-520px),340px)]";
+
 export function ProductCard({
   product: p,
   reason,
   rank,
   className,
   priority,
+  frame = "aspect-[4/4.4]",
 }: {
   product: Product;
   reason?: string;
   rank?: number;
   className?: string;
   priority?: boolean;
+  /** Image frame size — defaults to the 4:4.4 stage; home rails pass a screen-fitting variant. */
+  frame?: string;
 }) {
   const { mode, fmt } = usePrefs();
   const business = mode === "business";
@@ -70,7 +77,7 @@ export function ProductCard({
     <article className={clsx("group relative flex flex-col", className)}>
       <div className="relative overflow-hidden rounded-[22px] bg-white">
         <Link href={`/p/${p.slug}`} aria-label={p.name} className="block" prefetch={priority ? true : undefined}>
-          <span className="relative block aspect-[4/4.4] w-full transition-transform duration-[900ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.035]">
+          <span className={clsx("relative block w-full transition-transform duration-[900ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.035]", frame)}>
             <ProductImage product={p} variant={variant.id} preload={priority} sizes={CARD_SIZES} className="absolute inset-0" />
             {/* second angle on hover (pointer devices only — display:none images are never fetched) */}
             {hasView(p, "angle", variant.id) && (
