@@ -12,17 +12,17 @@ export const metadata: Metadata = {
 };
 
 const COLORS: { name: string; hex: string; role: string; share: number; ink: boolean; fill?: string }[] = [
-  { name: "Porcelain", hex: C.porcelain, role: "Primary surface — the logo's white, warmed a touch", share: 60, ink: true },
-  { name: "Pure White", hex: C.white, role: "Cards, product stages, inputs, modals", share: 25, ink: true },
-  { name: "Charcoal Ink", hex: C.ink, role: "Type, primary actions, selected states", share: 7, ink: false },
-  { name: "Graphite", hex: C.graphite, role: "Dark sections — the logo's own lettering colour", share: 3, ink: false },
-  { name: "Ayiin Amber", hex: C.brand, role: "The one CTA, live and verified signals, selection", share: 4, ink: true },
+  { name: "Cloud", hex: C.porcelain, role: "Page background — a cool, clean white that makes products the hero", share: 55, ink: true },
+  { name: "Pure White", hex: C.white, role: "Cards, product stages, inputs, modals", share: 20, ink: true },
+  { name: "Midnight Navy", hex: C.graphite, role: "Header, heroes, footer, dark panels — the logo's complement", share: 18, ink: false },
+  { name: "Navy Ink", hex: C.ink, role: "Type and primary actions", share: 2, ink: false },
+  { name: "Ayiin Amber", hex: C.brand, role: "The decisive CTA, live and verified signals, selection", share: 4, ink: true },
   { name: "Deep Amber", hex: C.brandDeep, role: "Amber for text and icons on light surfaces", share: 1, ink: false },
   {
     name: "Logo gradient",
     hex: `${C.brandOrange} → ${C.brandYellow}`,
     fill: `linear-gradient(90deg, ${C.brandOrange}, ${C.brand} 54%, ${C.brandYellow})`,
-    role: "Reserved for the mark and for things that fill up",
+    role: "The mark, progress bars, and one hero word per page",
     share: 0,
     ink: true,
   },
@@ -150,17 +150,17 @@ export default function BrandPage() {
       {/* Color */}
       <section className="shell mt-24">
         <Eyebrow index="04">Colour</Eyebrow>
-        <h2 className="display mt-4 text-[44px] sm:text-[64px]">Mostly light. Precisely loud.</h2>
-        <p className="mt-4 max-w-xl text-[16px] text-mute">Everything comes from the logo: charcoal lettering and a sunlit amber. Amber is a signal, not a paint — the system stays elegant with it removed.</p>
-        <div className="mt-8 flex h-4 overflow-hidden rounded-full shadow-[var(--shadow-hair)]" aria-label="Usage ratio: 60% porcelain, 25% white, 10% charcoal, 5% amber">
+        <h2 className="display mt-4 text-[44px] sm:text-[64px]">Midnight and sunlight.</h2>
+        <p className="mt-4 max-w-xl text-[16px] text-mute">Built against the logo: its sunlit amber sits on midnight navy, its exact opposite on the colour wheel, so the brand glows. Clean whites carry the products; amber marks what matters.</p>
+        <div className="mt-8 flex h-4 overflow-hidden rounded-full shadow-[var(--shadow-hair)]" aria-label="Usage ratio: 55% cloud, 20% white, 20% navy, 5% amber">
           {COLORS.filter((c) => c.share).map((c) => (
             <span key={c.name} style={{ background: c.hex, width: `${c.share}%` }} title={`${c.name} ${c.share}%`} />
           ))}
         </div>
         <div className="mt-2 flex justify-between font-mono text-[11px] text-mute">
-          <span>60% porcelain</span>
-          <span>25% white</span>
-          <span>10% charcoal · 5% amber</span>
+          <span>55% cloud</span>
+          <span>20% white</span>
+          <span>20% navy · 5% amber</span>
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {COLORS.map((c) => (
