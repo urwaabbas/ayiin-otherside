@@ -99,25 +99,6 @@ export function HomePersonal() {
       </section>
       </HeroFlashlight>
 
-      {/* The numbers band — its own row, so the hero above fits one screen */}
-      <section aria-label="Ayiin in numbers" className="shell">
-        <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-line lg:mt-8 lg:grid-cols-4 short:mt-6">
-          {[
-            ["98.7%", "delivered on the exact date promised"],
-            ["12 wks", "of price history behind every deal badge"],
-            ["18,400", "sellers, each verified on four checks"],
-            ["$0", "hidden fees — the total is the total"],
-          ].map(([n, l]) => (
-            <div key={l} className="bg-graphite p-5 sm:p-7">
-              <dt className="sr-only">{l}</dt>
-              <dd>
-                <span className="display block text-[40px] sm:text-[56px]">{n}</span>
-                <span className="mt-2 block max-w-[220px] text-[13.5px] text-mute">{l}</span>
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </section>
 
       <section className="mt-10 border-t border-line">
         <QuestionMarquee />
@@ -260,8 +241,28 @@ export function HomePersonal() {
         </section>
       )}
 
+      {/* ── THE NUMBERS — proof points, set just before the seller trust section ── */}
+      <section aria-label="Ayiin in numbers" className="shell mt-24 lg:mt-32">
+        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-line lg:grid-cols-4">
+          {[
+            ["98.7%", "delivered on the exact date promised"],
+            ["12 wks", "of price history behind every deal badge"],
+            ["18,400", "sellers, each verified on four checks"],
+            ["$0", "hidden fees — the total is the total"],
+          ].map(([n, l]) => (
+            <div key={l} className="bg-white p-5 sm:p-7">
+              <dt className="sr-only">{l}</dt>
+              <dd>
+                <span className="display block text-[40px] sm:text-[56px]">{n}</span>
+                <span className="mt-2 block max-w-[220px] text-[13.5px] text-mute">{l}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
       {/* ── 07 SELLERS ───────────────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
+      <section className="shell mt-12 lg:mt-16">
         <SectionHeader
           index="07"
           kicker="Trust, measured"

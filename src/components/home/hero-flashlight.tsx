@@ -164,7 +164,7 @@ export function HeroFlashlight({ products, children }: { products: Product[]; ch
       {/* First-visit hint */}
       <p
         aria-hidden
-        className={`pointer-events-none absolute bottom-3 left-[var(--gutter)] hidden items-center gap-2 rounded-full bg-[rgb(255_255_255/0.08)] px-3 py-1.5 text-[12px] text-mute-dark ring-1 ring-[rgb(255_255_255/0.1)] backdrop-blur transition-opacity duration-700 lg:flex ${hint ? "opacity-100" : "opacity-0"}`}
+        className={`pointer-events-none absolute bottom-3 right-[var(--gutter)] hidden items-center gap-2 rounded-full bg-[rgb(255_255_255/0.08)] px-3 py-1.5 text-[12px] text-mute-dark ring-1 ring-[rgb(255_255_255/0.1)] backdrop-blur transition-opacity duration-700 lg:flex ${hint ? "opacity-100" : "opacity-0"}`}
       >
         <span className="h-1.5 w-1.5 rounded-full bg-brand" /> Move to look closer — every product here is real
       </p>

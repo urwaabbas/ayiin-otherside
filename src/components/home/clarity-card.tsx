@@ -4,7 +4,6 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 import type { Product } from "@/lib/types";
-import { ProductImage } from "@/components/product/product-image";
 import { Price } from "@/components/ui/money";
 import { Icon } from "@/components/ui/icon";
 import { SignalDot } from "@/components/ui/signal";
@@ -116,55 +115,42 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
       aria-roledescription="carousel"
       aria-label="Ayiin Clarity — every answer before you buy"
     >
-      {/* progress */}
-      <div className="absolute inset-x-5 top-2 z-10 flex gap-1.5">
-        {items.map((it, n) => (
-          <button
-            key={it.id}
-            type="button"
-            aria-label={`Show ${it.name}`}
-            aria-current={n === i}
-            onClick={() => setI(n)}
-            className="group relative flex h-6 flex-1 items-center"
-          >
-            <span className="relative h-[3px] w-full overflow-hidden rounded-full bg-ink/10">
-            <span
-              key={`${i}-${paused}`}
-              className={clsx("absolute inset-y-0 left-0 rounded-full bg-ink", n < i && "w-full", n > i && "w-0")}
-              style={n === i ? { width: paused || reduced ? "100%" : undefined, animation: paused || reduced ? undefined : "clarity-progress 7s linear forwards" } : undefined}
-            />
-            </span>
-          </button>
-        ))}
-      </div>
-
-      <Link href={`/p/${p.slug}`} className="relative block" aria-label={p.name}>
-        <div className="relative aspect-[16/11] w-full overflow-hidden lg:max-h-[max(110px,calc(100svh-var(--hdr)-420px))]">
-          {items.map((it, n) => (
-            <ProductImage
-              key={it.id}
-              product={it}
-              preload={n === 0}
-              sizes="(min-width: 1024px) 520px, 92vw"
-              className={clsx(
-                "absolute inset-0 h-full w-full transition-all duration-[1100ms] ease-[var(--ease-out-expo)]",
-                n === i ? "scale-100 opacity-100" : "scale-[1.04] opacity-0",
-              )}
-            />
-          ))}
-        </div>
-        <span className="absolute bottom-4 left-5 inline-flex items-center gap-2 rounded-full bg-white/90 py-1.5 pl-3 pr-3 text-[12px] font-medium shadow-[var(--shadow-hair)] backdrop-blur">
+      {/* Header: the Clarity mark and the carousel progress */}
+      <div className="flex items-center justify-between gap-4 px-5 pt-5 sm:px-6">
+        <span className="inline-flex items-center gap-2 rounded-full bg-mist py-1.5 pl-3 pr-3 text-[12px] font-medium ring-1 ring-line">
           <AyiinLogo on="light" className="h-4" />
           Clarity
         </span>
-      </Link>
+          <div className="flex w-28 gap-1.5">
+          {items.map((it, n) => (
+            <button
+              key={it.id}
+              type="button"
+              aria-label={`Show ${it.name}`}
+              aria-current={n === i}
+              onClick={() => setI(n)}
+              className="group relative flex h-6 flex-1 items-center"
+            >
+              <span className="relative h-[3px] w-full overflow-hidden rounded-full bg-ink/10">
+              <span
+                key={`${i}-${paused}`}
+                className={clsx("absolute inset-y-0 left-0 rounded-full bg-ink", n < i && "w-full", n > i && "w-0")}
+                style={n === i ? { width: paused || reduced ? "100%" : undefined, animation: paused || reduced ? undefined : "clarity-progress 7s linear forwards" } : undefined}
+              />
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
 
-      <div className="p-5 sm:p-6 lg:py-[clamp(14px,2.4vh,24px)]">
+      <div className="p-5 pt-4 sm:p-6 sm:pt-4 lg:pb-[clamp(14px,2.4vh,24px)]">
         <div key={p.id} className="animate-fade">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-[12.5px] text-mute">{p.brand}</p>
-              <h3 className="mt-0.5 text-[18px] font-medium leading-tight tracking-[-0.02em] short:text-[17px]">{p.name}</h3>
+              <h3 className="mt-0.5 text-[18px] font-medium leading-tight tracking-[-0.02em] short:text-[17px]">
+                <Link href={`/p/${p.slug}`} className="hover:underline">{p.name}</Link>
+              </h3>
             </div>
             <div className="text-right">
               <Price usd={p.price} size="lg" />
