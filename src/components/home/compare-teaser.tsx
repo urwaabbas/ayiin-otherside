@@ -30,7 +30,7 @@ export function CompareTeaser({ items }: { items: Product[] }) {
   const shown = diffOnly ? rows.filter((r) => new Set(r.values.map(String)).size > 1) : rows;
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:gap-16">
+    <div className="grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:items-center lg:gap-16">
       <div>
         <SectionHeader
           index="06"
