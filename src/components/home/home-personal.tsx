@@ -72,7 +72,8 @@ export function HomePersonal() {
 
   return (
     <>
-      {/* ── HERO ─────────────────────────────────────────────── */}
+      {/* ── HERO — a midnight band, so the amber logo and CTAs glow ── */}
+      <div className="surface-night">
       <section className="shell pt-6 sm:pt-10 lg:pt-12">
         <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7 xl:col-span-8">
@@ -83,14 +84,14 @@ export function HomePersonal() {
               <span className="block animate-rise">
                 See more. <InlinePill items={pill} />
               </span>{" "}
-              <span className="block animate-rise [animation-delay:120ms]">Doubt less.</span>
+              <span className="block animate-rise [animation-delay:120ms]">Doubt <span className="text-brand-gradient">less.</span></span>
             </h1>
             <p className="mt-7 max-w-[560px] animate-rise text-[17px] leading-relaxed text-ink-2 [animation-delay:220ms] sm:text-[19px]">
               Every product on Ayiin answers the questions that matter — real price history, an exact delivery date, the seller&apos;s record, and whether there&apos;s a better option — before you have to ask.
             </p>
             <AskForm className="mt-8 max-w-[680px] animate-rise [animation-delay:320ms]" />
           </div>
-          <div className="animate-rise [animation-delay:260ms] lg:col-span-5 xl:col-span-4">
+          <div className="surface-day animate-rise [animation-delay:260ms] lg:col-span-5 xl:col-span-4">
             <ClarityCard items={clarity} alternatives={alternatives} />
           </div>
         </div>
@@ -102,7 +103,7 @@ export function HomePersonal() {
             ["18,400", "sellers, each verified on four checks"],
             ["$0", "hidden fees — the total is the total"],
           ].map(([n, l]) => (
-            <div key={l} className="bg-porcelain p-5 sm:p-7">
+            <div key={l} className="bg-graphite p-5 sm:p-7">
               <dt className="sr-only">{l}</dt>
               <dd>
                 <span className="display block text-[40px] sm:text-[56px]">{n}</span>
@@ -113,9 +114,10 @@ export function HomePersonal() {
         </dl>
       </section>
 
-      <section className="mt-10 border-y border-line">
+      <section className="mt-10 border-t border-line">
         <QuestionMarquee />
       </section>
+      </div>
 
       {/* ── 01 CATEGORIES ────────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">

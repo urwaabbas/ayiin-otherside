@@ -103,7 +103,7 @@ export function Header() {
 
   return (
     <>
-      <div aria-hidden className="h-[116px] lg:h-[164px]" />
+      <div aria-hidden className={clsx("h-[116px] lg:h-[164px]", business ? "bg-midnight" : "bg-graphite")} />
       {/* Scrim for desktop overlays */}
       <div
         aria-hidden
@@ -120,15 +120,16 @@ export function Header() {
         ref={headerRef}
         data-scrolled={compact}
         className={clsx(
-          "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500",
+          // Midnight navy in both modes — the logo's amber A sits on its complement.
+          "surface-night fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500",
           compact || megaOpen || searchOpen
-            ? "bg-porcelain/80 shadow-[0_1px_0_rgb(var(--rgb-ink)/0.07),0_14px_40px_-30px_rgb(var(--rgb-ink)/0.4)] backdrop-blur-xl backdrop-saturate-150"
-            : "bg-porcelain",
+            ? "bg-graphite/90 shadow-[0_1px_0_rgb(255_255_255/0.06),0_14px_40px_-24px_rgb(0_0_0/0.6)] backdrop-blur-xl backdrop-saturate-150"
+            : "bg-graphite",
         )}
       >
         {/* ── Utility strip ─────────────────────────────────── */}
         <Collapse open={!compact} className="hidden lg:grid">
-          <div className={clsx("transition-colors duration-500", business ? "bg-ink text-porcelain" : "bg-porcelain text-ink-2")}>
+          <div className="bg-midnight text-ink-2 transition-colors duration-500">
             <div className="shell flex h-9 items-center justify-between text-[12.5px]">
               <div className="flex items-center gap-2.5">
                 <span className={clsx("signal-dot", business && "!shadow-none")} data-live="true" />
@@ -167,7 +168,7 @@ export function Header() {
                 <Link href="/sell" className="link-underline">
                   Sell on Ayiin
                 </Link>
-                <LocaleMenu dark={business} />
+                <LocaleMenu dark />
               </nav>
             </div>
           </div>
@@ -192,7 +193,7 @@ export function Header() {
 
             <Link href="/" aria-label="Ayiin home" className="flex shrink-0 items-center">
               <AyiinLogo
-                on="light"
+                on="dark"
                 priority
                 className={clsx("transition-[height] duration-500 ease-[var(--ease-out-expo)]", compact ? "h-8 lg:h-9" : "h-8 lg:h-10")}
               />
@@ -264,7 +265,7 @@ export function Header() {
                     <Icon name="close" size={15} />
                   </button>
                 )}
-                <kbd className="pointer-events-none rounded-md border border-line bg-porcelain px-1.5 py-0.5 font-mono text-[11px] text-mute">⌘K</kbd>
+                <kbd className="pointer-events-none rounded-md border border-line bg-soft px-1.5 py-0.5 font-mono text-[11px] text-mute">⌘K</kbd>
               </span>
             </form>
 
@@ -414,7 +415,7 @@ function Panel({ open, children, id, className }: { open: boolean; children: Rea
     <div
       id={id}
       className={clsx(
-        "absolute inset-x-0 top-full origin-top border-t border-line bg-porcelain shadow-[0_40px_80px_-40px_rgb(var(--rgb-ink)/0.45)] transition-[opacity,transform,visibility] duration-400 ease-[var(--ease-out-expo)]",
+        "surface-day absolute inset-x-0 top-full origin-top border-t border-line bg-porcelain shadow-[0_40px_80px_-40px_rgb(var(--rgb-ink)/0.45)] transition-[opacity,transform,visibility] duration-400 ease-[var(--ease-out-expo)]",
         open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0",
         className,
       )}

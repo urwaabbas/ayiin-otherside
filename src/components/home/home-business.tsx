@@ -25,7 +25,8 @@ export function HomeBusiness() {
 
   return (
     <>
-      {/* ── HERO ─────────────────────────────────────────────── */}
+      {/* ── HERO — Business sits on the deepest navy: same brand, darker room ── */}
+      <div className="surface-night bg-midnight">
       <section className="shell pt-6 sm:pt-10 lg:pt-12">
         <div className="grid items-start gap-10 lg:grid-cols-12">
           <div className="lg:col-span-7">
@@ -36,7 +37,7 @@ export function HomeBusiness() {
               <span className="block animate-rise">Procure in</span>{" "}
               <span className="block animate-rise [animation-delay:100ms]">minutes, not</span>{" "}
               <span className="block animate-rise [animation-delay:200ms]">
-                <InlinePill items={pill} /> weeks.
+                <InlinePill items={pill} /> <span className="text-brand-gradient">weeks.</span>
               </span>
             </h1>
             <p className="mt-7 max-w-[560px] animate-rise text-[17px] leading-relaxed text-ink-2 [animation-delay:280ms] sm:text-[19px]">
@@ -54,7 +55,7 @@ export function HomeBusiness() {
               <div className="relative">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="grid h-11 w-11 place-items-center rounded-2xl bg-porcelain font-mono text-[13px] font-medium text-ink">NW</span>
+                    <span className="grid h-11 w-11 place-items-center rounded-2xl bg-brand font-mono text-[13px] font-medium text-on-brand">NW</span>
                     <div>
                       <p className="text-[16px] font-medium">{company.name}</p>
                       <p className="text-[12.5px] text-mute-dark">
@@ -104,7 +105,7 @@ export function HomeBusiness() {
             ["1 click", "to reorder any list, or schedule it"],
             ["Net 60", "terms available after 90 days of spend"],
           ].map(([n, l]) => (
-            <div key={l} className="bg-porcelain p-5 sm:p-7">
+            <div key={l} className="bg-midnight p-5 sm:p-7">
               <dt className="sr-only">{l}</dt>
               <dd>
                 <span className="display block text-[40px] sm:text-[56px]">{n}</span>
@@ -115,9 +116,10 @@ export function HomeBusiness() {
         </dl>
       </section>
 
-      <section className="panel-ink mt-10">
+      <section className="mt-10 border-t border-line">
         <QuestionMarquee tone="dark" />
       </section>
+      </div>
 
       {/* ── 01 REORDER ───────────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
