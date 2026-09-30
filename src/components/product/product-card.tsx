@@ -18,9 +18,8 @@ import { sellerById } from "@/lib/catalog/sellers";
 
 const CARD_SIZES = "(min-width: 1280px) 300px, (min-width: 1024px) 30vw, (min-width: 640px) 45vw, 50vw";
 
-/** Card frame for home rails: on laptop-height screens the image shrinks so the whole row
- *  (image, price, delivery) fits one screen; everywhere else it keeps the 4:4.4 stage. */
-export const RAIL_FRAME = "aspect-[4/4.4] short:aspect-auto short:h-[clamp(120px,calc(100vh-505px),340px)]";
+/** Card frame: the full square product photo, at every screen size — never cropped or shrunk to fit. */
+export const RAIL_FRAME = "aspect-square";
 
 export function ProductCard({
   product: p,
@@ -28,7 +27,7 @@ export function ProductCard({
   rank,
   className,
   priority,
-  frame = "aspect-[4/4.4]",
+  frame = "aspect-square",
 }: {
   product: Product;
   reason?: string;
