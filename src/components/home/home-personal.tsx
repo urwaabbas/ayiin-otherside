@@ -10,6 +10,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { Icon } from "@/components/ui/icon";
 import { ClarityCard } from "@/components/home/clarity-card";
 import { AskForm } from "@/components/home/ask-form";
+import { HeroFlashlight } from "@/components/home/hero-flashlight";
 import { ForYou } from "@/components/home/for-you";
 import { CompareTeaser } from "@/components/home/compare-teaser";
 import { BusinessBridge } from "@/components/home/business-bridge";
@@ -73,7 +74,8 @@ export function HomePersonal() {
     <>
       {/* ── HERO — a midnight band, so the amber logo and CTAs glow ── */}
       <div className="surface-night">
-      <section className="shell pt-6 sm:pt-10 lg:pt-[clamp(20px,4vh,48px)]">
+      <HeroFlashlight products={catalog}>
+      <section className="shell pb-10 pt-6 sm:pt-10 lg:pb-[clamp(24px,4vh,48px)] lg:pt-[clamp(20px,4vh,48px)]">
         <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7 xl:col-span-8 short:col-span-7">
             <Eyebrow index="Ayiin" className="animate-fade">
@@ -95,10 +97,11 @@ export function HomePersonal() {
           </div>
         </div>
       </section>
+      </HeroFlashlight>
 
       {/* The numbers band — its own row, so the hero above fits one screen */}
       <section aria-label="Ayiin in numbers" className="shell">
-        <dl className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-line lg:mt-20 lg:grid-cols-4 short:mt-12">
+        <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-line lg:mt-8 lg:grid-cols-4 short:mt-6">
           {[
             ["98.7%", "delivered on the exact date promised"],
             ["12 wks", "of price history behind every deal badge"],
