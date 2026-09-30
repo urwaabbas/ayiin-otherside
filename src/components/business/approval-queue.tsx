@@ -34,7 +34,7 @@ export function ApprovalQueue({ items, tone = "light", detailed = false }: { ite
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <p className={clsx("truncate text-[13.5px] font-medium", dark && "text-porcelain")}>
-                  {a.urgency === "high" && <span className="mr-1.5 inline-block h-1.5 w-1.5 -translate-y-0.5 rounded-full bg-lime" />}
+                  {a.urgency === "high" && <span className="mr-1.5 inline-block h-1.5 w-1.5 -translate-y-0.5 rounded-full bg-brand" />}
                   {a.title}
                 </p>
                 <p className={clsx("truncate text-[12px]", dark ? "text-mute-dark" : "text-mute")}>
@@ -52,12 +52,12 @@ export function ApprovalQueue({ items, tone = "light", detailed = false }: { ite
             </div>
             <div className="mt-3 flex items-center gap-2">
               {done ? (
-                <span className={clsx("inline-flex items-center gap-1.5 text-[12.5px]", dark ? "text-lime" : "text-lime-deep")}>
+                <span className={clsx("inline-flex items-center gap-1.5 text-[12.5px]", dark ? "text-brand" : "text-success")}>
                   <Icon name={done === "approved" ? "check" : "returns"} size={14} /> {done === "approved" ? "Approved · PO issued" : "Returned for changes"}
                 </span>
               ) : (
                 <>
-                  <button type="button" onClick={() => act(a, "approved")} className={clsx("btn btn-sm h-8 px-3.5 text-[12.5px]", dark ? "btn-signal" : "btn-ink")}>
+                  <button type="button" onClick={() => act(a, "approved")} className={clsx("btn btn-sm h-8 px-3.5 text-[12.5px]", dark ? "btn-brand" : "btn-ink")}>
                     Approve
                   </button>
                   <button type="button" onClick={() => act(a, "declined")} className={clsx("btn btn-sm h-8 px-3.5 text-[12.5px]", dark ? "btn-on-dark" : "btn-ghost")}>

@@ -10,7 +10,7 @@ export function BusinessBridge({ product: gloves }: { product: Product }) {
   const { setMode, fmt } = usePrefs();
   const max = gloves.b2b.tiers[0].price;
   return (
-    <div className="relative overflow-hidden rounded-[36px] bg-blue-soft">
+    <div className="relative overflow-hidden rounded-[36px] bg-mist">
       <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:p-14">
         <div className="flex flex-col justify-between">
           <div>
@@ -26,7 +26,7 @@ export function BusinessBridge({ product: gloves }: { product: Product }) {
             <ul className="mt-6 grid gap-2 text-[14.5px] sm:grid-cols-2">
               {["Tiered & contract pricing", "Multi-supplier quotes", "Approvals & budgets", "PO, invoice & net terms", "One-click reorders", "Tax-exempt checkout"].map((t) => (
                 <li key={t} className="flex items-center gap-2">
-                  <Icon name="check" size={16} className="text-blue-ink" strokeWidth={2} /> {t}
+                  <Icon name="check" size={16} className="text-brand-deep" strokeWidth={2} /> {t}
                 </li>
               ))}
             </ul>
@@ -40,7 +40,7 @@ export function BusinessBridge({ product: gloves }: { product: Product }) {
               }}
               className="btn btn-ink btn-lg"
             >
-              <span className="h-2 w-2 rounded-full bg-lime" /> Switch to Business
+              <span className="h-2 w-2 rounded-full bg-brand" /> Switch to Business
             </button>
             <Link href="/business" className="btn btn-ghost btn-lg">
               How it works
@@ -59,7 +59,7 @@ export function BusinessBridge({ product: gloves }: { product: Product }) {
                 <div key={t.min} className="flex flex-1 flex-col items-center gap-2">
                   <span className="num text-[12.5px] font-medium">{fmt(t.price, { cents: true })}</span>
                   <div
-                    className={`w-full rounded-t-xl ${i === gloves.b2b.tiers.length - 1 ? "bg-lime shadow-[inset_0_0_0_1.5px_#0A0B0D]" : "bg-soft"}`}
+                    className={`w-full rounded-t-xl ${i === gloves.b2b.tiers.length - 1 ? "bg-brand shadow-[inset_0_0_0_1.5px_var(--color-ink)]" : "bg-soft"}`}
                     style={{ height: `${(t.price / max) * 100}px` }}
                   />
                   <span className="num text-[11.5px] text-mute">{t.min}+</span>
@@ -76,7 +76,7 @@ export function BusinessBridge({ product: gloves }: { product: Product }) {
                 ["Finance", "Auto ≤ $5k", false],
               ].map(([t, who, done], i) => (
                 <li key={String(t)} className="flex flex-1 items-center gap-2">
-                  <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${done ? "bg-lime text-ink" : "border border-graphite-line text-mute-dark"}`}>
+                  <span className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${done ? "bg-brand text-ink" : "border border-graphite-line text-mute-dark"}`}>
                     {done ? <Icon name="check" size={14} strokeWidth={2.4} /> : i + 1}
                   </span>
                   <span className="min-w-0">

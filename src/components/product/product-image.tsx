@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
+import Image, { type ImageLoader } from "next/image";
 import { clsx } from "clsx";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import type { Product } from "@/lib/types";
-import { productImageSrc, type ImageView } from "@/lib/images";
-import { AyiinSymbol } from "@/components/brand/logo";
+import { photoUrl, productImageSrc, productPhoto, type ImageView } from "@/lib/images";
+import { AyiinMark } from "@/components/brand/ayiin-logo";
 
 type Props = {
   product: Pick<Product, "slug" | "variants" | "tint" | "name">;
@@ -26,22 +26,35 @@ type Props = {
 };
 
 /**
- * Photographic studio render of a product. Shows a tinted shimmer until the image has decoded,
- * then fades it in. The frame takes the product's studio tint, so edges blend seamlessly.
+ * A product image. Curated photography is served straight from the Unsplash CDN (their API terms
+ * ask for hotlinking), cropped square around the photo's focal point at each srcset width; products
+ * without photography use their studio render. Shows a tinted shimmer until the image has decoded,
+ * then fades it in. The frame takes the image's dominant colour, so edges blend while it loads.
  */
 export function ProductImage({ product: p, variant, view = "hero", sizes = "(min-width: 1024px) 25vw, 50vw", preload, alt = "", zoom, feather, className, imgClassName, imgStyle }: Props) {
-  const src = productImageSrc(p, variant, view);
+  const photo = productPhoto(p, variant, view) ?? productPhoto(p, variant, "hero");
+  const src = photo ? photo.src : productImageSrc(p, variant, view);
+  const loader: ImageLoader | undefined = photo ? ({ width, quality }) => photoUrl(photo, width, quality ?? 75) : undefined;
   const [settled, setSettled] = useState<{ src: string; ok: boolean } | null>(null);
   const loaded = settled?.src === src && settled.ok;
   const failed = settled?.src === src && !settled.ok;
+  // A fast CDN can finish loading before hydration, so the load event is missed; catch that on mount.
+  const settleIfLoaded = useCallback(
+    (img: HTMLImageElement | null) => {
+      if (img?.complete && img.naturalWidth > 0) setSettled({ src, ok: true });
+    },
+    [src],
+  );
   const positioned = /(^|\s)!?(absolute|fixed)(\s|$)/.test(className ?? "");
   return (
     <span
       className={clsx("block overflow-hidden", !positioned && "relative", !loaded && !failed && "shimmer", feather && "[mask-image:radial-gradient(closest-side,#000_62%,transparent)]", className)}
-      style={{ backgroundColor: p.tint }}
+      style={{ backgroundColor: photo?.color ?? p.tint }}
     >
       <Image
+        ref={settleIfLoaded}
         src={src}
+        loader={loader}
         alt={alt}
         fill
         sizes={sizes}
@@ -58,7 +71,7 @@ export function ProductImage({ product: p, variant, view = "hero", sizes = "(min
       />
       {failed && (
         <span aria-hidden className="absolute inset-0 grid place-items-center">
-          <AyiinSymbol tone="ink" lens="ink" tight className="h-[14%] max-h-8 min-h-3 opacity-15" />
+          <AyiinMark className="h-[14%] max-h-8 min-h-3 opacity-25 grayscale" />
         </span>
       )}
     </span>

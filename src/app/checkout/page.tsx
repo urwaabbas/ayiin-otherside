@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckoutView } from "@/components/checkout/checkout-view";
-import { AyiinSymbol } from "@/components/brand/logo";
+import { AyiinMark } from "@/components/brand/ayiin-logo";
 
 export const metadata: Metadata = { title: "Checkout", robots: { index: false } };
 
@@ -17,7 +17,7 @@ export default function CheckoutPage() {
       </div>
       <CheckoutView />
       <p className="mt-10 flex items-center justify-center gap-2 text-[12.5px] text-mute">
-        <AyiinSymbol tone="ink" lens="ink" tight className="h-3.5" /> Payments protected by Ayiin Assured · PCI DSS Level 1
+        <AyiinMark className="h-3.5" /> Payments protected by Ayiin Assured · PCI DSS Level 1
       </p>
     </div>
   );

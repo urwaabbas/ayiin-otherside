@@ -51,7 +51,7 @@ export function CompareTray() {
         <Link
           href="/compare"
           aria-disabled={items.length < 2}
-          className={clsx("btn btn-sm", items.length < 2 ? "pointer-events-none bg-graphite text-mute-dark" : "btn-signal")}
+          className={clsx("btn btn-sm", items.length < 2 ? "pointer-events-none bg-graphite text-mute-dark" : "btn-brand")}
         >
           <Icon name="compare" size={15} /> Compare
         </Link>

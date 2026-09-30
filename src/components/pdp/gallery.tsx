@@ -3,7 +3,7 @@
 import { clsx } from "clsx";
 import { useId, useRef, useState } from "react";
 import type { Product, Variant } from "@/lib/types";
-import { IMAGE_VIEWS, type ImageView } from "@/lib/images";
+import { productPhoto, productViews, type ImageView } from "@/lib/images";
 import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 
@@ -12,19 +12,24 @@ import { Icon } from "@/components/ui/icon";
  * swipe between views on touch, and a full-screen viewer.
  */
 export function ProductGallery({ product: p, variant, overlay }: { product: Product; variant: Variant; overlay?: React.ReactNode }) {
-  const [view, setView] = useState<ImageView>("hero");
+  const views = productViews(p, variant.id);
+  const [picked, setView] = useState<ImageView>("hero");
+  // Colourways can have different views; fall back to the front view when the picked one is missing.
+  const view = views.some((v) => v.id === picked) ? picked : "hero";
+  const photo = productPhoto(p, variant.id, view);
+  const single = views.length < 2;
   const [zoom, setZoom] = useState<{ x: number; y: number } | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const swipe = useRef<number | null>(null);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const id = useId();
-  const index = IMAGE_VIEWS.findIndex((v) => v.id === view);
-  const current = IMAGE_VIEWS[index];
+  const index = views.findIndex((v) => v.id === view);
+  const current = views[index];
   const alt = `${p.name} in ${variant.name} — ${current.label.toLowerCase()} view`;
 
   const go = (step: number, focus = false) => {
-    const n = (index + step + IMAGE_VIEWS.length) % IMAGE_VIEWS.length;
-    setView(IMAGE_VIEWS[n].id);
+    const n = (index + step + views.length) % views.length;
+    setView(views[n].id);
     if (focus) tabs.current[n]?.focus();
   };
 
@@ -38,8 +43,8 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
 
   return (
     <div className="flex flex-col-reverse gap-3 sm:flex-row">
-      <div role="tablist" aria-label="Product views" className="scroll-x -m-1 flex gap-2 p-1 sm:flex-col" onKeyDown={onTabKey}>
-        {IMAGE_VIEWS.map((vw, n) => (
+      <div role="tablist" aria-label="Product views" className={clsx("scroll-x -m-1 flex gap-2 p-1 sm:flex-col", single && "hidden")} onKeyDown={onTabKey}>
+        {views.map((vw, n) => (
           <button
             key={vw.id}
             ref={(el) => {
@@ -112,10 +117,23 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
         </button>
         <div className="absolute inset-x-4 bottom-4 flex items-center justify-between gap-3">
           <p className="rounded-full bg-white/85 px-3 py-1.5 text-[12px] text-ink-2 backdrop-blur">
-            Studio image · true to colour · {current.label}
+            {photo ? (
+              <>
+                {current.label} · Photo by{" "}
+                <a href={photo.profile} target="_blank" rel="noopener noreferrer" className="link-underline text-ink" onClick={(e) => e.stopPropagation()}>
+                  {photo.by}
+                </a>{" "}
+                on{" "}
+                <a href={photo.page} target="_blank" rel="noopener noreferrer" className="link-underline text-ink" onClick={(e) => e.stopPropagation()}>
+                  Unsplash
+                </a>
+              </>
+            ) : (
+              <>Studio image · true to colour · {current.label}</>
+            )}
           </p>
-          <div className="flex gap-1.5 sm:hidden" aria-hidden>
-            {IMAGE_VIEWS.map((vw) => (
+          <div className={clsx("flex gap-1.5 sm:hidden", single && "hidden")} aria-hidden>
+            {views.map((vw) => (
               <span key={vw.id} className={clsx("h-1.5 rounded-full transition-all", vw.id === view ? "w-5 bg-ink" : "w-1.5 bg-ink/25")} />
             ))}
           </div>
@@ -149,15 +167,15 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
             <div className="relative mx-auto aspect-square max-h-full w-full overflow-hidden rounded-[28px]">
               <ProductImage key={`${variant.id}-${view}-lb`} product={p} variant={variant.id} view={view} alt={alt} sizes="100vw" className="h-full w-full animate-fade" />
             </div>
-            <button type="button" onClick={() => go(-1)} aria-label="Previous view" className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] sm:left-4">
+            <button type="button" onClick={() => go(-1)} aria-label="Previous view" hidden={single} className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] sm:left-4">
               <Icon name="chevronLeft" size={18} />
             </button>
-            <button type="button" onClick={() => go(1)} aria-label="Next view" className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] sm:right-4">
+            <button type="button" onClick={() => go(1)} aria-label="Next view" hidden={single} className="absolute right-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] sm:right-4">
               <Icon name="chevronRight" size={18} />
             </button>
           </div>
-          <div className="flex justify-center gap-2 px-5 py-5">
-            {IMAGE_VIEWS.map((vw) => (
+          <div className={clsx("flex justify-center gap-2 px-5 py-5", single && "invisible")}>
+            {views.map((vw) => (
               <button
                 key={vw.id}
                 type="button"

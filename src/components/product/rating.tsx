@@ -13,9 +13,9 @@ export function Stars({ value, size = 12, className }: { value: number; size?: n
   );
   return (
     <span className={clsx("relative inline-block align-middle", className)} role="img" aria-label={`${value.toFixed(1)} out of 5 stars`}>
-      {row("#D8DBD4")}
+      {row("var(--color-line-strong)")}
       <span className="absolute inset-0 overflow-hidden" style={{ width: `${pct}%` }}>
-        {row("#0A0B0D")}
+        {row("var(--color-ink)")}
       </span>
     </span>
   );

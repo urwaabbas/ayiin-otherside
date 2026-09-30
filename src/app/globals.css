@@ -1,39 +1,73 @@
 @import "tailwindcss";
 
 /* ───────────────────────────────────────────────────────────────
-   AYIIN — "Intelligent Commerce" design tokens
-   60% porcelain · 25% white · 10% ink/graphite · 5% signal accents
+   AYIIN — design tokens, derived from the logo
+   The logo is warm charcoal lettering (#282828) with an A and two
+   i-tittles in a sunlit gradient: orange #FF9B2B → amber #FFA624 →
+   yellow #FDD207. Everything here comes from those two ideas:
+   · neutrals are the logo's charcoal, warmed a touch so they sit
+     with the amber instead of fighting it (no cool blue-blacks);
+   · the amber is a signal, not a paint — CTAs, selection, live and
+     verified moments. Most of the interface stays neutral.
+   60% porcelain · 25% white · 10% charcoal · 5% amber
    ─────────────────────────────────────────────────────────────── */
 
 @theme {
-  /* Core palette */
-  --color-ink: #0a0b0d;
-  --color-graphite: #202328;
-  --color-porcelain: #f7f7f2;
-  --color-soft: #e8eae6;
-  --color-lime: #c8ff3d;
-  --color-blue: #5967ff;
+  /* Neutrals — surfaces
+     porcelain  page background (the logo's #F7F7F7, warmed)
+     white      cards, elevated surfaces, inputs, modals, drawers
+     mist       secondary background, quiet fills, hovers
+     soft       tracks, inactive fills, pressed states
+     ink        dark actions, selected chips, dark text surfaces
+     graphite   dark sections: footer, business panels (the logo's own #282828) */
+  --color-porcelain: #f7f6f3;
   --color-white: #ffffff;
+  --color-mist: #f0eeea;
+  --color-soft: #e8e6e1;
+  --color-ink: #1f1e1c;
+  --color-graphite: #282725;
+  --color-graphite-2: #31302d;
+  --color-graphite-line: #3d3b38;
 
-  /* Derived neutrals (all text tokens pass WCAG AA on porcelain + white) */
-  --color-ink-2: #3a3e45;
-  --color-mute: #62666e;
-  --color-mute-dark: #9097a0;
-  --color-line: #e3e5e0;
-  --color-line-strong: #d0d3cd;
-  --color-mist: #f0f1ec;
-  --color-graphite-2: #2c3037;
-  --color-graphite-line: #33373e;
+  /* Neutrals — text (each passes WCAG AA on porcelain and white)
+     ink → ink-2 → mute → faint (disabled, decorative only)
+     mute-dark is muted text on graphite/ink surfaces */
+  --color-ink-2: #45423d;
+  --color-mute: #6b6760;
+  --color-faint: #a9a59e;
+  --color-mute-dark: #a8a49c;
 
-  /* Signal variants */
-  --color-lime-soft: #efffc7;
-  --color-lime-deep: #5b7a00;
-  --color-blue-ink: #4652f0;
-  --color-blue-soft: #eceeff;
-  --color-amber: #b86e00;
-  --color-amber-soft: #fff1dc;
-  --color-danger: #c9342c;
-  --color-danger-soft: #fdecea;
+  /* Neutrals — lines */
+  --color-line: #e5e2dc;
+  --color-line-strong: #d2cec6;
+  --color-line-hover: #b9b4ab;
+
+  /* Brand — from the logo gradient
+     brand        the amber midpoint; fills with ink text on top (7.5:1)
+     brand-hover  lifted amber for hover on brand fills
+     brand-soft   a whisper of amber for selected rows and chips
+     brand-deep   amber darkened for text/icons on light (5.5:1 on white)
+     brand-orange / brand-yellow  the gradient ends, for the gradient only */
+  --color-brand: #ffa624;
+  --color-brand-hover: #ffb547;
+  --color-brand-soft: #fff2de;
+  --color-brand-deep: #a5520c;
+  --color-brand-orange: #ff9b2b;
+  --color-brand-yellow: #fdd207;
+
+  /* Semantic — kept apart from the brand so amber never means "warning" */
+  --color-success: #23794c;
+  --color-success-soft: #e6f2ea;
+  --color-warning: #8f6200;
+  --color-warning-soft: #fbf1d6;
+  --color-danger: #c23b2e;
+  --color-danger-soft: #fcece9;
+  --color-info: #3e5874;
+  --color-info-soft: #ecf0f4;
+
+  /* Commerce */
+  --color-price: var(--color-ink);
+  --color-sale: var(--color-brand-deep);
 
   /* Typography */
   --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -44,10 +78,13 @@
   --text-2xs--line-height: 1rem;
 
   /* Elevation — soft, layered, never muddy */
-  --shadow-hair: 0 0 0 1px rgb(10 11 13 / 0.06);
-  --shadow-soft: 0 1px 2px rgb(10 11 13 / 0.04), 0 10px 30px -14px rgb(10 11 13 / 0.14);
-  --shadow-lift: 0 2px 6px rgb(10 11 13 / 0.05), 0 30px 70px -30px rgb(10 11 13 / 0.32);
-  --shadow-float: 0 20px 60px -20px rgb(10 11 13 / 0.35), 0 0 0 1px rgb(10 11 13 / 0.05);
+  --shadow-hair: 0 0 0 1px rgb(var(--rgb-ink) / 0.07);
+  --shadow-soft: 0 1px 2px rgb(var(--rgb-ink) / 0.04), 0 10px 30px -14px rgb(var(--rgb-ink) / 0.14);
+  --shadow-lift: 0 2px 6px rgb(var(--rgb-ink) / 0.05), 0 30px 70px -30px rgb(var(--rgb-ink) / 0.3);
+  --shadow-float: 0 20px 60px -20px rgb(var(--rgb-ink) / 0.32), 0 0 0 1px rgb(var(--rgb-ink) / 0.05);
+
+  /* The logo gradient. Used only where something fills up (progress). */
+  --gradient-brand: linear-gradient(90deg, var(--color-brand-orange), var(--color-brand) 54%, var(--color-brand-yellow));
 
   /* Motion — cinematic but restrained */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -64,8 +101,8 @@
   --animate-sheen: sheen 2.8s var(--ease-in-out-soft) infinite;
 
   @keyframes signal {
-    0%, 100% { box-shadow: 0 0 0 0 rgb(200 255 61 / 0.55); }
-    60% { box-shadow: 0 0 0 6px rgb(200 255 61 / 0); }
+    0%, 100% { box-shadow: 0 0 0 1.5px rgb(var(--rgb-ink) / 0.85), 0 0 0 0 rgb(var(--rgb-brand) / 0.5); }
+    60% { box-shadow: 0 0 0 1.5px rgb(var(--rgb-ink) / 0.85), 0 0 0 6px rgb(var(--rgb-brand) / 0); }
   }
   @keyframes rise {
     from { opacity: 0; transform: translate3d(0, 24px, 0); }
@@ -90,9 +127,15 @@
 @layer base {
   :root {
     color-scheme: light;
+    accent-color: var(--color-ink);
+    caret-color: var(--color-ink);
     --header-h: 132px;
     --gutter: 16px;
-    --focus: var(--color-blue);
+    --focus: var(--color-brand-deep);
+    /* Channel triplets of the core tokens, for translucent shadows and scrims */
+    --rgb-ink: 31 30 28;
+    --rgb-porcelain: 247 246 243;
+    --rgb-brand: 255 166 36;
   }
   @media (min-width: 640px) {
     :root { --gutter: 24px; }
@@ -118,7 +161,7 @@
   }
 
   ::selection {
-    background: var(--color-lime);
+    background: var(--color-brand);
     color: var(--color-ink);
   }
 
@@ -143,10 +186,6 @@
   input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
   input[type="search"]::-webkit-search-cancel-button,
   input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
-
-  [data-mode="business"] {
-    --focus: var(--color-blue);
-  }
 }
 
 /* ─── Signature components ─────────────────────────────────────── */
@@ -193,14 +232,17 @@
     height: 7px;
     flex: none;
     border-radius: 999px;
-    background: var(--color-lime);
-    box-shadow: 0 0 0 1.5px rgb(10 11 13 / 0.85);
+    background: var(--color-brand);
+    box-shadow: 0 0 0 1.5px rgb(var(--rgb-ink) / 0.85);
   }
   .signal-dot[data-live="true"] { animation: var(--animate-signal); }
-  .signal-dot[data-tone="amber"] { background: #ffb547; }
-  .signal-dot[data-tone="blue"] { background: var(--color-blue); box-shadow: none; }
+  .signal-dot[data-tone="success"] { background: var(--color-success); box-shadow: none; }
+  .signal-dot[data-tone="warning"] { background: var(--color-warning); box-shadow: none; }
+  .signal-dot[data-tone="danger"] { background: var(--color-danger); box-shadow: none; }
+  .signal-dot[data-tone="info"] { background: var(--color-info); box-shadow: none; }
   .signal-dot[data-tone="mute"] { background: var(--color-line-strong); box-shadow: none; }
-  .signal-dot[data-tone="danger"] { background: #ff6b5e; box-shadow: none; }
+  /* Only the brand dot pulses; semantic dots stay still. */
+  .signal-dot[data-tone]:not([data-tone="brand"])[data-live="true"] { animation: none; }
 
   /* Buttons */
   .btn {
@@ -220,27 +262,50 @@
     -webkit-tap-highlight-color: transparent;
   }
   .btn:active:not(:disabled) { transform: scale(0.98); }
-  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn:disabled {
+    cursor: not-allowed;
+    background: var(--color-soft);
+    border-color: transparent;
+    color: var(--color-faint);
+    box-shadow: none;
+  }
   .btn-sm { height: 38px; padding-inline: 1rem; font-size: 0.875rem; }
   .btn-lg { height: 56px; padding-inline: 1.75rem; font-size: 1rem; }
 
-  .btn-ink { background: var(--color-ink); color: var(--color-white); }
-  .btn-ink:hover:not(:disabled) { background: var(--color-graphite); box-shadow: 0 10px 30px -12px rgb(10 11 13 / 0.5); }
+  /* Hierarchy — one system everywhere:
+     .btn-brand    the one decisive CTA in a view (amber, ink text)
+     .btn-ink      primary action (charcoal, the logo's lettering)
+     .btn-ghost    secondary, outlined
+     .btn-white    secondary on tinted or image surfaces
+     .btn-quiet    minimal, text-weight action
+     .btn-danger   destructive
+     .btn-on-dark  secondary on graphite/ink surfaces */
+  .btn-brand { background: var(--color-brand); color: var(--color-ink); }
+  .btn-brand:hover:not(:disabled) { background: var(--color-brand-hover); }
+  .btn-brand:active:not(:disabled) { background: var(--color-brand-orange); }
 
-  .btn-signal { background: var(--color-lime); color: var(--color-ink); }
-  .btn-signal:hover:not(:disabled) { background: #d6ff6b; box-shadow: 0 10px 30px -12px rgb(120 170 0 / 0.55); }
+  .btn-ink { background: var(--color-ink); color: var(--color-white); }
+  .btn-ink:hover:not(:disabled) { background: var(--color-graphite-2); }
+  .btn-ink:active:not(:disabled) { background: var(--color-graphite); }
 
   .btn-ghost { background: transparent; color: var(--color-ink); border: 1px solid var(--color-line-strong); }
   .btn-ghost:hover:not(:disabled) { border-color: var(--color-ink); background: var(--color-white); }
+  .btn-ghost:active:not(:disabled) { background: var(--color-mist); }
 
   .btn-white { background: var(--color-white); color: var(--color-ink); box-shadow: var(--shadow-hair); }
   .btn-white:hover:not(:disabled) { box-shadow: var(--shadow-soft); }
+  .btn-white:active:not(:disabled) { background: var(--color-mist); }
 
-  .btn-blue { background: var(--color-blue); color: var(--color-ink); }
-  .btn-blue:hover:not(:disabled) { background: #6b78ff; }
+  .btn-quiet { background: transparent; color: var(--color-ink-2); }
+  .btn-quiet:hover:not(:disabled) { background: var(--color-mist); color: var(--color-ink); }
+  .btn-quiet:active:not(:disabled) { background: var(--color-soft); }
 
-  .btn-on-dark { background: transparent; color: var(--color-porcelain); border: 1px solid rgb(247 247 242 / 0.22); }
-  .btn-on-dark:hover:not(:disabled) { border-color: var(--color-porcelain); background: rgb(247 247 242 / 0.06); }
+  .btn-danger { background: var(--color-danger); color: var(--color-white); }
+  .btn-danger:hover:not(:disabled) { background: color-mix(in oklab, var(--color-danger), var(--color-ink) 16%); }
+
+  .btn-on-dark { background: transparent; color: var(--color-porcelain); border: 1px solid rgb(var(--rgb-porcelain) / 0.22); }
+  .btn-on-dark:hover:not(:disabled) { border-color: var(--color-porcelain); background: rgb(var(--rgb-porcelain) / 0.06); }
+  .btn-on-dark:disabled { background: transparent; border-color: var(--color-graphite-line); color: var(--color-mute-dark); }
 
   /* Chips */
   .chip {
@@ -258,7 +323,7 @@
     transition: all 200ms var(--ease-out-expo);
     white-space: nowrap;
   }
-  .chip:hover { border-color: var(--color-line-strong); color: var(--color-ink); }
+  .chip:hover { border-color: var(--color-line-hover); color: var(--color-ink); }
   .chip[aria-pressed="true"],
   .chip[data-active="true"] {
     background: var(--color-ink);
@@ -266,7 +331,7 @@
     color: var(--color-white);
   }
   .chip[aria-pressed="true"] .chip-dot,
-  .chip[data-active="true"] .chip-dot { background: var(--color-lime); }
+  .chip[data-active="true"] .chip-dot { background: var(--color-brand); }
 
   /* Surfaces */
   .card {
@@ -291,9 +356,10 @@
     color: var(--color-ink);
     transition: border-color 160ms, box-shadow 160ms;
   }
-  .field::placeholder { color: #8a8e96; }
-  .field:hover { border-color: #b9bdb6; }
-  .field:focus { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 4px rgb(89 103 255 / 0.16); }
+  .field::placeholder { color: var(--color-mute); opacity: 0.8; }
+  .field:hover { border-color: var(--color-line-hover); }
+  .field:focus { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 4px rgb(var(--rgb-brand) / 0.28); }
+  .field:disabled { background: var(--color-mist); color: var(--color-faint); cursor: not-allowed; }
   .field-label {
     display: block;
     font-size: 0.8125rem;
@@ -339,7 +405,7 @@
     position: relative;
     overflow: hidden;
     isolation: isolate;
-    background-color: #ecede8;
+    background-color: var(--color-mist);
   }
   .shimmer::after {
     content: "";
@@ -349,7 +415,7 @@
     background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.72) 50%, transparent 80%);
     animation: shimmer 1.5s var(--ease-in-out-soft) infinite;
   }
-  .shimmer-dark { background-color: #26292f; }
+  .shimmer-dark { background-color: var(--color-graphite-2); }
   .shimmer-dark::after { background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.08) 50%, transparent 80%); }
   @keyframes shimmer {
     to { transform: translateX(100%); }
@@ -385,20 +451,21 @@
   /* Subtle grain/grid texture used behind hero stages */
   .grid-texture {
     background-image:
-      linear-gradient(to right, rgb(10 11 13 / 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(10 11 13 / 0.045) 1px, transparent 1px);
+      linear-gradient(to right, rgb(var(--rgb-ink) / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--rgb-ink) / 0.045) 1px, transparent 1px);
     background-size: 56px 56px;
   }
   .grid-texture-dark {
     background-image:
-      linear-gradient(to right, rgb(247 247 242 / 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgb(247 247 242 / 0.05) 1px, transparent 1px);
+      linear-gradient(to right, rgb(var(--rgb-porcelain) / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--rgb-porcelain) / 0.05) 1px, transparent 1px);
     background-size: 56px 56px;
   }
 }
 
 @layer utilities {
   .text-balance { text-wrap: balance; }
+  .bg-brand-gradient { background-image: var(--gradient-brand); }
   .text-pretty { text-wrap: pretty; }
   .no-scrollbar { scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }

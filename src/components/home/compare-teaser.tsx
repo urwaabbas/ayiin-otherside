@@ -57,7 +57,7 @@ export function CompareTeaser({ items }: { items: Product[] }) {
               onClick={() => setDiffOnly((d) => !d)}
               className={clsx("relative h-6 w-10 rounded-full transition-colors duration-300", diffOnly ? "bg-ink" : "bg-line-strong")}
             >
-              <span className={clsx("absolute top-1 h-4 w-4 rounded-full transition-all duration-300", diffOnly ? "left-5 bg-lime" : "left-1 bg-white")} />
+              <span className={clsx("absolute top-1 h-4 w-4 rounded-full transition-all duration-300", diffOnly ? "left-5 bg-brand" : "left-1 bg-white")} />
             </button>
           </label>
         </div>
@@ -89,7 +89,7 @@ export function CompareTeaser({ items }: { items: Product[] }) {
                       <span
                         className={clsx(
                           "inline-flex items-center gap-1.5 rounded-full",
-                          r.best === i && "bg-lime-soft py-0.5 pl-1.5 pr-2.5 font-medium text-ink",
+                          r.best === i && "bg-brand-soft py-0.5 pl-1.5 pr-2.5 font-medium text-ink",
                         )}
                       >
                         {r.best === i && <span className="h-1.5 w-1.5 rounded-full bg-ink" />}

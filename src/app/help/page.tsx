@@ -53,7 +53,7 @@ export default function HelpPage() {
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {SECTIONS.map((s) => (
           <a key={s.id} href={`#${s.id}`} className="group rounded-[24px] bg-white p-5 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-mist transition-colors group-hover:bg-lime">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-mist transition-colors group-hover:bg-brand">
               <Icon name={s.icon} size={18} />
             </span>
             <p className="mt-4 text-[15px] font-medium">{s.title}</p>
@@ -84,7 +84,7 @@ export default function HelpPage() {
             <p className="mt-3 max-w-md text-[15px] text-mute-dark">Median reply time: 4 minutes, 7am–11pm ET. Business accounts get a named account manager.</p>
           </div>
           <div className="flex flex-wrap items-center gap-3 lg:justify-end">
-            <a href="tel:+18005550199" className="btn btn-signal">Call 1-800-555-0199</a>
+            <a href="tel:+18005550199" className="btn btn-brand">Call 1-800-555-0199</a>
             <a href="mailto:help@ayiin.com" className="btn btn-on-dark">help@ayiin.com</a>
           </div>
         </section>

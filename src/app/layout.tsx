@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { geist, geistMono, funnel } from "./fonts";
 import { getPrefs } from "@/lib/server-prefs";
+import { BRAND_COLORS } from "@/lib/brand-colors";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -29,7 +30,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F7F7F2",
+  themeColor: BRAND_COLORS.porcelain,
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",

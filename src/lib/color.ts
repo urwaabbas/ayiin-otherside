@@ -1,3 +1,5 @@
+import { BRAND_COLORS } from "@/lib/brand-colors";
+
 function lum(hex: string) {
   const h = hex.replace("#", "");
   const [r, g, b] = [0, 2, 4].map((i) => {
@@ -10,5 +12,5 @@ function lum(hex: string) {
 /** Ink or white — whichever reads better on the given fill. */
 export function readableOn(hex: string) {
   const l = lum(hex);
-  return (1.05) / (l + 0.05) >= (l + 0.05) / 0.0539 ? "#FFFFFF" : "#0A0B0D";
+  return (1.05) / (l + 0.05) >= (l + 0.05) / (lum(BRAND_COLORS.ink) + 0.05) ? BRAND_COLORS.white : BRAND_COLORS.ink;
 }

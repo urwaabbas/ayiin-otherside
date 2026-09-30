@@ -78,7 +78,7 @@ export function HomeBusiness() {
                     <Money usd={available} mono={false} />
                   </p>
                   <div className="mt-3 h-2 overflow-hidden rounded-full bg-graphite">
-                    <div className="h-full rounded-full bg-lime" style={{ width: `${(available / company.creditLimit) * 100}%` }} />
+                    <div className="bg-brand-gradient h-full rounded-full" style={{ width: `${(available / company.creditLimit) * 100}%` }} />
                   </div>
                   <p className="mt-2 text-[12px] text-mute-dark">Next invoice due Oct 4 · Autopay off</p>
                 </div>
@@ -86,7 +86,7 @@ export function HomeBusiness() {
                 <div className="mt-7">
                   <div className="mb-2 flex items-center justify-between">
                     <p className="eyebrow !text-mute-dark">Waiting on you</p>
-                    <Link href="/business?tab=approvals" className="text-[12.5px] text-lime hover:underline">
+                    <Link href="/business?tab=approvals" className="text-[12.5px] text-brand hover:underline">
                       All approvals
                     </Link>
                   </div>
@@ -194,7 +194,7 @@ export function HomeBusiness() {
                     <div className="min-w-0">
                       <p className="flex flex-wrap items-center gap-2 text-[14.5px] font-medium">
                         {s.name}
-                        {i === 0 && <span className="rounded-full bg-lime px-2 py-0.5 text-[10.5px]">Recommended</span>}
+                        {i === 0 && <span className="rounded-full bg-brand px-2 py-0.5 text-[10.5px]">Recommended</span>}
                       </p>
                       <p className="mt-0.5 truncate text-[12.5px] text-mute">
                         Replied in {r.time} · {r.lead}d lead · {r.note}
@@ -204,7 +204,7 @@ export function HomeBusiness() {
                       <p className="num text-[16px] font-medium">
                         <Money usd={r.price} cents />
                       </p>
-                      <p className={`text-[11.5px] ${underTarget ? "text-lime-deep" : "text-mute"}`}>{underTarget ? "Under target" : "Above target"}</p>
+                      <p className={`text-[11.5px] ${underTarget ? "text-success" : "text-mute"}`}>{underTarget ? "Under target" : "Above target"}</p>
                     </div>
                   </li>
                 );
@@ -232,7 +232,7 @@ export function HomeBusiness() {
           {FEATURES.map((f, i) => (
             <Reveal key={f.title} delay={i * 60} className={f.wide ? "lg:col-span-2" : ""}>
               <div className={`flex h-full flex-col rounded-[26px] p-6 sm:p-7 ${f.dark ? "panel-ink" : "bg-white shadow-[var(--shadow-hair)]"}`}>
-                <span className={`grid h-11 w-11 place-items-center rounded-2xl ${f.dark ? "bg-graphite text-lime" : "bg-mist"}`}>
+                <span className={`grid h-11 w-11 place-items-center rounded-2xl ${f.dark ? "bg-graphite text-brand" : "bg-mist"}`}>
                   <Icon name={f.icon} size={20} />
                 </span>
                 <p className="mt-5 text-[18px] font-medium tracking-[-0.02em]">{f.title}</p>

@@ -28,7 +28,7 @@ export function daysUntil(p: Product) {
 /* ─── Price intelligence ─────────────────────────────────── */
 
 export type PriceInsight = {
-  tone: "lime" | "blue" | "mute";
+  tone: "brand" | "info" | "mute";
   label: string;
   detail: string;
   verifiedDeal: boolean;
@@ -43,7 +43,7 @@ export function priceInsight(p: Product): PriceInsight {
   const savings = p.compareAt ? p.compareAt - p.price : 0;
   if (p.price < low) {
     return {
-      tone: "lime",
+      tone: "brand",
       label: "Lowest price in 90 days",
       detail: "Verified against 12 weeks of pricing",
       verifiedDeal: true,
@@ -53,7 +53,7 @@ export function priceInsight(p: Product): PriceInsight {
   }
   if (savings > 0 && p.price <= typical * 0.97) {
     return {
-      tone: "lime",
+      tone: "brand",
       label: `${Math.round(((typical - p.price) / typical) * 100)}% below typical`,
       detail: "Verified against 12 weeks of pricing",
       verifiedDeal: true,
@@ -64,7 +64,7 @@ export function priceInsight(p: Product): PriceInsight {
   if (p.price <= typical * 1.01) {
     return { tone: "mute", label: "Fair price", detail: "In line with its 90-day average", verifiedDeal: false, typical, low };
   }
-  return { tone: "blue", label: "Price is stable", detail: "No meaningful changes in 90 days", verifiedDeal: false, typical, low };
+  return { tone: "info", label: "Price is stable", detail: "No meaningful changes in 90 days", verifiedDeal: false, typical, low };
 }
 
 export function savingsPct(p: Product) {
@@ -74,12 +74,12 @@ export function savingsPct(p: Product) {
 
 /* ─── Stock ──────────────────────────────────────────────── */
 
-export function stockSignal(p: Product): { tone: "lime" | "amber" | "danger"; label: string; urgent: boolean } {
+export function stockSignal(p: Product): { tone: "success" | "warning" | "danger"; label: string; urgent: boolean } {
   if (p.stock <= 0) return { tone: "danger", label: "Back soon — get notified", urgent: false };
-  if (p.stock <= 15) return { tone: "amber", label: `Only ${p.stock} left`, urgent: true };
-  if (p.stock <= 60) return { tone: "amber", label: `Low stock · ${p.stock} left`, urgent: false };
-  if (p.stock >= 1000) return { tone: "lime", label: `In stock · ${(p.stock / 1000).toFixed(p.stock >= 10000 ? 0 : 1)}k+ available`, urgent: false };
-  return { tone: "lime", label: "In stock", urgent: false };
+  if (p.stock <= 15) return { tone: "warning", label: `Only ${p.stock} left`, urgent: true };
+  if (p.stock <= 60) return { tone: "warning", label: `Low stock · ${p.stock} left`, urgent: false };
+  if (p.stock >= 1000) return { tone: "success", label: `In stock · ${(p.stock / 1000).toFixed(p.stock >= 10000 ? 0 : 1)}k+ available`, urgent: false };
+  return { tone: "success", label: "In stock", urgent: false };
 }
 
 /* ─── Business pricing ───────────────────────────────────── */

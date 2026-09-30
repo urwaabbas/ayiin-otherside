@@ -84,8 +84,8 @@ export function CartDrawer() {
             </p>
             <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-soft">
               <div
-                className="h-full rounded-full bg-lime transition-[width] duration-700 ease-[var(--ease-out-expo)]"
-                style={{ width: `${Math.min(100, (sum.subtotal / FREE_SHIPPING_THRESHOLD) * 100)}%`, boxShadow: "inset 0 0 0 1px rgb(10 11 13 / 0.15)" }}
+                className="bg-brand-gradient h-full rounded-full transition-[width] duration-700 ease-[var(--ease-out-expo)]"
+                style={{ width: `${Math.min(100, (sum.subtotal / FREE_SHIPPING_THRESHOLD) * 100)}%`, boxShadow: "inset 0 0 0 1px rgb(var(--rgb-ink) / 0.12)" }}
               />
             </div>
           </div>
@@ -125,7 +125,7 @@ export function CartDrawer() {
               {sum.volumeSavings > 0 && (
                 <div className="flex justify-between">
                   <dt className="text-ink-2">Volume savings</dt>
-                  <dd className="num text-lime-deep">−{fmt(sum.volumeSavings, { cents: true })}</dd>
+                  <dd className="num text-sale">−{fmt(sum.volumeSavings, { cents: true })}</dd>
                 </div>
               )}
               <div className="flex justify-between">
@@ -139,7 +139,7 @@ export function CartDrawer() {
             </dl>
             <p className="mt-1 text-[12px] text-mute">{business ? "Tax calculated from your exemption certificate at checkout." : "Taxes calculated at checkout. No hidden fees."}</p>
             <div className="mt-4 grid gap-2">
-              <Link href="/checkout" onClick={close} className="btn btn-ink btn-lg w-full">
+              <Link href="/checkout" onClick={close} className="btn btn-brand btn-lg w-full">
                 <Icon name="lock" size={16} />
                 {business ? "Checkout with PO or terms" : "Checkout — no account needed"}
               </Link>
@@ -189,7 +189,7 @@ function DrawerLine({ line, business }: { line: CartLine; business: boolean }) {
           <SignalDot /> Arrives {deliveryLabel(p)}
         </p>
         {nt && business && (
-          <p className="mt-1 text-[12px] text-blue-ink">
+          <p className="mt-1 text-[12px] text-info">
             Add {nt.min - line.qty} more for <span className="num">{fmt(nt.price, { cents: true })}</span>/unit
           </p>
         )}

@@ -43,7 +43,7 @@ export function QuestionMarquee({ tone = "light" }: { tone?: "light" | "dark" })
       {QUESTIONS.map((q) => (
         <span key={q} className="flex items-center">
           <span className={tone === "dark" ? "text-porcelain/85" : "text-ink/85"}>{q}</span>
-          <span aria-hidden className="mx-8 inline-block h-2.5 w-2.5 rounded-full bg-lime shadow-[0_0_0_1.5px_rgb(10_11_13/0.85)]" />
+          <span aria-hidden className="mx-8 inline-block h-2.5 w-2.5 rounded-full bg-brand shadow-[0_0_0_1.5px_rgb(var(--rgb-ink)/0.85)]" />
         </span>
       ))}
     </div>
@@ -203,7 +203,7 @@ export function HomePersonal() {
                 >
                   <div className="relative">
                     <ProductImage product={p} sizes="340px" className="aspect-[4/3] w-full" />
-                    <span className="glint absolute left-3 top-3 inline-flex h-7 items-center gap-1.5 rounded-full bg-lime px-2.5 text-[11.5px] font-medium text-ink">
+                    <span className="glint absolute left-3 top-3 inline-flex h-7 items-center gap-1.5 rounded-full bg-brand px-2.5 text-[11.5px] font-medium text-ink">
                       <Icon name="check" size={12} strokeWidth={2.4} /> {ins.label}
                     </span>
                   </div>
@@ -271,7 +271,7 @@ export function HomePersonal() {
                 ["Service", "Response time and return rate tracked; below standard, delisted."],
               ].map(([t, d], n) => (
                 <li key={t} className="flex gap-4">
-                  <span className="num grid h-8 w-8 shrink-0 place-items-center rounded-full bg-ink text-[12px] text-lime">{n + 1}</span>
+                  <span className="num grid h-8 w-8 shrink-0 place-items-center rounded-full bg-ink text-[12px] text-brand">{n + 1}</span>
                   <div>
                     <p className="text-[15px] font-medium">{t}</p>
                     <p className="text-[13.5px] text-mute">{d}</p>
@@ -289,7 +289,7 @@ export function HomePersonal() {
                   </span>
                   <div className="min-w-0">
                     <p className="flex items-center gap-1.5 text-[15px] font-medium">
-                      {s.name} <Icon name="shield" size={14} className="text-blue-ink" />
+                      {s.name} <Icon name="shield" size={14} className="text-brand-deep" />
                     </p>
                     <p className="truncate text-[12.5px] text-mute">{s.tagline}</p>
                   </div>

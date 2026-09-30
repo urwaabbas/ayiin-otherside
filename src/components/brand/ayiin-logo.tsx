@@ -33,3 +33,18 @@ export function AyiinLogo({
     />
   );
 }
+
+/** The logo's "A" on its own — for square or tiny spaces (badges, placeholders). Size it by height; ratio 0.71:1. */
+export function AyiinMark({ className }: { className?: string }) {
+  return (
+    <Image
+      src="/brand/ayiin-mark.svg"
+      alt=""
+      aria-hidden
+      width={45}
+      height={63}
+      unoptimized
+      className={clsx("block w-auto object-contain", className)}
+    />
+  );
+}

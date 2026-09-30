@@ -7,8 +7,8 @@ export const categories: Category[] = [
     short: "Tech",
     blurb: "Headphones, laptops and the tools you use all day — tested, compared, explained.",
     kind: "headphones",
-    tint: "#E9ECF4",
-    accent: "#5967FF",
+    tint: "#ECEBE7",
+    accent: "#4F5B6B",
     business: true,
     subcategories: ["Headphones", "Speakers", "Laptops", "Monitors", "Phones"],
     guide: {
@@ -45,8 +45,8 @@ export const categories: Category[] = [
     short: "Kitchen",
     blurb: "Small-batch coffee, precise kettles and stoneware — for home and hospitality.",
     kind: "kettle",
-    tint: "#EEF0E6",
-    accent: "#6E7F3A",
+    tint: "#EEEEE5",
+    accent: "#6B7243",
     business: true,
     subcategories: ["Coffee", "Kettles", "Tableware", "Hospitality"],
     guide: {
@@ -64,8 +64,8 @@ export const categories: Category[] = [
     short: "Fashion",
     blurb: "Footwear, bags and accessories with fit data from thousands of verified buyers.",
     kind: "sneaker",
-    tint: "#EDEBEF",
-    accent: "#8A5CF6",
+    tint: "#EFEBE7",
+    accent: "#8C5E57",
     business: false,
     subcategories: ["Sneakers", "Bags", "Watches", "Eyewear", "Bottles"],
     guide: {
@@ -84,7 +84,7 @@ export const categories: Category[] = [
     blurb: "Clinically-backed skincare with full ingredient transparency.",
     kind: "serum",
     tint: "#F3EAE6",
-    accent: "#D06A5B",
+    accent: "#C0654E",
     business: false,
     subcategories: ["Skincare", "Body", "Fragrance", "Wellness"],
     guide: {
@@ -102,8 +102,8 @@ export const categories: Category[] = [
     short: "Office",
     blurb: "Seating, paper, peripherals and everything a team needs to work well.",
     kind: "taskchair",
-    tint: "#E8EEEC",
-    accent: "#2F8F7A",
+    tint: "#EAECE7",
+    accent: "#4F7466",
     business: true,
     subcategories: ["Seating", "Paper", "Peripherals", "Scanning", "Desk"],
     guide: {
@@ -140,8 +140,8 @@ export const categories: Category[] = [
     short: "Safety",
     blurb: "PPE, cleaning and facility essentials from certified industrial suppliers.",
     kind: "helmet",
-    tint: "#EFF0E3",
-    accent: "#B8A11A",
+    tint: "#F3EFDF",
+    accent: "#B7880F",
     business: true,
     subcategories: ["Gloves", "Head protection", "Cleaning", "First aid"],
     guide: {

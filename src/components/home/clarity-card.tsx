@@ -8,7 +8,7 @@ import { ProductImage } from "@/components/product/product-image";
 import { Price } from "@/components/ui/money";
 import { Icon } from "@/components/ui/icon";
 import { SignalDot } from "@/components/ui/signal";
-import { AyiinSymbol } from "@/components/brand/logo";
+import { AyiinLogo } from "@/components/brand/ayiin-logo";
 import { usePrefs } from "@/components/providers";
 import { deliveryLabel, priceInsight, stockSignal, tierSavingPct } from "@/lib/commerce";
 import { sellerById } from "@/lib/catalog/sellers";
@@ -153,11 +153,9 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
             />
           ))}
         </div>
-        <span className="absolute bottom-4 left-5 inline-flex items-center gap-2 rounded-full bg-white/90 py-1.5 pl-1.5 pr-3 text-[12px] font-medium shadow-[var(--shadow-hair)] backdrop-blur">
-          <span className="grid h-6 w-6 place-items-center rounded-full bg-ink">
-            <AyiinSymbol tone="porcelain" lens="lime" tight className="h-3" />
-          </span>
-          Ayiin Clarity
+        <span className="absolute bottom-4 left-5 inline-flex items-center gap-2 rounded-full bg-white/90 py-1.5 pl-3 pr-3 text-[12px] font-medium shadow-[var(--shadow-hair)] backdrop-blur">
+          <AyiinLogo on="light" className="h-4" />
+          Clarity
         </span>
       </Link>
 
@@ -170,7 +168,7 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
             </div>
             <div className="text-right">
               <Price usd={p.price} size="lg" />
-              {insight.verifiedDeal && <p className="mt-1 whitespace-nowrap text-[11.5px] font-medium text-lime-deep">✓ {insight.label}</p>}
+              {insight.verifiedDeal && <p className="mt-1 whitespace-nowrap text-[11.5px] font-medium text-brand-deep">✓ {insight.label}</p>}
             </div>
           </div>
           <dl className="mt-4 divide-y divide-line border-t border-line">

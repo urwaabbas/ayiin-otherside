@@ -84,7 +84,7 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
                   key={t.min}
                   className={clsx(
                     "rounded-2xl p-3 transition-colors duration-300",
-                    active ? "bg-lime text-ink shadow-[inset_0_0_0_1.5px_#0A0B0D]" : "bg-mist text-ink-2",
+                    active ? "bg-brand text-ink shadow-[inset_0_0_0_1.5px_var(--color-ink)]" : "bg-mist text-ink-2",
                   )}
                 >
                   <p className="num text-[11.5px]">{t.min}+</p>
@@ -102,7 +102,7 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
               <span>Your total</span> <span className="num">{fmt(unit * qty, { cents: true })}</span>
             </p>
             {nt && (
-              <p className="rounded-xl bg-blue-soft px-3 py-2 text-[13px] text-blue-ink">
+              <p className="rounded-xl bg-info-soft px-3 py-2 text-[13px] text-info">
                 Order {nt.min - qty} more to reach {fmt(nt.price, { cents: true })}/{p.b2b.unit} — saves {fmt((unit - nt.price) * nt.min)} on {nt.min}.
               </p>
             )}
@@ -135,7 +135,7 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
                       <div className="min-w-0">
                         <p className="flex items-center gap-1.5 truncate text-[14px] font-medium">
                           {s.name}
-                          {best && <span className="rounded-full bg-lime px-2 py-0.5 text-[10.5px] font-medium">Best value</span>}
+                          {best && <span className="rounded-full bg-brand px-2 py-0.5 text-[10.5px] font-medium">Best value</span>}
                         </p>
                         <p className="truncate text-[12px] text-mute">
                           <span className="num">{s.onTime}%</span> on time · {o.leadDays}d lead · MOQ {o.moq}

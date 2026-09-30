@@ -41,7 +41,7 @@ export function AskForm({ tone = "light", className }: { tone?: "light" | "dark"
           dark ? "bg-graphite ring-1 ring-graphite-line focus-within:ring-mute-dark" : "bg-white shadow-[var(--shadow-soft)] ring-1 ring-line focus-within:ring-ink",
         )}
       >
-        <Icon name="sparkle" size={20} className={clsx("shrink-0", dark ? "text-lime" : "text-ink")} />
+        <Icon name="sparkle" size={20} className={clsx("shrink-0", dark ? "text-brand" : "text-ink")} />
         <label htmlFor={`ask-${tone}`} className="sr-only">
           Describe what you need
         </label>
@@ -59,7 +59,7 @@ export function AskForm({ tone = "light", className }: { tone?: "light" | "dark"
             dark ? "text-porcelain placeholder:text-mute-dark" : "text-ink placeholder:text-mute",
           )}
         />
-        <button type="submit" className={clsx("btn h-12 shrink-0 rounded-2xl px-5", dark ? "btn-signal" : "btn-ink")}>
+        <button type="submit" className={clsx("btn h-12 shrink-0 rounded-2xl px-5", dark ? "btn-brand" : "btn-ink")}>
           <span className="hidden sm:inline">{mode === "business" ? "Find & price" : "Find it"}</span>
           <Icon name="arrowRight" size={18} />
         </button>

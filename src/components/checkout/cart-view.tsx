@@ -107,7 +107,7 @@ export function CartView() {
           <p className="text-[18px] font-medium tracking-[-0.02em]">Summary</p>
           <dl className="mt-5 space-y-2.5 text-[14px]">
             <div className="flex justify-between"><dt className="text-ink-2">Items ({sum.count})</dt><dd className="num">{fmt(sum.listTotal, { cents: true })}</dd></div>
-            {sum.volumeSavings > 0 && <div className="flex justify-between"><dt className="text-ink-2">Volume & contract savings</dt><dd className="num text-lime-deep">−{fmt(sum.volumeSavings, { cents: true })}</dd></div>}
+            {sum.volumeSavings > 0 && <div className="flex justify-between"><dt className="text-ink-2">Volume & contract savings</dt><dd className="num text-sale">−{fmt(sum.volumeSavings, { cents: true })}</dd></div>}
             <div className="flex justify-between"><dt className="text-ink-2">Delivery</dt><dd className="num">{shipping ? fmt(shipping, { cents: true }) : "Free"}</dd></div>
             <div className="flex justify-between">
               <dt className="text-ink-2">{business ? "Tax (exempt)" : "Estimated tax"}</dt>
@@ -124,11 +124,11 @@ export function CartView() {
             </p>
           )}
           {business && (
-            <p className="mt-3 rounded-xl bg-blue-soft px-3 py-2 text-[12.5px] text-blue-ink">
+            <p className="mt-3 rounded-xl bg-info-soft px-3 py-2 text-[12.5px] text-info">
               {total > 2500 ? "Over $2,500 — this order will route to Priya Raman for approval." : "Within your $2,500 limit — no approval needed."}
             </p>
           )}
-          <Link href="/checkout" className="btn btn-ink btn-lg mt-5 w-full">
+          <Link href="/checkout" className="btn btn-brand btn-lg mt-5 w-full">
             <Icon name="lock" size={16} /> {business ? (total > 2500 ? "Continue to approval" : "Checkout on Net 30") : "Checkout"}
           </Link>
           {!business && (
@@ -189,7 +189,7 @@ function Line({ line, business }: { line: CartLine; business: boolean }) {
         <p className="mt-2 flex items-center gap-1.5 text-[13px] text-ink-2">
           <SignalDot /> Arrives {deliveryLabel(p)} · {p.returns.free ? `Free returns for ${p.returns.days} days` : `${p.returns.days}-day returns`}
         </p>
-        {nt && <p className="mt-1 text-[12.5px] text-blue-ink">Add {nt.min - line.qty} more for {fmt(nt.price, { cents: true })}/{p.b2b.unit}</p>}
+        {nt && <p className="mt-1 text-[12.5px] text-info">Add {nt.min - line.qty} more for {fmt(nt.price, { cents: true })}/{p.b2b.unit}</p>}
         <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
           <QtyStepper value={line.qty} onChange={(q) => setQty(line.key, q)} size="sm" allowZero label={`Quantity of ${p.name}`} />
           <button type="button" onClick={() => save(line.key)} className="text-[13px] text-mute hover:text-ink">Save for later</button>

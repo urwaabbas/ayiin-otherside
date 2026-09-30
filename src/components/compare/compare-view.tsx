@@ -115,7 +115,7 @@ export function CompareView() {
           <label className="flex cursor-pointer items-center gap-2.5 text-[13.5px]">
             Differences only
             <button type="button" role="switch" aria-checked={diffOnly} onClick={() => setDiffOnly((d) => !d)} className={clsx("relative h-6 w-10 rounded-full transition-colors", diffOnly ? "bg-ink" : "bg-line-strong")}>
-              <span className={clsx("absolute top-1 h-4 w-4 rounded-full transition-all", diffOnly ? "left-5 bg-lime" : "left-1 bg-white")} />
+              <span className={clsx("absolute top-1 h-4 w-4 rounded-full transition-all", diffOnly ? "left-5 bg-brand" : "left-1 bg-white")} />
             </button>
           </label>
           <button type="button" onClick={clear} className="chip">
@@ -186,7 +186,7 @@ export function CompareView() {
                     </th>
                     {r.cells.map((c, i) => (
                       <td key={i} className="px-4 py-3.5 align-top">
-                        <span className={clsx("inline-flex items-center gap-1.5", r.best === i && "rounded-full bg-lime-soft py-0.5 pl-2 pr-2.5 font-medium")}>
+                        <span className={clsx("inline-flex items-center gap-1.5", r.best === i && "rounded-full bg-brand-soft py-0.5 pl-2 pr-2.5 font-medium")}>
                           {r.best === i && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />}
                           {c}
                         </span>

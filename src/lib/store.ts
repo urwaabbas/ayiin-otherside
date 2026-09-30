@@ -121,9 +121,9 @@ const SEED_LISTS: ProcurementList[] = [
     updatedAt: "2026-09-02T09:10:00.000Z",
     items: [
       { productId: idOf("kova-book-14-air"), variantId: "silver", qty: 1 },
-      { productId: idOf("kova-keys-low-profile"), variantId: "porcelain", qty: 1 },
+      { productId: idOf("kova-keys-low-profile"), variantId: "graphite", qty: 1 },
       { productId: idOf("transit-daypack-22"), variantId: "ink", qty: 1 },
-      { productId: idOf("trail-bottle-750"), variantId: "signal", qty: 1 },
+      { productId: idOf("trail-bottle-750"), variantId: "chalk", qty: 1 },
     ],
   },
 ];

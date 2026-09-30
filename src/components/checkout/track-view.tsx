@@ -62,7 +62,7 @@ export function TrackView() {
                 <p className="num text-[13px] text-mute">{lookup}</p>
                 <p className="display mt-1 text-[40px]">{found ? (found.status === "awaiting-approval" ? "Awaiting approval" : "Confirmed") : "Arriving " + fmtDay(addBusinessDays(t, 2))}</p>
               </div>
-              <span className="flex items-center gap-2 rounded-full bg-lime-soft px-3 py-1.5 text-[13px] font-medium">
+              <span className="flex items-center gap-2 rounded-full bg-brand-soft px-3 py-1.5 text-[13px] font-medium">
                 <SignalDot live /> On schedule
               </span>
             </div>
@@ -72,7 +72,7 @@ export function TrackView() {
             <ol className="mt-8 space-y-5">
               {steps.map((s) => (
                 <li key={s.label} className="flex items-start gap-4">
-                  <span className={clsx("mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full", s.done ? "bg-ink text-lime" : s.live ? "bg-lime shadow-[inset_0_0_0_1.5px_#0A0B0D]" : "border border-line-strong")}>
+                  <span className={clsx("mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full", s.done ? "bg-ink text-brand" : s.live ? "bg-brand shadow-[inset_0_0_0_1.5px_var(--color-ink)]" : "border border-line-strong")}>
                     {s.done && <Icon name="check" size={12} strokeWidth={2.6} />}
                   </span>
                   <div className="flex-1">

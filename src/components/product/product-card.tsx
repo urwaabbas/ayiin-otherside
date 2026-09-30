@@ -4,6 +4,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useState } from "react";
 import type { Product } from "@/lib/types";
+import { hasView } from "@/lib/images";
 import { ProductImage } from "@/components/product/product-image";
 import { QuickView } from "@/components/product/quick-view";
 import { Rating } from "@/components/product/rating";
@@ -47,12 +48,12 @@ export function ProductCard({
   const tier = bestTier(p);
   const badge = business
     ? p.b2b.contractPrice
-      ? { label: "Contract price", tone: "blue" as const }
+      ? { label: "Contract price", tone: "contract" as const }
       : p.tags.includes("bulk")
         ? { label: `Up to ${tierSavingPct(p, tier.price)}% off at volume`, tone: "ink" as const }
         : null
     : insight.verifiedDeal
-      ? { label: insight.label, tone: "lime" as const }
+      ? { label: insight.label, tone: "brand" as const }
       : p.tags.includes("new")
         ? { label: "New", tone: "ink" as const }
         : p.tags.includes("bestseller")
@@ -72,9 +73,11 @@ export function ProductCard({
           <span className="relative block aspect-[4/4.4] w-full transition-transform duration-[900ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.035]">
             <ProductImage product={p} variant={variant.id} preload={priority} sizes={CARD_SIZES} className="absolute inset-0" />
             {/* second angle on hover (pointer devices only — display:none images are never fetched) */}
+            {hasView(p, "angle", variant.id) && (
             <span className="absolute inset-0 hidden opacity-0 transition-opacity duration-500 group-hover:opacity-100 [@media(hover:hover)]:block">
               <ProductImage product={p} variant={variant.id} view="angle" sizes={CARD_SIZES} className="h-full w-full" />
             </span>
+            )}
           </span>
         </Link>
         {rank != null && (
@@ -84,13 +87,13 @@ export function ProductCard({
           <span
             className={clsx(
               "pointer-events-none absolute left-3 top-3 inline-flex h-7 max-w-[calc(100%-4.25rem)] items-center gap-1.5 rounded-full px-2.5 text-[11.5px] font-medium",
-              badge.tone === "lime" && "glint bg-lime text-ink",
+              badge.tone === "brand" && "glint bg-brand text-ink",
               badge.tone === "ink" && "bg-ink text-white",
-              badge.tone === "blue" && "bg-blue text-ink",
+              badge.tone === "contract" && "bg-ink text-brand",
               badge.tone === "white" && "bg-white/90 text-ink shadow-[var(--shadow-hair)] backdrop-blur",
             )}
           >
-            {badge.tone === "lime" && <Icon name="check" size={12} strokeWidth={2.4} className="shrink-0" />}
+            {badge.tone === "brand" && <Icon name="check" size={12} strokeWidth={2.4} className="shrink-0" />}
             <span className="truncate">{badge.label}</span>
           </span>
         )}
@@ -102,7 +105,7 @@ export function ProductCard({
             onClick={() => toggleWishlist(p.id)}
             className={clsx(
               "grid h-9 w-9 place-items-center rounded-full backdrop-blur transition-all duration-300",
-              hydrated && wished ? "bg-ink text-lime" : "bg-white/85 text-ink shadow-[var(--shadow-hair)] hover:bg-white",
+              hydrated && wished ? "bg-ink text-brand" : "bg-white/85 text-ink shadow-[var(--shadow-hair)] hover:bg-white",
             )}
           >
             <Icon name="heart" size={17} fill={hydrated && wished ? "currentColor" : "none"} />

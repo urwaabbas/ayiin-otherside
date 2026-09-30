@@ -4,7 +4,7 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useState } from "react";
 import type { Product, Variant } from "@/lib/types";
-import { IMAGE_VIEWS, type ImageView } from "@/lib/images";
+import { productViews, type ImageView } from "@/lib/images";
 import { ProductImage } from "@/components/product/product-image";
 import { Rating } from "@/components/product/rating";
 import { Icon } from "@/components/ui/icon";
@@ -21,7 +21,7 @@ export function QuickView({ product: p, initialVariant, onClose }: { product: Pr
   const { mode, fmt } = usePrefs();
   const business = mode === "business";
   const [variant, setVariant] = useState(initialVariant);
-  const [view, setView] = useState<ImageView>("hero");
+  const [picked, setView] = useState<ImageView>("hero");
   const [qty, setQty] = useState(business ? Math.max(p.b2b.moq, 1) : 1);
   const addToCart = useShop((s) => s.addToCart);
   const openCart = useUI((s) => s.openCart);
@@ -36,6 +36,9 @@ export function QuickView({ product: p, initialVariant, onClose }: { product: Pr
     onClose();
     openCart();
   };
+
+  const views = productViews(p, variant.id);
+  const view = views.some((v) => v.id === picked) ? picked : "hero";
 
   return (
     <dialog
@@ -63,8 +66,8 @@ export function QuickView({ product: p, initialVariant, onClose }: { product: Pr
             sizes="(min-width: 768px) 520px, 100vw"
             className="aspect-[5/4] w-full animate-fade rounded-[24px] md:aspect-square"
           />
-          <div className="absolute inset-x-6 bottom-6 flex gap-2 md:inset-x-7 md:bottom-7">
-            {IMAGE_VIEWS.map((vw) => (
+          <div className={clsx("absolute inset-x-6 bottom-6 flex gap-2 md:inset-x-7 md:bottom-7", views.length < 2 && "hidden")}>
+            {views.map((vw) => (
               <button
                 key={vw.id}
                 type="button"
@@ -106,7 +109,7 @@ export function QuickView({ product: p, initialVariant, onClose }: { product: Pr
               </span>
             ) : (
               insight.verifiedDeal && (
-                <span className="glint inline-flex h-7 items-center gap-1.5 rounded-full bg-lime px-2.5 text-[12px] font-medium">
+                <span className="glint inline-flex h-7 items-center gap-1.5 rounded-full bg-brand px-2.5 text-[12px] font-medium">
                   <Icon name="check" size={12} strokeWidth={2.4} /> {insight.label}
                 </span>
               )

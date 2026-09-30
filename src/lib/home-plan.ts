@@ -3,6 +3,7 @@ import { categories } from "@/lib/catalog/categories";
 import { VOLUME_PRODUCT_SLUGS } from "@/lib/catalog/offers";
 import { Shelf } from "@/lib/catalog/shelf";
 import { priceInsight } from "@/lib/commerce";
+import { hasView } from "@/lib/images";
 
 /**
  * Home page product plans.
@@ -83,8 +84,9 @@ export function planPersonalHome() {
   const forYou = shelf.takeGrid(4, { min: 2, step: 2, where: (p) => isConsumer(p) && !isDeal(p), maxPerCategory: 2 });
   const lookbook = shelf.takeGrid(3, {
     min: 3,
-    prefer: ["stoneware-bud-vases", "night-recovery-oil", "meridian-automatic-38", "everyday-stoneware-mugs"],
-    where: (p) => isConsumer(p) && !isDeal(p),
+    prefer: ["night-recovery-oil", "pour-gooseneck-kettle", "trail-bottle-750", "kova-book-14-air"],
+    // Only products photographed in context can anchor a scene.
+    where: (p) => isConsumer(p) && !isDeal(p) && hasView(p, "scene"),
   });
   const deals = shelf.takeGrid(2, { min: 2, where: isDeal, rank: bySales });
   const bestsellers = shelf.takeGrid(2, { min: 2, step: 2, where: isHousehold, rank: bySales });

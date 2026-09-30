@@ -57,13 +57,13 @@ export function BusinessHub() {
               >
                 <Icon name={t.icon} size={17} />
                 {t.label}
-                {t.id === "approvals" && <span className={clsx("num ml-auto rounded-full px-1.5 text-[11px]", tab === t.id ? "bg-lime text-ink" : "bg-ink text-white")}>{approvals.length}</span>}
+                {t.id === "approvals" && <span className={clsx("num ml-auto rounded-full px-1.5 text-[11px]", tab === t.id ? "bg-brand text-ink" : "bg-ink text-white")}>{approvals.length}</span>}
               </button>
             </li>
           ))}
         </ul>
         {mode !== "business" && (
-          <div className="mt-6 hidden rounded-2xl bg-blue-soft p-4 text-[13px] text-blue-ink lg:block">
+          <div className="mt-6 hidden rounded-2xl bg-info-soft p-4 text-[13px] text-info lg:block">
             <p className="font-medium">You&apos;re in Personal mode</p>
             <p className="mt-1">Switch to see contract & volume pricing across Ayiin.</p>
             <button type="button" onClick={() => setMode("business")} className="btn btn-ink btn-sm mt-3">
@@ -369,7 +369,7 @@ function QuotesTab() {
         <Panel title="New request">
           {sent ? (
             <div className="py-8 text-center">
-              <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-lime shadow-[inset_0_0_0_1.5px_#0A0B0D]">
+              <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-brand shadow-[inset_0_0_0_1.5px_var(--color-ink)]">
                 <Icon name="check" size={20} strokeWidth={2.4} />
               </span>
               <p className="mt-4 text-[18px] font-medium">{sent} sent to 6 suppliers</p>
@@ -449,7 +449,7 @@ function QuotesTab() {
         </Panel>
 
         <div className="space-y-5">
-          <Panel title="RFQ-20418 · responses" action={<span className="rounded-full bg-lime px-2.5 py-1 text-[11.5px] font-medium">3 in</span>}>
+          <Panel title="RFQ-20418 · responses" action={<span className="rounded-full bg-brand px-2.5 py-1 text-[11.5px] font-medium">3 in</span>}>
             <p className="text-[13px] text-mute">200 boxes nitrile gloves · target $9.75 · by Oct 6</p>
             <ul className="mt-4 space-y-2">
               {rfqResponses.map((r, i) => {
@@ -563,7 +563,7 @@ function InvoicesTab() {
                 </span>
                 <span className="flex items-center gap-3">
                   <span className="num">{fmt(o.total, { cents: true })}</span>
-                  <span className={clsx("rounded-full px-2.5 py-1 text-[12px]", o.status === "awaiting-approval" ? "bg-blue-soft text-blue-ink" : "bg-lime-soft")}>
+                  <span className={clsx("rounded-full px-2.5 py-1 text-[12px]", o.status === "awaiting-approval" ? "bg-info-soft text-info" : "bg-success-soft text-success")}>
                     {o.status === "awaiting-approval" ? "Awaiting approval" : "Confirmed"}
                   </span>
                 </span>
@@ -599,7 +599,7 @@ function InvoicesTab() {
                         Pay
                       </button>
                     ) : (
-                      <span className="rounded-full bg-lime-soft px-2.5 py-1 text-[12px]">Paid</span>
+                      <span className="rounded-full bg-success-soft px-2.5 py-1 text-[12px] text-success">Paid</span>
                     )}
                   </td>
                 </tr>

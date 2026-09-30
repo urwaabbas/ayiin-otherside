@@ -8,7 +8,7 @@ export function SellForm() {
   if (done)
     return (
       <div className="rounded-[28px] bg-white p-8 text-center shadow-[var(--shadow-hair)]">
-        <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-lime shadow-[inset_0_0_0_1.5px_#0A0B0D]">
+        <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-brand shadow-[inset_0_0_0_1.5px_var(--color-ink)]">
           <Icon name="check" size={20} strokeWidth={2.4} />
         </span>
         <p className="mt-4 text-[18px] font-medium">Application received</p>

@@ -67,7 +67,7 @@ export function ForYou({ pool }: { pool: Product[] }) {
         <span className="eyebrow mr-2">Your interests</span>
         {INTERESTS.map((i) => (
           <button key={i.id} type="button" aria-pressed={selected.includes(i.id)} onClick={() => toggle(i.id)} className="chip">
-            <span className={clsx("chip-dot h-1.5 w-1.5 rounded-full", selected.includes(i.id) ? "bg-lime" : "bg-line-strong")} />
+            <span className={clsx("chip-dot h-1.5 w-1.5 rounded-full", selected.includes(i.id) ? "bg-brand" : "bg-line-strong")} />
             {i.label}
           </button>
         ))}

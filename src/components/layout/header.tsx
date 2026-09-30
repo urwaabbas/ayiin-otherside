@@ -122,7 +122,7 @@ export function Header() {
         className={clsx(
           "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-500",
           compact || megaOpen || searchOpen
-            ? "bg-porcelain/80 shadow-[0_1px_0_rgb(10_11_13/0.07),0_14px_40px_-30px_rgb(10_11_13/0.4)] backdrop-blur-xl backdrop-saturate-150"
+            ? "bg-porcelain/80 shadow-[0_1px_0_rgb(var(--rgb-ink)/0.07),0_14px_40px_-30px_rgb(var(--rgb-ink)/0.4)] backdrop-blur-xl backdrop-saturate-150"
             : "bg-porcelain",
         )}
       >
@@ -139,7 +139,7 @@ export function Header() {
                     <span className="mx-2 text-mute-dark">·</span>
                     <span className="num">$48,200</span> credit available
                     <span className="mx-2 text-mute-dark">·</span>
-                    <Link href="/business?tab=approvals" className="link-underline text-lime">
+                    <Link href="/business?tab=approvals" className="link-underline text-brand">
                       3 approvals waiting
                     </Link>
                   </span>
@@ -247,7 +247,7 @@ export function Header() {
                 className={clsx(
                   "w-full rounded-full border bg-white pl-11 pr-24 text-[15px] text-ink outline-none transition-all duration-500 ease-[var(--ease-out-expo)] placeholder:text-mute/90",
                   compact ? "h-11" : "h-[52px]",
-                  searchOpen ? "border-ink shadow-[0_0_0_4px_rgb(89_103_255/0.14)]" : "border-line-strong hover:border-[#b9bdb6]",
+                  searchOpen ? "border-ink shadow-[0_0_0_4px_rgb(var(--rgb-brand)/0.28)]" : "border-line-strong hover:border-line-hover",
                 )}
               />
               <span className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
@@ -414,7 +414,7 @@ function Panel({ open, children, id, className }: { open: boolean; children: Rea
     <div
       id={id}
       className={clsx(
-        "absolute inset-x-0 top-full origin-top border-t border-line bg-porcelain shadow-[0_40px_80px_-40px_rgb(10_11_13/0.45)] transition-[opacity,transform,visibility] duration-400 ease-[var(--ease-out-expo)]",
+        "absolute inset-x-0 top-full origin-top border-t border-line bg-porcelain shadow-[0_40px_80px_-40px_rgb(var(--rgb-ink)/0.45)] transition-[opacity,transform,visibility] duration-400 ease-[var(--ease-out-expo)]",
         open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0",
         className,
       )}
@@ -477,7 +477,7 @@ function CartButton() {
       <span
         className={clsx(
           "num grid h-[22px] min-w-[22px] place-items-center rounded-full px-1.5 text-[12px] font-medium transition-all duration-300",
-          shown > 0 ? "bg-lime text-ink" : "bg-soft text-mute",
+          shown > 0 ? "bg-brand text-ink" : "bg-soft text-mute",
         )}
       >
         {shown > 99 ? "99+" : shown}

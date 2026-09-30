@@ -9,7 +9,7 @@ export function NewsletterForm() {
   if (done)
     return (
       <p className="mt-5 flex items-center gap-2 text-[14px] text-porcelain" role="status">
-        <span className="grid h-6 w-6 place-items-center rounded-full bg-lime text-ink">
+        <span className="grid h-6 w-6 place-items-center rounded-full bg-brand text-ink">
           <Icon name="check" size={14} strokeWidth={2.2} />
         </span>
         You&apos;re in. First Brief arrives Friday.
@@ -35,7 +35,7 @@ export function NewsletterForm() {
         placeholder="you@company.com"
         className="h-10 min-w-0 flex-1 bg-transparent px-3 text-[14px] text-porcelain outline-none placeholder:text-mute-dark"
       />
-      <button type="submit" className="btn btn-signal btn-sm">
+      <button type="submit" className="btn btn-brand btn-sm">
         Subscribe
       </button>
     </form>

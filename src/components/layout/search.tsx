@@ -147,7 +147,7 @@ export function SearchPanel({
             <Icon name="sparkle" size={13} /> Understood
           </span>
           {intent.chips.map((c) => (
-            <span key={c.key} className="inline-flex h-7 items-center gap-1.5 rounded-full bg-lime-soft px-2.5 text-[12.5px] font-medium text-ink">
+            <span key={c.key} className="inline-flex h-7 items-center gap-1.5 rounded-full bg-brand-soft px-2.5 text-[12.5px] font-medium text-ink">
               <span className="h-1.5 w-1.5 rounded-full bg-ink" />
               {c.label}
             </span>

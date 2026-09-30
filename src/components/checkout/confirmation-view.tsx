@@ -51,7 +51,7 @@ export function ConfirmationView() {
       <div className="panel-ink relative overflow-hidden rounded-[32px] p-7 sm:p-10">
         <div aria-hidden className="grid-texture-dark pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
         <div className="relative">
-          <span className="grid h-12 w-12 place-items-center rounded-full bg-lime text-ink">
+          <span className="grid h-12 w-12 place-items-center rounded-full bg-brand text-ink">
             <Icon name={awaiting ? "clock" : "check"} size={22} strokeWidth={2.2} />
           </span>
           <h1 className="display mt-6 text-[44px] sm:text-[64px]">{awaiting ? "Sent for approval." : "It’s on its way."}</h1>
@@ -68,7 +68,7 @@ export function ConfirmationView() {
             {steps.map(([label, when, done], i) => (
               <li key={String(label)} className="relative flex gap-4 pb-7 last:pb-0">
                 {i < steps.length - 1 && <span aria-hidden className="absolute left-[11px] top-7 h-[calc(100%-20px)] w-px bg-graphite-line" />}
-                <span className={`relative mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full ${done ? "bg-lime text-ink" : "border border-graphite-line"}`}>
+                <span className={`relative mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full ${done ? "bg-brand text-ink" : "border border-graphite-line"}`}>
                   {done ? <Icon name="check" size={13} strokeWidth={2.6} /> : <span className="h-1.5 w-1.5 rounded-full bg-mute-dark" />}
                 </span>
                 <div>
@@ -79,7 +79,7 @@ export function ConfirmationView() {
             ))}
           </ol>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link href={`/track?order=${order.id}`} className="btn btn-signal">Track order</Link>
+            <Link href={`/track?order=${order.id}`} className="btn btn-brand">Track order</Link>
             <Link href="/" className="btn btn-on-dark">Keep browsing</Link>
           </div>
         </div>

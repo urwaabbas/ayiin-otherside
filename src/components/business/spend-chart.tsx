@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePrefs } from "@/components/providers";
 
 /**
- * Monthly spend — single series, so one hue (ink) with the current month in the accent.
+ * Monthly spend — single series, so one hue (ink) with the current month in the brand amber.
  * Columns ≤ 24px, 4px rounded caps, square at the baseline; hairline solid gridlines;
  * value labelled on the latest cap only; hover tooltip per column; table fallback for AT.
  */
@@ -28,8 +28,8 @@ export function SpendChart({ data }: { data: { m: string; v: number }[] }) {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={`Monthly spend, ${data[0].m} to ${data[last].m}. Latest ${fmt(data[last].v)}.`}>
         {ticks.map((t) => (
           <g key={t}>
-            <line x1={padL} x2={W} y1={y(t)} y2={y(t)} stroke="#E3E5E0" strokeWidth="1" />
-            <text x={padL - 8} y={y(t) + 4} textAnchor="end" fontSize="11" fill="#62666E" fontFamily="var(--font-geist-mono)">
+            <line x1={padL} x2={W} y1={y(t)} y2={y(t)} className="stroke-line" strokeWidth="1" />
+            <text x={padL - 8} y={y(t) + 4} textAnchor="end" fontSize="11" className="fill-mute" fontFamily="var(--font-geist-mono)">
               {t === 0 ? "0" : `${t / 1000}k`}
             </text>
           </g>
@@ -44,12 +44,12 @@ export function SpendChart({ data }: { data: { m: string; v: number }[] }) {
           return (
             <g key={d.m} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
               <rect x={cx - band / 2} y={padT} width={band} height={H - padT - padB} fill="transparent" />
-              <path d={path} fill={i === last ? "#5967FF" : "#0A0B0D"} opacity={hover == null || hover === i ? 1 : 0.35} className="transition-opacity" />
-              <text x={cx} y={H - 8} textAnchor="middle" fontSize="11.5" fill="#62666E">
+              <path d={path} opacity={hover == null || hover === i ? 1 : 0.35} strokeWidth={i === last ? 1.5 : 0} className={`transition-opacity ${i === last ? "fill-brand stroke-ink" : "fill-ink"}`} />
+              <text x={cx} y={H - 8} textAnchor="middle" fontSize="11.5" className="fill-mute">
                 {d.m}
               </text>
               {i === last && (
-                <text x={cx} y={yt - 8} textAnchor="middle" fontSize="12" fontWeight="500" fill="#0A0B0D">
+                <text x={cx} y={yt - 8} textAnchor="middle" fontSize="12" fontWeight="500" className="fill-ink">
                   {fmt(d.v)}
                 </text>
               )}

@@ -39,8 +39,8 @@ export function Lookbook({ index = "03", items }: { index?: string; items: Produ
                   className="absolute inset-0 transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
                 <span aria-hidden className="absolute left-[58%] top-[34%] grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 place-items-center">
-                  <span className="absolute inset-0 rounded-full bg-lime/45 motion-safe:animate-ping" />
-                  <span className="relative h-2.5 w-2.5 rounded-full bg-lime shadow-[0_0_0_2px_#0A0B0D]" />
+                  <span className="absolute inset-0 rounded-full bg-brand/45 motion-safe:animate-ping" />
+                  <span className="relative h-2.5 w-2.5 rounded-full bg-brand shadow-[0_0_0_2px_var(--color-ink)]" />
                 </span>
                 <span
                   className={clsx(

@@ -18,7 +18,7 @@ export const sellers: Seller[] = [
     business: true,
     netTerms: "Net 30",
     certifications: ["Brand owner", "Authorized warranty"],
-    color: "#5967FF",
+    color: "#4F5B6B",
   },
   {
     id: "kova",
@@ -37,7 +37,7 @@ export const sellers: Seller[] = [
     business: true,
     netTerms: "Net 30 / Net 60",
     certifications: ["Brand owner", "Fleet program", "ISO 9001"],
-    color: "#0A0B0D",
+    color: "#1F1E1C",
   },
   {
     id: "atelier-mesa",
@@ -74,7 +74,7 @@ export const sellers: Seller[] = [
     verified: true,
     business: false,
     certifications: ["Maker verified", "Lead-free glazes"],
-    color: "#56662B",
+    color: "#5C6436",
   },
   {
     id: "solace",
@@ -92,7 +92,7 @@ export const sellers: Seller[] = [
     verified: true,
     business: false,
     certifications: ["Cruelty-free", "Derm tested"],
-    color: "#D06A5B",
+    color: "#C0654E",
   },
   {
     id: "fieldwork",
@@ -111,7 +111,7 @@ export const sellers: Seller[] = [
     business: true,
     netTerms: "Net 30",
     certifications: ["Bluesign fabrics", "Custom branding"],
-    color: "#2F8F7A",
+    color: "#4F7466",
   },
   {
     id: "oro",
@@ -149,7 +149,7 @@ export const sellers: Seller[] = [
     business: true,
     netTerms: "Net 30 / Net 60",
     certifications: ["BIFMA partner", "Punch-out catalog", "SOC 2"],
-    color: "#2F8F7A",
+    color: "#4F7466",
   },
   {
     id: "parcel",
@@ -187,7 +187,7 @@ export const sellers: Seller[] = [
     business: true,
     netTerms: "Net 30 / Net 60",
     certifications: ["ANSI/ISEA", "EN 374", "ISO 45001"],
-    color: "#B8A11A",
+    color: "#B7880F",
   },
 ];
 

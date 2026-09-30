@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 
-export function SignalDot({ tone = "lime", live, className }: { tone?: "lime" | "amber" | "blue" | "mute" | "danger"; live?: boolean; className?: string }) {
+export function SignalDot({ tone = "brand", live, className }: { tone?: "brand" | "success" | "warning" | "danger" | "info" | "mute"; live?: boolean; className?: string }) {
   return <span aria-hidden className={clsx("signal-dot", className)} data-tone={tone} data-live={live ? "true" : undefined} />;
 }
 

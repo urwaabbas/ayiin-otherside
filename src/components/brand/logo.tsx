@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import { BRAND_COLORS as C } from "@/lib/brand-colors";
  
 
 /**
@@ -15,24 +16,22 @@ export const SYMBOL_PATH =
 export const LENS_PATH = "M21.9 42Q32 35.5 42.1 42Q32 48.5 21.9 42Z";
 
 type Tone = "ink" | "porcelain" | "current";
-type LensTone = "lime" | "blue" | "match" | "ink" | "porcelain";
+type LensTone = "brand" | "match" | "ink" | "porcelain";
 
 const toneColor: Record<Tone, string> = {
-  ink: "#0A0B0D",
-  porcelain: "#F7F7F2",
+  ink: C.ink,
+  porcelain: C.porcelain,
   current: "currentColor",
 };
 
 const lensColor = (lens: LensTone, tone: Tone) =>
-  lens === "lime"
-    ? "#C8FF3D"
-    : lens === "blue"
-      ? "#5967FF"
-      : lens === "ink"
-        ? "#0A0B0D"
-        : lens === "porcelain"
-          ? "#F7F7F2"
-          : toneColor[tone];
+  lens === "brand"
+    ? C.brand
+    : lens === "ink"
+      ? C.ink
+      : lens === "porcelain"
+        ? C.porcelain
+        : toneColor[tone];
 
 export function AyiinSymbol({
   className,
@@ -136,12 +135,12 @@ export function AyiinAppIcon({
   title,
 }: {
   className?: string;
-  variant?: "ink" | "lime" | "porcelain" | "blue";
+  variant?: "ink" | "brand" | "porcelain";
   title?: string;
 }) {
-  const bg = { ink: "#0A0B0D", lime: "#C8FF3D", porcelain: "#F7F7F2", blue: "#5967FF" }[variant];
-  const fg = variant === "ink" ? "#F7F7F2" : "#0A0B0D";
-  const lens = variant === "ink" ? "#C8FF3D" : variant === "blue" ? "#F7F7F2" : "#0A0B0D";
+  const bg = { ink: C.ink, brand: C.brand, porcelain: C.porcelain }[variant];
+  const fg = variant === "ink" ? C.porcelain : C.ink;
+  const lens = variant === "ink" ? C.brand : C.ink;
   return (
     <svg
       viewBox="0 0 64 64"

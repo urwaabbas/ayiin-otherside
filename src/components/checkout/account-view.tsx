@@ -25,7 +25,7 @@ export function AccountView() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {tiles.map((t) => (
           <Link key={t.title} href={t.href} className="group rounded-[24px] bg-white p-5 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-mist transition-colors group-hover:bg-lime">
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-mist transition-colors group-hover:bg-brand">
               <Icon name={t.icon} size={18} />
             </span>
             <p className="mt-4 text-[15px] font-medium">{t.title}</p>
@@ -70,7 +70,7 @@ export function AccountView() {
           </ul>
         )}
       </section>
-      <section className="flex flex-col items-start justify-between gap-4 rounded-[28px] bg-blue-soft p-6 sm:flex-row sm:items-center">
+      <section className="flex flex-col items-start justify-between gap-4 rounded-[28px] bg-info-soft p-6 sm:flex-row sm:items-center">
         <div>
           <p className="text-[16px] font-medium">Buying for work too?</p>
           <p className="text-[14px] text-ink-2">Add a business profile to get volume pricing, invoices and net terms — same login.</p>

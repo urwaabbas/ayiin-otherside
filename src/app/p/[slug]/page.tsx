@@ -106,7 +106,7 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
               <ul className="mt-3 space-y-2.5 text-[14.5px]">
                 {p.brief.pros.map((x) => (
                   <li key={x} className="flex gap-2.5">
-                    <span className="mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-lime shadow-[inset_0_0_0_1px_#0A0B0D]">
+                    <span className="mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-brand shadow-[inset_0_0_0_1px_var(--color-ink)]">
                       <Icon name="check" size={10} strokeWidth={3} />
                     </span>
                     {x}
@@ -167,14 +167,14 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
           <ul className="mt-8 grid gap-3 sm:grid-cols-2">
             {p.highlights.map((h) => (
               <li key={h} className="rounded-2xl bg-white p-4 text-[14.5px] font-medium shadow-[var(--shadow-hair)]">
-                <SignalDot className="mr-2" /> {h}
+                <SignalDot tone="mute" className="mr-2" /> {h}
               </li>
             ))}
           </ul>
           <div className="mt-8 rounded-[24px] bg-white p-6 shadow-[var(--shadow-hair)]">
             <div className="flex items-center justify-between">
               <p className="text-[15px] font-medium">Price history · 12 weeks</p>
-              <span className={insight.verifiedDeal ? "rounded-full bg-lime px-2.5 py-1 text-[12px] font-medium" : "rounded-full bg-mist px-2.5 py-1 text-[12px]"}>
+              <span className={insight.verifiedDeal ? "rounded-full bg-brand px-2.5 py-1 text-[12px] font-medium" : "rounded-full bg-mist px-2.5 py-1 text-[12px]"}>
                 {insight.label}
               </span>
             </div>

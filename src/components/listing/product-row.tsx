@@ -41,7 +41,7 @@ export function ProductRow({ product: p }: { product: Product }) {
           <span>{p.brand}</span>
           <span>·</span>
           <span className="inline-flex items-center gap-1">
-            {seller.name} {seller.verified && <Icon name="shield" size={12} className="text-blue-ink" />}
+            {seller.name} {seller.verified && <Icon name="shield" size={12} className="text-brand-deep" />}
           </span>
           {business && (
             <>
@@ -82,7 +82,7 @@ export function ProductRow({ product: p }: { product: Product }) {
                 <Price usd={unit} size="md" />
                 <span className="text-[12px] text-mute">
                   /{p.b2b.unit}
-                  {tierSavingPct(p, unit) > 0 && <span className="text-lime-deep"> · −{tierSavingPct(p, unit)}%</span>}
+                  {tierSavingPct(p, unit) > 0 && <span className="text-sale"> · −{tierSavingPct(p, unit)}%</span>}
                 </span>
               </div>
               <div className="mt-2 flex gap-1" aria-label="Volume tiers">
@@ -97,7 +97,7 @@ export function ProductRow({ product: p }: { product: Product }) {
                 ))}
               </div>
               {nt && (
-                <p className="mt-1.5 text-[11.5px] text-blue-ink">
+                <p className="mt-1.5 text-[11.5px] text-info">
                   {nt.min - qty} more → {fmt(nt.price, { cents: true })}
                 </p>
               )}
@@ -120,7 +120,7 @@ export function ProductRow({ product: p }: { product: Product }) {
           <>
             <div>
               <Price usd={p.price} size="lg" strike={p.compareAt} />
-              {insight.verifiedDeal && <p className="mt-1 text-[12px] font-medium text-lime-deep">✓ {insight.label}</p>}
+              {insight.verifiedDeal && <p className="mt-1 text-[12px] font-medium text-brand-deep">✓ {insight.label}</p>}
               <p className="mt-1 text-[12px] text-mute">{p.shipping ? `+ ${fmt(p.shipping)} delivery` : "Free delivery · no fees at checkout"}</p>
             </div>
             <div className="flex gap-2">

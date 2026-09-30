@@ -17,7 +17,7 @@ export function InlinePill({ items, className, interval = 2600 }: { items: Produ
     <span
       aria-hidden
       className={clsx(
-        "relative inline-block h-[0.74em] w-[1.42em] overflow-hidden rounded-full align-[-0.02em] shadow-[inset_0_0_0_1px_rgb(10_11_13/0.06)]",
+        "relative inline-block h-[0.74em] w-[1.42em] overflow-hidden rounded-full align-[-0.02em] shadow-[inset_0_0_0_1px_rgb(var(--rgb-ink)/0.06)]",
         className,
       )}
     >

@@ -96,7 +96,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               overlay={
                 <div className="pointer-events-none absolute left-4 right-16 top-4 flex flex-wrap gap-2">
                   {insight.verifiedDeal && !business && (
-                    <span className="glint inline-flex h-8 items-center gap-1.5 rounded-full bg-lime px-3 text-[12.5px] font-medium">
+                    <span className="glint inline-flex h-8 items-center gap-1.5 rounded-full bg-brand px-3 text-[12.5px] font-medium">
                       <Icon name="check" size={13} strokeWidth={2.4} /> {insight.label}
                     </span>
                   )}
@@ -122,7 +122,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                 type="button"
                 aria-pressed={hydrated && wished}
                 onClick={() => toggleWishlist(p.id)}
-                className={clsx("grid h-10 w-10 place-items-center rounded-full transition-colors", hydrated && wished ? "bg-ink text-lime" : "hover:bg-soft")}
+                className={clsx("grid h-10 w-10 place-items-center rounded-full transition-colors", hydrated && wished ? "bg-ink text-brand" : "hover:bg-soft")}
                 aria-label={wished ? "Remove from saved" : "Save for later"}
               >
                 <Icon name="heart" size={19} fill={hydrated && wished ? "currentColor" : "none"} />
@@ -172,10 +172,10 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                       per {p.b2b.unit} at {qty.toLocaleString("en-US")} · list <span className="num line-through">{fmt(p.price, { cents: true })}</span>
                     </p>
                   </div>
-                  {tierSavingPct(p, unit) > 0 && <span className="rounded-full bg-lime px-3 py-1.5 text-[13px] font-medium">−{tierSavingPct(p, unit)}%</span>}
+                  {tierSavingPct(p, unit) > 0 && <span className="rounded-full bg-brand px-3 py-1.5 text-[13px] font-medium">−{tierSavingPct(p, unit)}%</span>}
                 </div>
                 {p.b2b.contractPrice && (
-                  <p className="mt-3 flex items-center gap-2 rounded-xl bg-blue-soft px-3 py-2 text-[12.5px] text-blue-ink">
+                  <p className="mt-3 flex items-center gap-2 rounded-xl bg-info-soft px-3 py-2 text-[12.5px] text-info">
                     <Icon name="file" size={14} /> Northwind contract price {fmt(p.b2b.contractPrice, { cents: true })} applies at any quantity
                   </p>
                 )}
@@ -193,7 +193,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                       const nextMin = p.b2b.tiers[i + 1]?.min;
                       const active = qty >= t.min && (!nextMin || qty < nextMin);
                       return (
-                        <tr key={t.min} className={clsx("border-t border-line", active && "bg-lime-soft")}>
+                        <tr key={t.min} className={clsx("border-t border-line", active && "bg-brand-soft")}>
                           <td className="py-2 pl-2">
                             <button type="button" className="num hover:underline" onClick={() => setQty(Math.max(t.min, p.b2b.moq))}>
                               {t.min}
@@ -221,7 +221,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                   </div>
                 </div>
                 <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[13px]">
-                  <span className={clsx("inline-flex items-center gap-1.5", insight.verifiedDeal ? "font-medium text-lime-deep" : "text-ink-2")}>
+                  <span className={clsx("inline-flex items-center gap-1.5", insight.verifiedDeal ? "font-medium text-brand-deep" : "text-ink-2")}>
                     {insight.verifiedDeal ? <Icon name="check" size={14} strokeWidth={2.2} /> : <Icon name="trend" size={14} />}
                     {insight.label}
                     <span className="font-normal text-mute">· typical {fmt(Math.round(insight.typical))}</span>
@@ -267,7 +267,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
           {/* Delivery */}
           <div className="mt-6 overflow-hidden rounded-[24px] border border-line">
             <div className="flex items-start gap-3 p-4">
-              <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-lime shadow-[inset_0_0_0_1.5px_#0A0B0D]">
+              <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand shadow-[inset_0_0_0_1.5px_var(--color-ink)]">
                 <Icon name="truck" size={17} />
               </span>
               <div className="min-w-0 flex-1">
@@ -303,7 +303,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               </div>
             )}
             <div className="flex items-center gap-2 border-t border-line px-4 py-3 text-[13px] text-ink-2">
-              <SignalDot tone={stock.tone} live={stock.tone === "lime"} />
+              <SignalDot tone={stock.tone} live={stock.tone === "success"} />
               {stock.label}
               <span className="text-mute">· ships from {seller.location.split(" · ")[0]}</span>
             </div>
@@ -317,7 +317,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
             </button>
           </div>
           {nt && (
-            <p className="mt-2 text-[13px] text-blue-ink">
+            <p className="mt-2 text-[13px] text-info">
               Add {nt.min - qty} more to pay {fmt(nt.price, { cents: true })}/{p.b2b.unit} — saves {fmt((unit - nt.price) * nt.min)}
             </p>
           )}
@@ -353,7 +353,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               </>
             ) : (
               <>
-                <button type="button" onClick={() => add(true)} className="btn btn-signal col-span-2 w-full">
+                <button type="button" onClick={() => add(true)} className="btn btn-brand col-span-2 w-full">
                   <Icon name="bolt" size={17} /> Buy now — guest checkout
                 </button>
               </>
@@ -397,7 +397,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               </span>
               <div className="min-w-0 flex-1">
                 <p className="flex items-center gap-1.5 text-[14.5px] font-medium">
-                  Sold by {seller.name} {seller.verified && <Icon name="shield" size={14} className="text-blue-ink" />}
+                  Sold by {seller.name} {seller.verified && <Icon name="shield" size={14} className="text-brand-deep" />}
                 </p>
                 <p className="truncate text-[12.5px] text-mute">
                   {seller.tagline} · on Ayiin since {seller.since}

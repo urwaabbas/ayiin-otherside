@@ -47,14 +47,14 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
           </span>
           {intent.chips.map((c) =>
             c.kind === "attr" || c.kind === "category" ? (
-              <span key={c.key} className="inline-flex h-8 items-center gap-1.5 rounded-full bg-lime-soft px-3 text-[13px] font-medium">
+              <span key={c.key} className="inline-flex h-8 items-center gap-1.5 rounded-full bg-brand-soft px-3 text-[13px] font-medium">
                 {c.label}
               </span>
             ) : (
               <Link
                 key={c.key}
                 href={`/search?q=${encodeURIComponent(rebuild(intent, c.key))}`}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-lime-soft pl-3 pr-2 text-[13px] font-medium transition-colors hover:bg-lime"
+                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-brand-soft pl-3 pr-2 text-[13px] font-medium transition-colors hover:bg-brand"
                 aria-label={`Remove ${c.label}`}
               >
                 {c.label} <Icon name="close" size={13} />
@@ -70,7 +70,7 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
             <span className="font-medium">Buying {intent.qty.toLocaleString("en-US")} units?</span>{" "}
             <span className="text-mute-dark">Prices below already reflect volume tiers. For more, let suppliers compete.</span>
           </p>
-          <Link href={`/business?tab=quotes&q=${encodeURIComponent(q)}`} className="btn btn-signal btn-sm shrink-0">
+          <Link href={`/business?tab=quotes&q=${encodeURIComponent(q)}`} className="btn btn-brand btn-sm shrink-0">
             Request quotes
           </Link>
         </div>

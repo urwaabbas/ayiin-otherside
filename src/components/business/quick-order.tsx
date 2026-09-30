@@ -40,7 +40,7 @@ export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "he
     <div className={clsx("overflow-hidden rounded-[26px]", dark ? "bg-graphite ring-1 ring-graphite-line" : "bg-white shadow-[var(--shadow-soft)] ring-1 ring-line")}>
       <div className={clsx("flex items-center justify-between px-5 pt-4", dark ? "text-porcelain" : "")}>
         <p className="flex items-center gap-2 text-[14px] font-medium">
-          <Icon name="bolt" size={16} className={dark ? "text-lime" : ""} /> Quick order
+          <Icon name="bolt" size={16} className={dark ? "text-brand" : ""} /> Quick order
         </p>
         <button
           type="button"
@@ -87,7 +87,7 @@ export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "he
                     {p ? (
                       <>
                         {l.match === "sku" ? "SKU match" : "Matched by description"} · {p.b2b.sku}
-                        {tierSavingPct(p, unit) > 0 && <span className={dark ? "text-lime" : "text-lime-deep"}> · −{tierSavingPct(p, unit)}% volume</span>}
+                        {tierSavingPct(p, unit) > 0 && <span className={dark ? "text-brand" : "text-sale"}> · −{tierSavingPct(p, unit)}% volume</span>}
                       </>
                     ) : (
                       "Try a SKU or a simpler description"
@@ -124,7 +124,7 @@ export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "he
               Upload CSV
             </Link>
           )}
-          <button type="button" disabled={!matched.length} onClick={addAll} className={clsx("btn btn-sm", dark ? "btn-signal" : "btn-ink")}>
+          <button type="button" disabled={!matched.length} onClick={addAll} className={clsx("btn btn-sm", dark ? "btn-brand" : "btn-ink")}>
             Add {matched.length || ""} to cart
           </button>
         </div>

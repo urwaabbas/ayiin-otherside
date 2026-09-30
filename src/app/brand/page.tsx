@@ -1,23 +1,32 @@
 import type { Metadata } from "next";
-import { AyiinAppIcon, AyiinLockup, AyiinSymbol, AyiinWordmark, LENS_PATH, SYMBOL_PATH } from "@/components/brand/logo";
+import { AyiinLogo, AyiinMark } from "@/components/brand/ayiin-logo";
 import { Eyebrow, SignalDot } from "@/components/ui/signal";
 import { Icon } from "@/components/ui/icon";
 import { ProductImage } from "@/components/product/product-image";
 import { productBySlug } from "@/lib/catalog/products";
+import { BRAND_COLORS as C } from "@/lib/brand-colors";
 
 export const metadata: Metadata = {
   title: "Brand",
   description: "The Ayiin identity: the Aperture symbol, custom wordmark, colour, typography and the Intelligent Commerce language.",
 };
 
-const COLORS = [
-  { name: "Porcelain", hex: "#F7F7F2", role: "Primary surface — the room everything sits in", share: 60, ink: true },
-  { name: "Pure White", hex: "#FFFFFF", role: "Cards, product stages, inputs", share: 25, ink: true },
-  { name: "Deep Ink", hex: "#0A0B0D", role: "Type, primary actions, business mode", share: 7, ink: false },
-  { name: "Graphite", hex: "#202328", role: "Dark surfaces and panels", share: 3, ink: false },
-  { name: "Signal Lime", hex: "#C8FF3D", role: "Live data, verified deals, selected states", share: 3, ink: true },
-  { name: "Electric Blue", hex: "#5967FF", role: "Business signals, focus, information", share: 2, ink: true },
-  { name: "Soft Gray", hex: "#E8EAE6", role: "Quiet fills, tracks, dividers", share: 0, ink: true },
+const COLORS: { name: string; hex: string; role: string; share: number; ink: boolean; fill?: string }[] = [
+  { name: "Porcelain", hex: C.porcelain, role: "Primary surface — the logo's white, warmed a touch", share: 60, ink: true },
+  { name: "Pure White", hex: C.white, role: "Cards, product stages, inputs, modals", share: 25, ink: true },
+  { name: "Charcoal Ink", hex: C.ink, role: "Type, primary actions, selected states", share: 7, ink: false },
+  { name: "Graphite", hex: C.graphite, role: "Dark sections — the logo's own lettering colour", share: 3, ink: false },
+  { name: "Ayiin Amber", hex: C.brand, role: "The one CTA, live and verified signals, selection", share: 4, ink: true },
+  { name: "Deep Amber", hex: C.brandDeep, role: "Amber for text and icons on light surfaces", share: 1, ink: false },
+  {
+    name: "Logo gradient",
+    hex: `${C.brandOrange} → ${C.brandYellow}`,
+    fill: `linear-gradient(90deg, ${C.brandOrange}, ${C.brand} 54%, ${C.brandYellow})`,
+    role: "Reserved for the mark and for things that fill up",
+    share: 0,
+    ink: true,
+  },
+  { name: "Soft", hex: C.soft, role: "Quiet fills, tracks, dividers", share: 0, ink: true },
 ];
 
 function Tile({ label, children, dark, className }: { label: string; children: React.ReactNode; dark?: boolean; className?: string }) {
@@ -31,78 +40,46 @@ function Tile({ label, children, dark, className }: { label: string; children: R
 
 export default function BrandPage() {
   const hp = productBySlug("aurel-anc-over-ear")!;
-  const runner = productBySlug("stride-runner-2")!;
+  const runner = productBySlug("pour-gooseneck-kettle")!;
   return (
     <div>
       {/* Hero */}
       <section className="shell pt-6 lg:pt-10">
-        <Eyebrow index="Brand">Intelligent Commerce · Identity system v1.0</Eyebrow>
+        <Eyebrow index="Brand">Intelligent Commerce · Identity system v2.0</Eyebrow>
         <div className="mt-8 grid items-end gap-10 lg:grid-cols-[1fr_1.1fr]">
           <div>
-            <h1 className="display text-[64px] sm:text-[112px]">The Aperture.</h1>
+            <h1 className="display text-[64px] sm:text-[112px]">Sunlit A.</h1>
             <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-ink-2">
-              A round-shouldered gateway whose opening forms a negative-space <em>A</em>. The opening is a vesica — the meeting of two arcs, buyer and seller, converging on one point. A lens bridges the walls: the eye that discovers, and the connection that closes the deal.
+              A bold, forward-leaning <em>A</em> in a warm orange-to-yellow gradient, followed by charcoal lettering whose two i&apos;s carry the same sunlit dots. The gradient is where the whole palette comes from; the charcoal sets every neutral.
             </p>
             <div className="mt-8 flex flex-wrap gap-2">
               {["Discovery", "Connection", "Commerce", "Choice"].map((w) => (
                 <span key={w} className="chip">
-                  <span className="h-1.5 w-1.5 rounded-full bg-lime shadow-[0_0_0_1px_#0A0B0D]" /> {w}
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand shadow-[0_0_0_1px_var(--color-ink)]" /> {w}
                 </span>
               ))}
             </div>
           </div>
-          <div className="panel-ink relative grid aspect-[4/3] place-items-center overflow-hidden rounded-[36px]">
+          <div className="panel-ink relative grid aspect-[4/3] place-items-center overflow-hidden rounded-[36px] bg-graphite">
             <div aria-hidden className="grid-texture-dark absolute inset-0" />
-            <AyiinSymbol tone="porcelain" lens="lime" tight className="relative h-[52%]" title="Ayiin symbol" />
+            <AyiinLogo on="dark" className="relative h-[34%]" />
           </div>
         </div>
       </section>
 
-      {/* Construction */}
+      {/* The mark */}
       <section className="shell mt-24">
-        <Eyebrow index="01">Construction</Eyebrow>
+        <Eyebrow index="01">The mark</Eyebrow>
         <div className="mt-6 grid gap-8 lg:grid-cols-[1.1fr_1fr]">
-          <div className="grid place-items-center rounded-[32px] bg-white p-8 shadow-[var(--shadow-hair)]">
-            <svg viewBox="-40 -10 144 84" className="w-full max-w-[560px]" role="img" aria-label="Construction of the Ayiin symbol from two intersecting arcs and a lens">
-              <defs>
-                <clipPath id="c-clip">
-                  <rect x="-40" y="-10" width="144" height="70" />
-                </clipPath>
-              </defs>
-              <g stroke="#5967FF" strokeWidth="0.25" fill="none" opacity="0.7">
-                <line x1="-40" x2="104" y1="60" y2="60" />
-                <line x1="32" x2="32" y1="-10" y2="74" strokeDasharray="1 1" />
-                <circle cx="32" cy="32" r="26" strokeDasharray="1 1" />
-                <g clipPath="url(#c-clip)">
-                  <circle cx="106.67" cy="60" r="86.67" />
-                  <circle cx="-42.67" cy="60" r="86.67" />
-                </g>
-              </g>
-              <path fill="#0A0B0D" fillOpacity="0.9" fillRule="evenodd" d={SYMBOL_PATH} />
-              <path fill="#C8FF3D" d={LENS_PATH} />
-              <g fill="#5967FF">
-                <circle cx="32" cy="16" r="0.9" />
-                <circle cx="20" cy="60" r="0.9" />
-                <circle cx="44" cy="60" r="0.9" />
-              </g>
-              <g stroke="#62666E" strokeWidth="0.2">
-                <line x1="33" y1="16" x2="64" y2="12" />
-                <line x1="42.5" y1="42" x2="64" y2="42" />
-              </g>
-              <g fontFamily="var(--font-geist-mono)" fontSize="2.4" fill="#62666E">
-                <text x="65" y="12.8">apex · two arcs converge</text>
-                <text x="65" y="42.8">lens · the connection</text>
-                <text x="-38" y="66">baseline</text>
-                <text x="60" y="66">r = 86.67 · span 24</text>
-              </g>
-            </svg>
+          <div className="grid place-items-center rounded-[32px] bg-white p-10 shadow-[var(--shadow-hair)] sm:p-16">
+            <AyiinLogo on="light" className="h-28 sm:h-36" />
           </div>
           <ul className="grid content-start gap-3">
             {[
-              ["Two arcs", "The opening is the intersection of two circles (r 86.67) — buyer and seller. It rises to a single apex: many paths, one destination."],
-              ["One gateway", "The outer form is a round-shouldered arch — an aperture, an opening, a door into the marketplace. Solid, calm, unmistakable at 16px."],
-              ["The lens", "A vesica bridges the two walls exactly at their inner edges. It reads as an eye and as a crossbar, completing the A without drawing it."],
-              ["Signal", "On dark surfaces the lens carries Signal Lime — the same colour Ayiin uses for live, verified information everywhere else."],
+              ["The A", "A forward-leaning A cut from a single stroke, its counter opening like a doorway. It works on its own wherever space is square: favicon, app icon, badges."],
+              ["The gradient", "Orange #FF9B2B through amber #FFA624 to yellow #FDD207. Amber is the brand colour across the site — used as a signal, never as a paint."],
+              ["The lettering", "Charcoal #282828 on light surfaces, near-white on dark. Every neutral on Ayiin is this charcoal, warmed a touch."],
+              ["Two dots", "The i's carry the gradient too, so the A and the dots read as one idea: warmth where it matters, calm everywhere else."],
             ].map(([t, d]) => (
               <li key={t} className="rounded-[22px] bg-white p-5 shadow-[var(--shadow-hair)]">
                 <p className="text-[15px] font-medium">{t}</p>
@@ -116,55 +93,37 @@ export default function BrandPage() {
       {/* Logo system */}
       <section className="shell mt-24">
         <Eyebrow index="02">Logo system</Eyebrow>
-        <h2 className="display mt-4 text-[44px] sm:text-[64px]">Eight marks, one idea.</h2>
+        <h2 className="display mt-4 text-[44px] sm:text-[64px]">One logo, every surface.</h2>
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Tile label="1 · Symbol">
-            <AyiinSymbol tone="ink" lens="ink" tight className="h-28" title="Symbol" />
+          <Tile label="1 · Logo — for light surfaces" className="lg:col-span-2">
+            <AyiinLogo on="light" className="h-20" />
           </Tile>
-          <Tile label="2 · Wordmark" className="lg:col-span-2">
-            <AyiinWordmark tone="ink" className="h-20" />
+          <Tile label="2 · Logo — for dark surfaces" dark className="lg:col-span-2">
+            <AyiinLogo on="dark" className="h-20" />
           </Tile>
-          <Tile label="3 · Horizontal lockup">
-            <AyiinLockup tone="ink" lens="ink" className="h-10" />
+          <Tile label="3 · The A">
+            <AyiinMark className="h-28" />
           </Tile>
-          <Tile label="4 · Compact icon" dark>
-            <div className="flex items-end gap-4">
-              <AyiinAppIcon className="h-24 w-24 drop-shadow-[0_20px_30px_rgba(0,0,0,0.4)]" title="App icon, ink" />
-              <AyiinAppIcon variant="lime" className="h-16 w-16" title="App icon, lime" />
-            </div>
+          <Tile label="4 · App icon" dark>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/icon.svg" alt="App icon" className="h-24 w-24 drop-shadow-[0_20px_30px_rgb(var(--rgb-ink)/0.4)]" />
           </Tile>
           <Tile label="5 · Favicon · 48 / 32 / 16">
             <div className="flex items-end gap-5">
-              <AyiinAppIcon className="h-12 w-12" />
-              <AyiinAppIcon className="h-8 w-8" />
-              <AyiinAppIcon className="h-4 w-4" />
+              {["h-12 w-12", "h-8 w-8", "h-4 w-4"].map((c) => (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img key={c} src="/icon.svg" alt="" className={c} />
+              ))}
             </div>
           </Tile>
-          <Tile label="6 · Monochrome">
-            <div className="flex items-center gap-8">
-              <AyiinSymbol tone="ink" lens="ink" tight className="h-20" />
-              <div className="rounded-2xl bg-ink p-4">
-                <AyiinSymbol tone="porcelain" lens="porcelain" tight className="h-12" />
-              </div>
-            </div>
-          </Tile>
-          <Tile label="7 · Light version — for dark surfaces" dark>
-            <AyiinLockup tone="porcelain" lens="lime" className="h-10" />
-          </Tile>
-          <Tile label="8 · Dark version — for light surfaces" className="lg:col-span-2">
-            <div className="flex flex-wrap items-center justify-center gap-10">
-              <AyiinLockup tone="ink" lens="ink" className="h-12" />
-              <AyiinLockup tone="ink" lens="blue" className="h-12" />
-            </div>
-          </Tile>
-          <Tile label="Clear space = lens height × 2 · Minimum 16px">
-            <div className="relative p-6 outline-1 outline-dashed outline-blue/60">
-              <AyiinSymbol tone="ink" lens="ink" tight className="h-16" />
+          <Tile label="Clear space = height of the A ÷ 2 · Minimum 20px tall">
+            <div className="relative p-6 outline-1 outline-dashed outline-brand-deep/60">
+              <AyiinLogo on="light" className="h-10" />
             </div>
           </Tile>
         </div>
         <div className="mt-6 flex flex-wrap gap-2 text-[13px]">
-          {["ayiin-symbol-ink.svg", "ayiin-symbol-porcelain.svg", "ayiin-wordmark-ink.svg", "ayiin-lockup-ink.svg", "ayiin-lockup-porcelain.svg", "ayiin-app-icon-ink.svg"].map((f) => (
+          {["ayiin-logo-on-light.svg", "ayiin-logo-on-dark.svg", "ayiin-mark.svg"].map((f) => (
             <a key={f} href={`/brand/${f}`} download className="chip">
               <Icon name="upload" size={13} className="rotate-180" /> {f}
             </a>
@@ -172,18 +131,18 @@ export default function BrandPage() {
         </div>
       </section>
 
-      {/* Wordmark */}
+      {/* On dark */}
       <section className="shell mt-24 grid gap-8 lg:grid-cols-2">
         <div>
-          <Eyebrow index="03">Wordmark</Eyebrow>
-          <h2 className="display mt-4 text-[44px] sm:text-[64px]">Two i&apos;s, one lens.</h2>
+          <Eyebrow index="03">On dark</Eyebrow>
+          <h2 className="display mt-4 text-[44px] sm:text-[64px]">Same warmth, after dark.</h2>
           <p className="mt-5 max-w-lg text-[16px] leading-relaxed text-ink-2">
-            Drawn from scratch on a 100-unit x-height with a single 19-unit stroke. The two i&apos;s — two people, two sides of every trade — share one tittle: the same lens as the symbol. The y is two converging paths. Nothing is typed from a font.
+            On graphite the lettering turns near-white and the gradient stays exactly as it is — the footer, business panels and dark sections are the same brand, not a second one.
           </p>
         </div>
-        <div className="panel-ink flex items-center justify-center rounded-[32px] p-10 sm:p-14">
+        <div className="panel-ink flex items-center justify-center rounded-[32px] bg-graphite p-10 sm:p-14">
           <div className="w-full max-w-[520px]">
-            <AyiinWordmark tone="porcelain" tittle="lime" className="h-auto w-full" />
+            <AyiinLogo on="dark" className="!h-auto !w-full" />
           </div>
         </div>
       </section>
@@ -192,8 +151,8 @@ export default function BrandPage() {
       <section className="shell mt-24">
         <Eyebrow index="04">Colour</Eyebrow>
         <h2 className="display mt-4 text-[44px] sm:text-[64px]">Mostly light. Precisely loud.</h2>
-        <p className="mt-4 max-w-xl text-[16px] text-mute">Signal Lime and Electric Blue are signals, not decoration. The system stays elegant with them removed.</p>
-        <div className="mt-8 flex h-4 overflow-hidden rounded-full shadow-[var(--shadow-hair)]" aria-label="Usage ratio: 60% porcelain, 25% white, 10% ink and graphite, 5% accents">
+        <p className="mt-4 max-w-xl text-[16px] text-mute">Everything comes from the logo: charcoal lettering and a sunlit amber. Amber is a signal, not a paint — the system stays elegant with it removed.</p>
+        <div className="mt-8 flex h-4 overflow-hidden rounded-full shadow-[var(--shadow-hair)]" aria-label="Usage ratio: 60% porcelain, 25% white, 10% charcoal, 5% amber">
           {COLORS.filter((c) => c.share).map((c) => (
             <span key={c.name} style={{ background: c.hex, width: `${c.share}%` }} title={`${c.name} ${c.share}%`} />
           ))}
@@ -201,12 +160,12 @@ export default function BrandPage() {
         <div className="mt-2 flex justify-between font-mono text-[11px] text-mute">
           <span>60% porcelain</span>
           <span>25% white</span>
-          <span>10% ink · 5% signal</span>
+          <span>10% charcoal · 5% amber</span>
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {COLORS.map((c) => (
             <div key={c.name} className="overflow-hidden rounded-[22px] bg-white shadow-[var(--shadow-hair)]">
-              <div className="flex h-32 items-end p-4" style={{ background: c.hex, color: c.ink ? "#0A0B0D" : "#F7F7F2" }}>
+              <div className="flex h-32 items-end p-4" style={{ background: c.fill ?? c.hex, color: c.ink ? C.ink : C.porcelain }}>
                 <span className="num text-[13px]">{c.hex}</span>
               </div>
               <div className="p-4">
@@ -252,7 +211,7 @@ export default function BrandPage() {
             <p className="mt-5 flex items-center gap-2.5 text-[15px]">
               <SignalDot live /> Arrives tomorrow · 214 in stock
             </p>
-            <p className="mt-4 text-[13.5px] text-mute">A ringed lime point marks anything live and verified: stock, delivery, deals.</p>
+            <p className="mt-4 text-[13.5px] text-mute">A ringed amber point marks anything live and verified: delivery, deals, trust.</p>
           </div>
           <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
             <p className="eyebrow">Inline image capsules</p>
@@ -307,7 +266,7 @@ export default function BrandPage() {
 
       {/* Voice */}
       <section className="shell mt-24">
-        <div className="grid gap-8 rounded-[36px] bg-lime p-8 sm:p-12 lg:grid-cols-2">
+        <div className="grid gap-8 rounded-[36px] bg-brand-soft p-8 sm:p-12 lg:grid-cols-2">
           <div>
             <Eyebrow index="07" className="!text-ink/60">Voice</Eyebrow>
             <h2 className="display mt-4 text-[44px] sm:text-[72px]">Answers, not adjectives.</h2>

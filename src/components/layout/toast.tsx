@@ -24,7 +24,7 @@ export function Toast() {
             "pointer-events-auto flex w-full max-w-md animate-rise items-center gap-3 rounded-2xl bg-ink py-3 pl-3 pr-2 text-porcelain shadow-[var(--shadow-float)]",
           )}
         >
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-lime text-ink">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-brand text-ink">
             <Icon name="check" size={18} strokeWidth={2.2} />
           </span>
           <div className="min-w-0 flex-1">
@@ -32,7 +32,7 @@ export function Toast() {
             {toast.body && <p className="truncate text-[12.5px] text-mute-dark">{toast.body}</p>}
           </div>
           {toast.action ? (
-            <Link href={toast.action.href} onClick={dismiss} className="rounded-xl px-3 py-2 text-[13px] font-medium text-lime hover:bg-graphite">
+            <Link href={toast.action.href} onClick={dismiss} className="rounded-xl px-3 py-2 text-[13px] font-medium text-brand hover:bg-graphite">
               {toast.action.label}
             </Link>
           ) : (
@@ -42,7 +42,7 @@ export function Toast() {
                 dismiss();
                 openCart();
               }}
-              className="rounded-xl px-3 py-2 text-[13px] font-medium text-lime hover:bg-graphite"
+              className="rounded-xl px-3 py-2 text-[13px] font-medium text-brand hover:bg-graphite"
             >
               View bag
             </button>

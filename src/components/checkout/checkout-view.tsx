@@ -55,7 +55,7 @@ function Step({ n, title, children, aside }: { n: number; title: string; childre
     <section aria-labelledby={`step-${n}`} className="rounded-[28px] bg-white p-5 shadow-[var(--shadow-hair)] sm:p-7">
       <div className="mb-5 flex items-center justify-between gap-3">
         <h2 id={`step-${n}`} className="flex items-center gap-3 text-[18px] font-medium tracking-[-0.02em]">
-          <span className="num grid h-7 w-7 place-items-center rounded-full bg-ink text-[12px] text-lime">{n}</span>
+          <span className="num grid h-7 w-7 place-items-center rounded-full bg-ink text-[12px] text-brand">{n}</span>
           {title}
         </h2>
         {aside}
@@ -320,12 +320,12 @@ export function CheckoutView() {
             </div>
           </dl>
           {needsApproval && (
-            <div className="mt-4 rounded-2xl bg-blue-soft p-4 text-[13px] text-blue-ink">
+            <div className="mt-4 rounded-2xl bg-info-soft p-4 text-[13px] text-info">
               <p className="font-medium">Needs approval</p>
               <p className="mt-0.5">Over your $2,500 limit. Priya Raman (Manager) will be notified and can approve from email — median 42 minutes.</p>
             </div>
           )}
-          <button type="submit" disabled={placing} className="btn btn-ink btn-lg mt-5 w-full">
+          <button type="submit" disabled={placing} className="btn btn-brand btn-lg mt-5 w-full">
             <Icon name="lock" size={16} />
             {placing ? "Placing…" : needsApproval ? "Submit for approval" : `Place order · ${fmt(total, { cents: true })}`}
           </button>

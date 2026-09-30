@@ -74,8 +74,8 @@ export function Reviews({ product: p }: { product: Product }) {
                   </div>
                 </div>
                 <div className="flex gap-1.5">
-                  {r.verified && <span className="rounded-full bg-lime-soft px-2.5 py-1 text-[11.5px] font-medium">Verified purchase</span>}
-                  {r.business && <span className="rounded-full bg-blue-soft px-2.5 py-1 text-[11.5px] font-medium text-blue-ink">Business buyer</span>}
+                  {r.verified && <span className="rounded-full bg-success-soft px-2.5 py-1 text-[11.5px] font-medium text-success">Verified purchase</span>}
+                  {r.business && <span className="rounded-full bg-info-soft px-2.5 py-1 text-[11.5px] font-medium text-info">Business buyer</span>}
                 </div>
               </div>
               <p className="mt-3 text-[15.5px] font-medium tracking-[-0.01em]">{r.title}</p>

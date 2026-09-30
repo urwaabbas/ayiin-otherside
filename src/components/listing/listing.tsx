@@ -288,7 +288,7 @@ function FilterPanel({
               onClick={() => set({ within: v == null ? null : String(v) })}
               className="chip !h-8 !px-3"
             >
-              {v === 1 && <span className="chip-dot h-1.5 w-1.5 rounded-full bg-lime" />}
+              {v === 1 && <span className="chip-dot h-1.5 w-1.5 rounded-full bg-brand" />}
               {label}
               {v != null && <span className="num text-[11px] opacity-60">{countWith({ within: Number(v) })}</span>}
             </button>
@@ -441,7 +441,7 @@ function Toggle({ on, onChange, label }: { on?: boolean; onChange: () => void; l
       onClick={onChange}
       className={clsx("relative h-6 w-10 shrink-0 rounded-full transition-colors duration-300", on ? "bg-ink" : "bg-line-strong")}
     >
-      <span className={clsx("absolute top-1 h-4 w-4 rounded-full transition-all duration-300", on ? "left-5 bg-lime" : "left-1 bg-white")} />
+      <span className={clsx("absolute top-1 h-4 w-4 rounded-full transition-all duration-300", on ? "left-5 bg-brand" : "left-1 bg-white")} />
     </button>
   );
 }
