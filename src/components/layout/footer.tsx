@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AyiinLogo } from "@/components/brand/ayiin-logo";
+import { AyiinFooterMark } from "@/components/brand/ayiin-footer-mark";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { NewsletterForm } from "@/components/layout/newsletter";
 import type { Mode } from "@/lib/types";
@@ -106,7 +107,7 @@ export function Footer({ mode }: { mode: Mode }) {
             </nav>
           </div>
 
-          <AyiinLogo on="dark" className="mb-10 mt-20 !h-auto !w-full" />
+          <AyiinFooterMark className="mb-10 mt-20" />
 
           <div className="flex flex-col gap-4 border-t border-graphite-line py-6 text-[12.5px] text-mute-dark sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 Ayiin Inc. · Multi-vendor marketplace for people and companies.</p>
