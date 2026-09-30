@@ -63,7 +63,7 @@ export function ForYou({ pool }: { pool: Product[] }) {
         title={<>Tuned to you.<br />Never on a loop.</>}
         description="Tell Ayiin what you're into. Every recommendation explains itself, no category repeats more than twice, and you can always ask for something different."
       />
-      <div className="mt-10 flex flex-wrap items-center gap-2 short:mt-6">
+      <div className="mt-10 flex flex-wrap items-center gap-2 short:mt-[clamp(12px,2.6vh,24px)]">
         <span className="eyebrow mr-2">Your interests</span>
         {INTERESTS.map((i) => (
           <button key={i.id} type="button" aria-pressed={selected.includes(i.id)} onClick={() => toggle(i.id)} className="chip">
@@ -75,7 +75,7 @@ export function ForYou({ pool }: { pool: Product[] }) {
           <Icon name="repeat" size={14} /> Show me something different
         </button>
       </div>
-      <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 short:mt-6">
+      <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 short:mt-[clamp(12px,2.6vh,24px)]">
         {feed.map(({ p, hits }, n) => (
           <div key={`${p.id}`} className="animate-rise" style={{ animationDelay: `${n * 50}ms` }}>
             <ProductCard

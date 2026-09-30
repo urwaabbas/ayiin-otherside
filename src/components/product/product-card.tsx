@@ -20,7 +20,7 @@ const CARD_SIZES = "(min-width: 1280px) 300px, (min-width: 1024px) 30vw, (min-wi
 
 /** Card frame for home rails: on laptop-height screens the image shrinks so the whole row
  *  (image, price, delivery) fits one screen; everywhere else it keeps the 4:4.4 stage. */
-export const RAIL_FRAME = "aspect-[4/4.4] short:aspect-auto short:h-[clamp(190px,calc(100vh-520px),340px)]";
+export const RAIL_FRAME = "aspect-[4/4.4] short:aspect-auto short:h-[clamp(120px,calc(100vh-485px),340px)]";
 
 export function ProductCard({
   product: p,

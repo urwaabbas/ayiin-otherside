@@ -103,7 +103,7 @@ export function Header() {
 
   return (
     <>
-      <div aria-hidden className={clsx("h-[116px] lg:h-[164px]", business ? "bg-midnight" : "bg-graphite")} />
+      <div aria-hidden className={clsx("h-[116px] lg:h-[164px] tiny:h-[84px]", business ? "bg-midnight" : "bg-graphite")} />
       {/* Scrim for desktop overlays */}
       <div
         aria-hidden
@@ -128,7 +128,7 @@ export function Header() {
         )}
       >
         {/* ── Utility strip ─────────────────────────────────── */}
-        <Collapse open={!compact} className="hidden lg:grid">
+        <Collapse open={!compact} className="hidden lg:grid tiny:hidden">
           <div className="bg-midnight text-ink-2 transition-colors duration-500">
             <div className="shell flex h-9 items-center justify-between text-[12.5px]">
               <div className="flex items-center gap-2.5">
@@ -311,7 +311,7 @@ export function Header() {
         </Collapse>
 
         {/* ── Category rail ─────────────────────────────────── */}
-        <Collapse open={!compact} className="hidden lg:grid">
+        <Collapse open={!compact} className="hidden lg:grid tiny:hidden">
           <div className="shell flex h-11 items-center justify-between border-t border-line text-[13.5px]">
             <nav aria-label="Featured" className="-ml-3 flex items-center">
               {business ? (

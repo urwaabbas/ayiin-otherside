@@ -71,7 +71,7 @@ export function CompareTeaser({ items }: { items: Product[] }) {
                 {items.map((p) => (
                   <th key={p.id} scope="col" className="p-3 align-bottom font-normal">
                     <Link href={`/p/${p.slug}`} className="group block">
-                      <ProductImage product={p} className="aspect-square w-full rounded-2xl short:aspect-[4/3]" />
+                      <ProductImage product={p} className="aspect-square w-full rounded-2xl short:aspect-auto short:h-[clamp(64px,calc(100vh-540px),150px)]" />
                       <span className="mt-2 block text-[13.5px] font-medium leading-snug group-hover:underline">{p.name}</span>
                     </Link>
                   </th>
@@ -81,11 +81,11 @@ export function CompareTeaser({ items }: { items: Product[] }) {
             <tbody>
               {shown.map((r) => (
                 <tr key={r.label} className="border-t border-line">
-                  <th scope="row" className="px-4 py-3 font-normal text-mute">
+                  <th scope="row" className="px-4 py-3 font-normal text-mute short:py-[clamp(6px,1.2vh,12px)]">
                     {r.label}
                   </th>
                   {r.values.map((v, i) => (
-                    <td key={i} className="px-3 py-3">
+                    <td key={i} className="px-3 py-3 short:py-[clamp(6px,1.2vh,12px)]">
                       <span
                         className={clsx(
                           "inline-flex items-center gap-1.5 rounded-full",
