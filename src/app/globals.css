@@ -1,0 +1,492 @@
+@import "tailwindcss";
+
+/* ───────────────────────────────────────────────────────────────
+   AYIIN — design tokens, derived from the logo
+   The logo is warm charcoal lettering (#282828) with an A and two
+   i-tittles in a sunlit gradient: orange #FF9B2B → amber #FFA624 →
+   yellow #FDD207. Everything here comes from those two ideas:
+   · neutrals are the logo's charcoal, warmed a touch so they sit
+     with the amber instead of fighting it (no cool blue-blacks);
+   · the amber is a signal, not a paint — CTAs, selection, live and
+     verified moments. Most of the interface stays neutral.
+   60% porcelain · 25% white · 10% charcoal · 5% amber
+   ─────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* Neutrals — surfaces
+     porcelain  page background (the logo's #F7F7F7, warmed)
+     white      cards, elevated surfaces, inputs, modals, drawers
+     mist       secondary background, quiet fills, hovers
+     soft       tracks, inactive fills, pressed states
+     ink        dark actions, selected chips, dark text surfaces
+     graphite   dark sections: footer, business panels (the logo's own #282828) */
+  --color-porcelain: #f7f6f3;
+  --color-white: #ffffff;
+  --color-mist: #f0eeea;
+  --color-soft: #e8e6e1;
+  --color-ink: #1f1e1c;
+  --color-graphite: #282725;
+  --color-graphite-2: #31302d;
+  --color-graphite-line: #3d3b38;
+
+  /* Neutrals — text (each passes WCAG AA on porcelain and white)
+     ink → ink-2 → mute → faint (disabled, decorative only)
+     mute-dark is muted text on graphite/ink surfaces */
+  --color-ink-2: #45423d;
+  --color-mute: #6b6760;
+  --color-faint: #a9a59e;
+  --color-mute-dark: #a8a49c;
+
+  /* Neutrals — lines */
+  --color-line: #e5e2dc;
+  --color-line-strong: #d2cec6;
+  --color-line-hover: #b9b4ab;
+
+  /* Brand — from the logo gradient
+     brand        the amber midpoint; fills with ink text on top (7.5:1)
+     brand-hover  lifted amber for hover on brand fills
+     brand-soft   a whisper of amber for selected rows and chips
+     brand-deep   amber darkened for text/icons on light (5.5:1 on white)
+     brand-orange / brand-yellow  the gradient ends, for the gradient only */
+  --color-brand: #ffa624;
+  --color-brand-hover: #ffb547;
+  --color-brand-soft: #fff2de;
+  --color-brand-deep: #a5520c;
+  --color-brand-orange: #ff9b2b;
+  --color-brand-yellow: #fdd207;
+
+  /* Semantic — kept apart from the brand so amber never means "warning" */
+  --color-success: #23794c;
+  --color-success-soft: #e6f2ea;
+  --color-warning: #8f6200;
+  --color-warning-soft: #fbf1d6;
+  --color-danger: #c23b2e;
+  --color-danger-soft: #fcece9;
+  --color-info: #3e5874;
+  --color-info-soft: #ecf0f4;
+
+  /* Commerce */
+  --color-price: var(--color-ink);
+  --color-sale: var(--color-brand-deep);
+
+  /* Typography */
+  --font-sans: var(--font-geist), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-funnel), var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --text-2xs: 0.6875rem;
+  --text-2xs--line-height: 1rem;
+
+  /* Elevation — soft, layered, never muddy */
+  --shadow-hair: 0 0 0 1px rgb(var(--rgb-ink) / 0.07);
+  --shadow-soft: 0 1px 2px rgb(var(--rgb-ink) / 0.04), 0 10px 30px -14px rgb(var(--rgb-ink) / 0.14);
+  --shadow-lift: 0 2px 6px rgb(var(--rgb-ink) / 0.05), 0 30px 70px -30px rgb(var(--rgb-ink) / 0.3);
+  --shadow-float: 0 20px 60px -20px rgb(var(--rgb-ink) / 0.32), 0 0 0 1px rgb(var(--rgb-ink) / 0.05);
+
+  /* The logo gradient. Used only where something fills up (progress). */
+  --gradient-brand: linear-gradient(90deg, var(--color-brand-orange), var(--color-brand) 54%, var(--color-brand-yellow));
+
+  /* Motion — cinematic but restrained */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+
+  --breakpoint-xs: 26rem;
+  --breakpoint-3xl: 110rem;
+
+  --animate-signal: signal 2.4s var(--ease-in-out-soft) infinite;
+  --animate-rise: rise 0.9s var(--ease-out-expo) both;
+  --animate-fade: fade 0.6s var(--ease-out-expo) both;
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-sheen: sheen 2.8s var(--ease-in-out-soft) infinite;
+
+  @keyframes signal {
+    0%, 100% { box-shadow: 0 0 0 1.5px rgb(var(--rgb-ink) / 0.85), 0 0 0 0 rgb(var(--rgb-brand) / 0.5); }
+    60% { box-shadow: 0 0 0 1.5px rgb(var(--rgb-ink) / 0.85), 0 0 0 6px rgb(var(--rgb-brand) / 0); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translate3d(0, 24px, 0); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+  @keyframes sheen {
+    0% { transform: translateX(-120%); }
+    60%, 100% { transform: translateX(220%); }
+  }
+}
+
+/* ─── Base ─────────────────────────────────────────────────────── */
+
+@layer base {
+  :root {
+    color-scheme: light;
+    accent-color: var(--color-ink);
+    caret-color: var(--color-ink);
+    --header-h: 132px;
+    --gutter: 16px;
+    --focus: var(--color-brand-deep);
+    /* Channel triplets of the core tokens, for translucent shadows and scrims */
+    --rgb-ink: 31 30 28;
+    --rgb-porcelain: 247 246 243;
+    --rgb-brand: 255 166 36;
+  }
+  @media (min-width: 640px) {
+    :root { --gutter: 24px; }
+  }
+  @media (min-width: 1024px) {
+    :root { --gutter: 40px; }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    scroll-padding-top: 96px;
+  }
+
+  body {
+    background: var(--color-porcelain);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: var(--color-brand);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
+  img, svg { display: block; }
+
+  /* Grid and flex children shouldn't be forced wider than their track by long content. */
+  :where(.grid) > * { min-width: 0; }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
+}
+
+/* ─── Signature components ─────────────────────────────────────── */
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 1520px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* Editorial eyebrow: "01 — Discover" */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    line-height: 1rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-mute);
+  }
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.045em;
+    line-height: 0.92;
+    font-feature-settings: "ss01";
+  }
+
+  .num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  .hairline { border-color: var(--color-line); }
+
+  /* The Ayiin signal dot — the recurring "live data" marker */
+  .signal-dot {
+    position: relative;
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    flex: none;
+    border-radius: 999px;
+    background: var(--color-brand);
+    box-shadow: 0 0 0 1.5px rgb(var(--rgb-ink) / 0.85);
+  }
+  .signal-dot[data-live="true"] { animation: var(--animate-signal); }
+  .signal-dot[data-tone="success"] { background: var(--color-success); box-shadow: none; }
+  .signal-dot[data-tone="warning"] { background: var(--color-warning); box-shadow: none; }
+  .signal-dot[data-tone="danger"] { background: var(--color-danger); box-shadow: none; }
+  .signal-dot[data-tone="info"] { background: var(--color-info); box-shadow: none; }
+  .signal-dot[data-tone="mute"] { background: var(--color-line-strong); box-shadow: none; }
+  /* Only the brand dot pulses; semantic dots stay still. */
+  .signal-dot[data-tone]:not([data-tone="brand"])[data-live="true"] { animation: none; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 48px;
+    padding-inline: 1.375rem;
+    border-radius: 999px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    transition: background-color 200ms var(--ease-out-expo), color 200ms var(--ease-out-expo),
+      transform 300ms var(--ease-out-expo), box-shadow 300ms var(--ease-out-expo), border-color 200ms;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn:active:not(:disabled) { transform: scale(0.98); }
+  .btn:disabled {
+    cursor: not-allowed;
+    background: var(--color-soft);
+    border-color: transparent;
+    color: var(--color-faint);
+    box-shadow: none;
+  }
+  .btn-sm { height: 38px; padding-inline: 1rem; font-size: 0.875rem; }
+  .btn-lg { height: 56px; padding-inline: 1.75rem; font-size: 1rem; }
+
+  /* Hierarchy — one system everywhere:
+     .btn-brand    the one decisive CTA in a view (amber, ink text)
+     .btn-ink      primary action (charcoal, the logo's lettering)
+     .btn-ghost    secondary, outlined
+     .btn-white    secondary on tinted or image surfaces
+     .btn-quiet    minimal, text-weight action
+     .btn-danger   destructive
+     .btn-on-dark  secondary on graphite/ink surfaces */
+  .btn-brand { background: var(--color-brand); color: var(--color-ink); }
+  .btn-brand:hover:not(:disabled) { background: var(--color-brand-hover); }
+  .btn-brand:active:not(:disabled) { background: var(--color-brand-orange); }
+
+  .btn-ink { background: var(--color-ink); color: var(--color-white); }
+  .btn-ink:hover:not(:disabled) { background: var(--color-graphite-2); }
+  .btn-ink:active:not(:disabled) { background: var(--color-graphite); }
+
+  .btn-ghost { background: transparent; color: var(--color-ink); border: 1px solid var(--color-line-strong); }
+  .btn-ghost:hover:not(:disabled) { border-color: var(--color-ink); background: var(--color-white); }
+  .btn-ghost:active:not(:disabled) { background: var(--color-mist); }
+
+  .btn-white { background: var(--color-white); color: var(--color-ink); box-shadow: var(--shadow-hair); }
+  .btn-white:hover:not(:disabled) { box-shadow: var(--shadow-soft); }
+  .btn-white:active:not(:disabled) { background: var(--color-mist); }
+
+  .btn-quiet { background: transparent; color: var(--color-ink-2); }
+  .btn-quiet:hover:not(:disabled) { background: var(--color-mist); color: var(--color-ink); }
+  .btn-quiet:active:not(:disabled) { background: var(--color-soft); }
+
+  .btn-danger { background: var(--color-danger); color: var(--color-white); }
+  .btn-danger:hover:not(:disabled) { background: color-mix(in oklab, var(--color-danger), var(--color-ink) 16%); }
+
+  .btn-on-dark { background: transparent; color: var(--color-porcelain); border: 1px solid rgb(var(--rgb-porcelain) / 0.22); }
+  .btn-on-dark:hover:not(:disabled) { border-color: var(--color-porcelain); background: rgb(var(--rgb-porcelain) / 0.06); }
+  .btn-on-dark:disabled { background: transparent; border-color: var(--color-graphite-line); color: var(--color-mute-dark); }
+
+  /* Chips */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 34px;
+    padding-inline: 0.875rem;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 450;
+    color: var(--color-ink-2);
+    background: var(--color-white);
+    border: 1px solid var(--color-line);
+    transition: all 200ms var(--ease-out-expo);
+    white-space: nowrap;
+  }
+  .chip:hover { border-color: var(--color-line-hover); color: var(--color-ink); }
+  .chip[aria-pressed="true"],
+  .chip[data-active="true"] {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-white);
+  }
+  .chip[aria-pressed="true"] .chip-dot,
+  .chip[data-active="true"] .chip-dot { background: var(--color-brand); }
+
+  /* Surfaces */
+  .card {
+    background: var(--color-white);
+    border-radius: 20px;
+    box-shadow: var(--shadow-hair);
+  }
+  .panel-ink {
+    background: var(--color-ink);
+    color: var(--color-porcelain);
+  }
+
+  /* Inputs */
+  .field {
+    width: 100%;
+    height: 48px;
+    padding-inline: 1rem;
+    border-radius: 12px;
+    background: var(--color-white);
+    border: 1px solid var(--color-line-strong);
+    font-size: 0.9375rem;
+    color: var(--color-ink);
+    transition: border-color 160ms, box-shadow 160ms;
+  }
+  .field::placeholder { color: var(--color-mute); opacity: 0.8; }
+  .field:hover { border-color: var(--color-line-hover); }
+  .field:focus { outline: none; border-color: var(--color-ink); box-shadow: 0 0 0 4px rgb(var(--rgb-brand) / 0.28); }
+  .field:disabled { background: var(--color-mist); color: var(--color-faint); cursor: not-allowed; }
+  .field-label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-ink-2);
+    margin-bottom: 0.375rem;
+  }
+
+  /* Links with the signal underline */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    transition: background-size 400ms var(--ease-out-expo);
+  }
+  .link-underline:hover { background-size: 100% 1px; }
+
+  /* Scroll areas */
+  .scroll-x {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .scroll-x::-webkit-scrollbar { display: none; }
+  .scroll-x > * { scroll-snap-align: start; }
+  .scroll-x { scroll-padding-inline: var(--gutter); }
+
+  .thin-scroll { scrollbar-width: thin; scrollbar-color: var(--color-line-strong) transparent; }
+
+  /* Reveal on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    transition: opacity 900ms var(--ease-out-expo), transform 1100ms var(--ease-out-expo);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal[data-in="true"] { opacity: 1; transform: none; }
+
+  /* Shimmer — the Ayiin loading surface. A soft porcelain block with a light sweep. */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background-color: var(--color-mist);
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.72) 50%, transparent 80%);
+    animation: shimmer 1.5s var(--ease-in-out-soft) infinite;
+  }
+  .shimmer-dark { background-color: var(--color-graphite-2); }
+  .shimmer-dark::after { background: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.08) 50%, transparent 80%); }
+  @keyframes shimmer {
+    to { transform: translateX(100%); }
+  }
+
+  /* One-off sweep on signal badges (verified deals, best value) */
+  .glint { position: relative; overflow: hidden; }
+  .glint::after {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    transform: translateX(-120%) skewX(-18deg);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.75), transparent);
+    animation: glint 4.5s var(--ease-in-out-soft) infinite;
+    animation-delay: var(--glint-delay, 0.6s);
+  }
+  @keyframes glint {
+    0% { transform: translateX(-120%) skewX(-18deg); }
+    22%, 100% { transform: translateX(220%) skewX(-18deg); }
+  }
+
+  /* Skeleton sheen */
+  .sheen { position: relative; overflow: hidden; }
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+    animation: var(--animate-sheen);
+  }
+
+  /* Subtle grain/grid texture used behind hero stages */
+  .grid-texture {
+    background-image:
+      linear-gradient(to right, rgb(var(--rgb-ink) / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--rgb-ink) / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+  .grid-texture-dark {
+    background-image:
+      linear-gradient(to right, rgb(var(--rgb-porcelain) / 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(var(--rgb-porcelain) / 0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+  .bg-brand-gradient { background-image: var(--gradient-brand); }
+  .text-pretty { text-wrap: pretty; }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
+
+/* Mode-switch view transition: a restrained cross-fade with a slight lift */
+::view-transition-old(root) {
+  animation: 260ms var(--ease-in-out-soft) both vt-out;
+}
+::view-transition-new(root) {
+  animation: 520ms var(--ease-out-expo) both vt-in;
+}
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(10px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}

@@ -1,0 +1,158 @@
+import type { Category } from "@/lib/types";
+
+export const categories: Category[] = [
+  {
+    slug: "audio-tech",
+    name: "Audio & Tech",
+    short: "Tech",
+    blurb: "Headphones, laptops and the tools you use all day — tested, compared, explained.",
+    kind: "headphones",
+    tint: "#ECEBE7",
+    accent: "#4F5B6B",
+    business: true,
+    subcategories: ["Headphones", "Speakers", "Laptops", "Monitors", "Phones"],
+    guide: {
+      title: "What actually matters in audio & tech",
+      points: [
+        "Noise cancelling beats driver size for commuting and flights",
+        "Battery life claims are measured at 50% volume — expect ~80%",
+        "USB-C and multipoint pairing save the most daily friction",
+      ],
+    },
+  },
+  {
+    slug: "home-living",
+    name: "Home & Living",
+    short: "Home",
+    blurb: "Lighting, seating and objects made by independent studios and verified makers.",
+    kind: "lamp",
+    tint: "#F1ECE4",
+    accent: "#C07A45",
+    business: false,
+    subcategories: ["Lighting", "Seating", "Decor", "Candles", "Plants"],
+    guide: {
+      title: "Choosing for your space",
+      points: [
+        "Warm 2700K light for living spaces, 4000K for work surfaces",
+        "Check seat height (43–46cm) against your table height",
+        "Every item lists its real dimensions with a scale reference",
+      ],
+    },
+  },
+  {
+    slug: "kitchen",
+    name: "Kitchen & Coffee",
+    short: "Kitchen",
+    blurb: "Small-batch coffee, precise kettles and stoneware — for home and hospitality.",
+    kind: "kettle",
+    tint: "#EEEEE5",
+    accent: "#6B7243",
+    business: true,
+    subcategories: ["Coffee", "Kettles", "Tableware", "Hospitality"],
+    guide: {
+      title: "Brewing better",
+      points: [
+        "Roast date matters more than origin — look for < 3 weeks",
+        "Gooseneck spouts give control for pour-over",
+        "Hospitality sellers offer case pricing from 6 units",
+      ],
+    },
+  },
+  {
+    slug: "fashion",
+    name: "Fashion & Carry",
+    short: "Fashion",
+    blurb: "Footwear, bags and accessories with fit data from thousands of verified buyers.",
+    kind: "sneaker",
+    tint: "#EFEBE7",
+    accent: "#8C5E57",
+    business: false,
+    subcategories: ["Sneakers", "Bags", "Watches", "Eyewear", "Bottles"],
+    guide: {
+      title: "Getting fit right the first time",
+      points: [
+        "Ayiin Fit compares sizing to brands you already own",
+        "68% of buyers say the Stride Runner fits true to size",
+        "Free exchanges on every size — no restocking fees",
+      ],
+    },
+  },
+  {
+    slug: "beauty",
+    name: "Beauty & Wellness",
+    short: "Beauty",
+    blurb: "Clinically-backed skincare with full ingredient transparency.",
+    kind: "serum",
+    tint: "#F3EAE6",
+    accent: "#C0654E",
+    business: false,
+    subcategories: ["Skincare", "Body", "Fragrance", "Wellness"],
+    guide: {
+      title: "Reading an ingredient list",
+      points: [
+        "Actives are listed with concentrations — no guesswork",
+        "Fragrance-free options are flagged for sensitive skin",
+        "Opened items can still be returned within 30 days",
+      ],
+    },
+  },
+  {
+    slug: "office",
+    name: "Office & Workspace",
+    short: "Office",
+    blurb: "Seating, paper, peripherals and everything a team needs to work well.",
+    kind: "taskchair",
+    tint: "#EAECE7",
+    accent: "#4F7466",
+    business: true,
+    subcategories: ["Seating", "Paper", "Peripherals", "Scanning", "Desk"],
+    guide: {
+      title: "Equipping a team",
+      points: [
+        "BIFMA-certified chairs are rated for 8+ hours daily",
+        "Volume pricing starts at 10 units on most workspace items",
+        "Schedule recurring paper & supplies to never run out",
+      ],
+    },
+  },
+  {
+    slug: "supplies",
+    name: "Packaging & Supplies",
+    short: "Packaging",
+    blurb: "Cartons, mailers and fulfilment supplies at volume — with live stock at every warehouse.",
+    kind: "carton",
+    tint: "#F0EBE2",
+    accent: "#A87B45",
+    business: true,
+    subcategories: ["Shipping cartons", "Mailers", "Labels", "Protective"],
+    guide: {
+      title: "Buying packaging at scale",
+      points: [
+        "ECT-32 double-wall handles up to 30kg per carton",
+        "Pallet quantities unlock the steepest price breaks",
+        "Split deliveries across multiple warehouses in one order",
+      ],
+    },
+  },
+  {
+    slug: "safety",
+    name: "Safety & Facility",
+    short: "Safety",
+    blurb: "PPE, cleaning and facility essentials from certified industrial suppliers.",
+    kind: "helmet",
+    tint: "#F3EFDF",
+    accent: "#B7880F",
+    business: true,
+    subcategories: ["Gloves", "Head protection", "Cleaning", "First aid"],
+    guide: {
+      title: "Compliance, simplified",
+      points: [
+        "Every PPE listing shows its certification (EN, ANSI, ASTM)",
+        "Certificates of conformity download with the invoice",
+        "Standing orders keep sites stocked automatically",
+      ],
+    },
+  },
+];
+
+export const categoryBySlug = (slug: string) => categories.find((c) => c.slug === slug);
