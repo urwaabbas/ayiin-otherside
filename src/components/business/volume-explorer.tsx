@@ -43,19 +43,19 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
               i === pi ? "bg-ink text-white" : "text-ink-2 hover:bg-mist",
             )}
           >
-            <ProductImage product={vp} sizes="36px" className="h-9 w-9 rounded-xl" />
+            <ProductImage product={vp} sizes="36px" className="h-9 w-9 rounded-xl short:h-7 short:w-7 short:rounded-lg" />
             {vp.name.split(/ — |, /)[0]}
           </button>
         ))}
       </div>
 
       <div className="grid gap-0 lg:grid-cols-[1fr_1.15fr]">
-        <div className="border-b border-line p-6 sm:p-8 lg:border-b-0 lg:border-r">
+        <div className="border-b border-line p-6 sm:p-8 lg:border-b-0 lg:border-r short:px-6 short:py-5">
           <label htmlFor="vol-qty" className="eyebrow">
             Quantity · {p.b2b.unit}
           </label>
           <div className="mt-3 flex items-end justify-between gap-4">
-            <p className="display text-[64px] leading-none tabular-nums">{qty.toLocaleString("en-US")}</p>
+            <p className="display text-[64px] leading-none tabular-nums short:text-[46px]">{qty.toLocaleString("en-US")}</p>
             <div className="text-right">
               <p className="num text-[28px] font-medium tracking-[-0.03em]">{fmt(unit, { cents: true })}</p>
               <p className="text-[12.5px] text-mute">per {p.b2b.unit}</p>
@@ -69,21 +69,21 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
             value={stop}
             onChange={(e) => setStop(Number(e.target.value))}
             aria-valuetext={`${qty} units`}
-            className="mt-6 w-full accent-ink"
+            className="mt-6 w-full accent-ink short:mt-3"
           />
           <div className="mt-1 flex justify-between font-mono text-[10.5px] text-mute">
             <span>1</span>
             <span>1,000</span>
           </div>
 
-          <ol className="mt-6 grid grid-cols-4 gap-2">
+          <ol className="mt-6 grid grid-cols-4 gap-2 short:mt-3">
             {p.b2b.tiers.map((t) => {
               const active = t.min === activeMin;
               return (
                 <li
                   key={t.min}
                   className={clsx(
-                    "rounded-2xl p-3 transition-colors duration-300",
+                    "rounded-2xl p-3 transition-colors duration-300 short:px-3 short:py-2",
                     active ? "bg-brand text-ink shadow-[inset_0_0_0_1.5px_var(--color-ink)]" : "bg-mist text-ink-2",
                   )}
                 >
@@ -94,7 +94,7 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
               );
             })}
           </ol>
-          <div className="mt-6 space-y-1.5 text-[14px]">
+          <div className="mt-6 space-y-1.5 text-[14px] short:mt-3">
             <p className="flex justify-between">
               <span className="text-mute">Total at list</span> <span className="num text-mute line-through">{fmt(p.price * qty, { cents: true })}</span>
             </p>
@@ -109,12 +109,12 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
           </div>
         </div>
 
-        <div className="p-6 sm:p-8">
+        <div className="p-6 sm:p-8 short:px-6 short:py-5">
           <div className="flex items-center justify-between">
             <p className="eyebrow">{offers.length} verified suppliers · landed cost</p>
             <span className="text-[12px] text-mute">incl. delivery</span>
           </div>
-          <ul className="mt-4 space-y-2.5">
+          <ul className="mt-4 space-y-2.5 short:mt-3 short:space-y-2">
             {offers.map((o, i) => {
               const s = sellerById(o.sellerId);
               const best = i === 0 && o.eligible;
@@ -152,7 +152,7 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
               );
             })}
           </ul>
-          <div className="mt-6 flex flex-wrap gap-2">
+          <div className="mt-6 flex flex-wrap gap-2 short:mt-3">
             <button
               type="button"
               onClick={() => {

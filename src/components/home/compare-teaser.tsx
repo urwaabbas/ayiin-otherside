@@ -71,7 +71,7 @@ export function CompareTeaser({ items }: { items: Product[] }) {
                 {items.map((p) => (
                   <th key={p.id} scope="col" className="p-3 align-bottom font-normal">
                     <Link href={`/p/${p.slug}`} className="group block">
-                      <ProductImage product={p} className="aspect-square w-full rounded-2xl" />
+                      <ProductImage product={p} className="aspect-square w-full rounded-2xl short:aspect-[4/3]" />
                       <span className="mt-2 block text-[13.5px] font-medium leading-snug group-hover:underline">{p.name}</span>
                     </Link>
                   </th>

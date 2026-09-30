@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* short: — laptop-shaped screens (desktop layout, ≤ 920px tall: 1280×720, 1366×768,
+   1440×900, 1536×864). Used to fit a section into one screen; phones, tablets in
+   portrait and tall desktop monitors never match, so they keep the full design. */
+@custom-variant short (@media (min-width: 1024px) and (max-height: 920px));
+
 /* ───────────────────────────────────────────────────────────────
    AYIIN — "Midnight navy" design tokens, built against the logo
    The logo is a sunlit orange → amber → yellow gradient (#FF9B2B →
