@@ -41,7 +41,7 @@ export function AskForm({ tone = "light", className }: { tone?: "light" | "dark"
           dark ? "bg-graphite ring-1 ring-graphite-line focus-within:ring-mute-dark" : "bg-white shadow-[var(--shadow-soft)] ring-1 ring-line focus-within:ring-ink",
         )}
       >
-        <Icon name="sparkle" size={20} className={clsx("shrink-0", dark ? "text-brand" : "text-brand-deep")} />
+        <Icon name="search" size={19} className={clsx("shrink-0", dark ? "text-mute-dark" : "text-mute")} />
         <label htmlFor={`ask-${tone}`} className="sr-only">
           Describe what you need
         </label>

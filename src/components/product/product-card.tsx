@@ -20,7 +20,7 @@ const CARD_SIZES = "(min-width: 1280px) 300px, (min-width: 1024px) 30vw, (min-wi
 
 /** Card frame for home rails: on laptop-height screens the image shrinks so the whole row
  *  (image, price, delivery) fits one screen; everywhere else it keeps the 4:4.4 stage. */
-export const RAIL_FRAME = "aspect-[4/4.4] short:aspect-auto short:h-[clamp(120px,calc(100vh-485px),340px)]";
+export const RAIL_FRAME = "aspect-[4/4.4] short:aspect-auto short:h-[clamp(120px,calc(100vh-505px),340px)]";
 
 export function ProductCard({
   product: p,
@@ -88,7 +88,15 @@ export function ProductCard({
           </span>
         </Link>
         {rank != null && (
-          <span className="display pointer-events-none absolute bottom-3 left-4 text-[56px] leading-none text-ink/90">{String(rank).padStart(2, "0")}</span>
+          <span
+            aria-label={`Rank ${rank}`}
+            className={clsx(
+              "pointer-events-none absolute bottom-3 left-3 inline-flex h-7 items-center rounded-full px-2.5 font-mono text-[12px] font-medium tabular-nums shadow-[var(--shadow-hair)] backdrop-blur",
+              rank === 1 ? "bg-brand text-on-brand" : "bg-ink/85 text-white",
+            )}
+          >
+            #{rank}
+          </span>
         )}
         {badge && (
           <span

@@ -20,11 +20,16 @@ const INTERESTS: { id: string; label: string; match: (p: Product) => boolean }[]
 ];
 
 /**
- * The page hands For You its own pool of products (none of which appear
- * elsewhere on the page); interests and "something different" re-rank that
- * pool, they never pull in products from outside it.
+ * For You has two sources:
+ *  · `pool` — its own reserved products (none appear elsewhere on the page), shown when
+ *    no interest is selected, and used first when they match;
+ *  · `catalog` — every shopper product, so a selected interest always has something to show.
+ * Selecting interests filters to matching products; if fewer than a full row match, the row
+ * is completed with popular picks, labelled as such. "Something different" rotates the order.
  */
-export function ForYou({ pool }: { pool: Product[] }) {
+const ROW = 4;
+
+export function ForYou({ pool, catalog }: { pool: Product[]; catalog: Product[] }) {
   const selected = useShop((s) => s.interests);
   const toggleInterest = useShop((s) => s.toggleInterest);
   const [shuffle, setShuffle] = useState(0);
@@ -34,26 +39,55 @@ export function ForYou({ pool }: { pool: Product[] }) {
     setShuffle(0);
   };
 
-  const feed = useMemo(() => {
-    const scored = pool.map((p) => {
-      const hits = INTERESTS.filter((i) => selected.includes(i.id) && i.match(p));
-      // Diversity: small deterministic jitter that changes with each "something different" press
-      const jitter = ((p.id.charCodeAt(p.id.length - 1) * (shuffle + 3)) % 17) / 10;
-      return { p, hits, score: hits.length * 3 + p.rating + jitter - (shuffle > 0 && hits.length ? shuffle * 0.4 : 0) };
-    });
-    scored.sort((a, b) => b.score - a.score);
-    // Never show more than two items from the same category in a row of four
-    const out: typeof scored = [];
-    const perCat: Record<string, number> = {};
-    for (const s of scored) {
-      if ((perCat[s.p.category] ?? 0) >= 2) continue;
-      perCat[s.p.category] = (perCat[s.p.category] ?? 0) + 1;
-      out.push(s);
+  const { feed, matchCount } = useMemo(() => {
+    const active = INTERESTS.filter((i) => selected.includes(i.id));
+    const inPool = new Set(pool.map((p) => p.id));
+    // Deterministic rotation that changes with each "something different" press.
+    const jitter = (p: Product) => ((p.id.charCodeAt(p.id.length - 1) * (shuffle + 3) + shuffle * 7) % 17) / 10;
+    const score = (p: Product, hits: number) => hits * 3 + (inPool.has(p.id) ? 0.6 : 0) + p.rating + (shuffle ? jitter(p) * 1.5 : jitter(p) * 0.2);
+
+    type Row = { p: Product; hits: string[]; fallback: boolean };
+    const pick = (rows: (Row & { s: number })[], limit: number) => {
+      rows.sort((a, b) => b.s - a.s);
+      const out: Row[] = [];
+      const perCat: Record<string, number> = {};
+      // Variety first: at most two from one category, then top up if the row is still short.
+      for (const r of rows) {
+        if (out.length === limit) break;
+        if ((perCat[r.p.category] ?? 0) >= 2) continue;
+        perCat[r.p.category] = (perCat[r.p.category] ?? 0) + 1;
+        out.push(r);
+      }
+      for (const r of rows) {
+        if (out.length === limit) break;
+        if (!out.includes(r)) out.push(r);
+      }
+      return out;
+    };
+
+    if (!active.length) {
+      const rows = pool.map((p) => ({ p, hits: [], fallback: false, s: score(p, 0) }));
+      return { feed: pick(rows, ROW), matchCount: 0 };
     }
-    // Top up with anything the diversity cap held back, so the pool is always shown in full.
-    for (const s of scored) if (!out.includes(s)) out.push(s);
-    return out;
-  }, [pool, selected, shuffle]);
+
+    const matches = catalog
+      .map((p) => {
+        const hits = active.filter((i) => i.match(p)).map((i) => i.label);
+        return { p, hits, fallback: false, s: score(p, hits.length) };
+      })
+      .filter((r) => r.hits.length > 0);
+    const chosen = pick(matches, ROW);
+    if (chosen.length < ROW) {
+      const taken = new Set(chosen.map((r) => r.p.id));
+      const extras = [...pool, ...catalog]
+        .filter((p, i, all) => !taken.has(p.id) && all.findIndex((x) => x.id === p.id) === i)
+        .map((p) => ({ p, hits: [], fallback: true, s: score(p, 0) }));
+      chosen.push(...pick(extras, ROW - chosen.length));
+    }
+    return { feed: chosen, matchCount: matches.length };
+  }, [pool, catalog, selected, shuffle]);
+
+  const activeLabels = INTERESTS.filter((i) => selected.includes(i.id)).map((i) => i.label);
 
   return (
     <>
@@ -75,13 +109,26 @@ export function ForYou({ pool }: { pool: Product[] }) {
           <Icon name="repeat" size={14} /> Show me something different
         </button>
       </div>
-      <div className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 short:mt-[clamp(12px,2.6vh,24px)]">
-        {feed.map(({ p, hits }, n) => (
-          <div key={`${p.id}`} className="animate-rise" style={{ animationDelay: `${n * 50}ms` }}>
+      <p aria-live="polite" className="mt-3 text-[13px] text-mute short:mt-2">
+        {activeLabels.length
+          ? `${matchCount} ${matchCount === 1 ? "pick" : "picks"} for ${activeLabels.join(", ")}${matchCount < ROW ? " — completed with popular picks" : ""}`
+          : "Pick an interest to tune this row, or leave it open for this week's highlights."}
+      </p>
+      <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4 short:mt-[clamp(8px,1.6vh,24px)]">
+        {feed.map(({ p, hits, fallback }, n) => (
+          <div key={`${p.id}-${shuffle}`} className="animate-rise" style={{ animationDelay: `${n * 50}ms` }}>
             <ProductCard
               product={p}
               frame={RAIL_FRAME}
-              reason={hits.length ? `Because you like ${hits.map((h) => h.label).slice(0, 2).join(" & ")}` : shuffle ? "Something different" : "Highly rated this month"}
+              reason={
+                hits.length
+                  ? `Because you like ${hits.slice(0, 2).join(" & ")}`
+                  : fallback
+                    ? "Popular right now"
+                    : shuffle
+                      ? "Something different"
+                      : "Highly rated this month"
+              }
             />
           </div>
         ))}
