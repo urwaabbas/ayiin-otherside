@@ -75,7 +75,7 @@ export function HomePersonal() {
       {/* ── HERO — a midnight band, so the amber logo and CTAs glow ── */}
       <div className="surface-night">
       <HeroFlashlight products={catalog}>
-      <section className="shell pb-10 pt-6 sm:pt-10 lg:pb-[clamp(24px,4vh,48px)] lg:pt-[clamp(20px,4vh,48px)]">
+      <section className="shell pb-10 pt-6 sm:pt-10 lg:pb-[clamp(12px,1.6vh,28px)] lg:pt-[clamp(20px,4vh,48px)]">
         <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-10">
           <div className="lg:col-span-7 xl:col-span-8 short:col-span-7">
             <Eyebrow index="Ayiin" className="animate-fade">
