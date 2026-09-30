@@ -459,6 +459,23 @@
   }
   .link-underline:hover { background-size: 100% 1px; }
 
+  /* Footer wordmark — glyphs rise in with an alternating tilt, and a pointer
+     spotlight reveals the full-colour logo over its gradient outline. */
+  .ayiin-glyph {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    transform: translateY(var(--rise)) rotate(var(--tilt));
+    transition: transform 1.2s var(--ease-out-expo) calc(var(--step) * 90ms);
+  }
+  .ayiin-footer-mark[data-in="true"] .ayiin-glyph { transform: none; }
+  .ayiin-footer-mark-fill {
+    -webkit-mask-image: radial-gradient(clamp(90px, 14vw, 220px) at var(--mx, -999px) var(--my, -999px), #000 20%, transparent 100%);
+    mask-image: radial-gradient(clamp(90px, 14vw, 220px) at var(--mx, -999px) var(--my, -999px), #000 20%, transparent 100%);
+  }
+  @media (hover: none) {
+    .ayiin-footer-mark-fill { -webkit-mask-image: none; mask-image: none; }
+  }
+
   /* Scroll areas */
   .scroll-x {
     overflow-x: auto;
