@@ -18,7 +18,10 @@ import { ProductImage } from "@/components/product/product-image";
  * the wall and fully legible — a scrim keeps the text column calm.
  * Reduced motion: a static, softly lit wall.
  */
-const TILES = 48;
+const COLUMNS = 12;
+const PER_COLUMN = 6;
+/** Loop length per column, in seconds — slow, and never two neighbours in step. */
+const SPEEDS = [78, 64, 92, 70, 86, 60, 82, 74, 96, 66, 88, 72];
 const RADIUS = 240;
 
 export function HeroFlashlight({ products, children }: { products: Product[]; children: React.ReactNode }) {
@@ -33,7 +36,12 @@ export function HeroFlashlight({ products, children }: { products: Product[]; ch
   const target = useRef({ x: 0.72, y: 0.42, manual: false });
   const light = useRef({ x: 0.72, y: 0.42 });
 
-  const tiles = Array.from({ length: TILES }, (_, i) => products[(i * 7) % Math.max(products.length, 1)]).filter(Boolean);
+  // The living wall: columns of real products, each drifting up or down (alternating) on its own slow loop.
+  const n = Math.max(products.length, 1);
+  const columns = Array.from({ length: COLUMNS }, (_, c) =>
+    Array.from({ length: PER_COLUMN }, (_, k) => products[(c * 5 + k * 3) % n]).filter(Boolean),
+  );
+  const [moving, setMoving] = useState(true);
 
   useEffect(() => {
     const el = wrap.current;
@@ -51,6 +59,7 @@ export function HeroFlashlight({ products, children }: { products: Product[]; ch
     const start = performance.now();
     const io = new IntersectionObserver(([e]) => {
       visible = e.isIntersecting;
+      setMoving(e.isIntersecting);
       if (visible && !raf) raf = requestAnimationFrame(tick);
     });
     io.observe(el);
@@ -81,11 +90,11 @@ export function HeroFlashlight({ products, children }: { products: Product[]; ch
   /** The wall tile under a viewport point, if the point isn't over the hero's own content. */
   const tileAt = (clientX: number, clientY: number, from: EventTarget | null) => {
     if (from instanceof Element && from.closest("a, button, input, textarea, h1, p, [data-hero-solid]")) return null;
-    const nodes = wall.current?.children;
+    const nodes = wall.current?.querySelectorAll<HTMLElement>("[data-tile]");
     if (!nodes) return null;
-    for (let i = 0; i < nodes.length; i++) {
-      const r = nodes[i].getBoundingClientRect();
-      if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) return tiles[i] ?? null;
+    for (const node of nodes) {
+      const r = node.getBoundingClientRect();
+      if (clientX >= r.left && clientX <= r.right && clientY >= r.top && clientY <= r.bottom) return products.find((p) => p.id === node.dataset.tile) ?? null;
     }
     return null;
   };
@@ -118,19 +127,32 @@ export function HeroFlashlight({ products, children }: { products: Product[]; ch
         if (p) router.push(`/p/${p.slug}`);
       }}
     >
-      {/* The wall */}
+      {/* The living wall — pauses while a product is in the light, or when the hero is off screen */}
       <div
         ref={wall}
         aria-hidden
-        className="pointer-events-none absolute inset-[-12px] -z-20 grid grid-cols-[repeat(auto-fill,minmax(120px,1fr))] content-start gap-2.5 p-2.5 sm:grid-cols-[repeat(auto-fill,minmax(150px,1fr))]"
+        className="pointer-events-none absolute inset-0 -z-20 grid grid-cols-[repeat(12,minmax(120px,1fr))] gap-2.5 overflow-hidden px-2.5 sm:grid-cols-[repeat(12,minmax(150px,1fr))]"
       >
-        {tiles.map((p, i) => (
-          <ProductImage
-            key={i}
-            product={p}
-            sizes="160px"
-            className={`aspect-square w-full rounded-2xl transition-[filter] duration-300 ${focus?.p.id === p.id ? "brightness-110" : ""}`}
-          />
+        {columns.map((col, c) => (
+          <div
+            key={c}
+            className="flex flex-col gap-2.5 will-change-transform"
+            style={{
+              animation: `${c % 2 ? "wall-down" : "wall-up"} ${SPEEDS[c % SPEEDS.length]}s linear infinite`,
+              animationPlayState: focus || !moving ? "paused" : "running",
+            }}
+          >
+            {/* Each column is its tile set twice, so the loop is seamless. */}
+            {[...col, ...col].map((p, k) => (
+              <div key={k} data-tile={p.id}>
+                <ProductImage
+                  product={p}
+                  sizes="160px"
+                  className={`aspect-square w-full rounded-2xl transition-[filter] duration-300 ${focus?.p.id === p.id ? "brightness-110" : ""}`}
+                />
+              </div>
+            ))}
+          </div>
         ))}
       </div>
 

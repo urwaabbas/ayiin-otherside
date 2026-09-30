@@ -598,6 +598,15 @@
 ::view-transition-new(root) {
   animation: 520ms var(--ease-out-expo) both vt-in;
 }
+/* Hero living wall: each column holds its tiles twice, so -50% is one seamless loop. */
+@keyframes wall-up {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -50%, 0); }
+}
+@keyframes wall-down {
+  from { transform: translate3d(0, -50%, 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
 @keyframes vt-out { to { opacity: 0; } }
 @keyframes vt-in { from { opacity: 0; transform: translateY(10px); } }
 
