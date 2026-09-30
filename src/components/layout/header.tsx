@@ -326,6 +326,7 @@ export function Header() {
                 </>
               ) : (
                 <>
+                  <RailLink href="/discover" icon="eye">Discover</RailLink>
                   <RailLink href="/search?deal=1" icon="tag">Verified deals</RailLink>
                   <RailLink href="/search?fast=1" icon="bolt">Arrives tomorrow</RailLink>
                   <span className="mx-2 h-4 w-px bg-line-strong" />
@@ -426,7 +427,7 @@ function Panel({ open, children, id, className }: { open: boolean; children: Rea
   );
 }
 
-function RailLink({ href, children, icon }: { href: string; children: React.ReactNode; icon?: "tag" | "bolt" | "file" | "repeat" }) {
+function RailLink({ href, children, icon }: { href: string; children: React.ReactNode; icon?: "tag" | "bolt" | "file" | "repeat" | "eye" }) {
   const pathname = usePathname();
   const active = pathname === href.split("?")[0] && !href.includes("?");
   return (

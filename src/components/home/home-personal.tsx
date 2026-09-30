@@ -10,6 +10,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { Icon } from "@/components/ui/icon";
 import { AskForm } from "@/components/home/ask-form";
 import { HeroFlashlight } from "@/components/home/hero-flashlight";
+import { DiscoverEntry } from "@/components/discover/discover-entry";
 import { ForYou } from "@/components/home/for-you";
 import { CompareTeaser } from "@/components/home/compare-teaser";
 import { BusinessBridge } from "@/components/home/business-bridge";
@@ -98,6 +99,8 @@ export function HomePersonal() {
         <QuestionMarquee />
       </section>
       </div>
+
+      <DiscoverEntry />
 
       {/* ── 01 CATEGORIES ────────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
