@@ -8,7 +8,7 @@ import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 
 /**
- * Product gallery: view thumbnails, a main stage with pointer-following zoom on hover,
+ * Product gallery: view thumbnails, a main stage (click to open full screen),
  * swipe between views on touch, and a full-screen viewer.
  */
 export function ProductGallery({ product: p, variant, overlay }: { product: Product; variant: Variant; overlay?: React.ReactNode }) {
@@ -18,7 +18,6 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
   const view = views.some((v) => v.id === picked) ? picked : "hero";
   const photo = productPhoto(p, variant.id, view);
   const single = views.length < 2;
-  const [zoom, setZoom] = useState<{ x: number; y: number } | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const swipe = useRef<number | null>(null);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -83,16 +82,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
           if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
         }}
       >
-        <div
-          className="relative aspect-square w-full cursor-zoom-in"
-          onPointerMove={(e) => {
-            if (e.pointerType !== "mouse") return;
-            const r = e.currentTarget.getBoundingClientRect();
-            setZoom({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 });
-          }}
-          onPointerLeave={() => setZoom(null)}
-          onClick={() => dialogRef.current?.showModal()}
-        >
+        <div className="relative aspect-square w-full cursor-zoom-in" onClick={() => dialogRef.current?.showModal()}>
           <ProductImage
             key={`${variant.id}-${view}`}
             product={p}
@@ -102,8 +92,6 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
             alt={alt}
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="h-full w-full animate-fade"
-            imgClassName={clsx("!transition-[opacity,filter,transform] !duration-500 motion-reduce:!transform-none", zoom ? "scale-[2.1]" : "scale-100")}
-            imgStyle={zoom ? { transformOrigin: `${zoom.x}% ${zoom.y}%` } : undefined}
           />
         </div>
         {overlay}
