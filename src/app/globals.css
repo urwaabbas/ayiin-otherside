@@ -316,6 +316,28 @@
   .hdr-hit:hover { border-color: rgb(255 255 255 / 0.85); }
   .hdr-hit:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 0; }
 
+  /* Ayiin department links: even spacing, amber underline on hover and when active */
+  .dept-link {
+    position: relative;
+    padding-inline: 2px;
+    transition: color 150ms;
+  }
+  .dept-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--color-brand);
+    transform: scaleX(0);
+    transition: transform 200ms var(--ease-out-expo);
+  }
+  .dept-link:hover { color: var(--color-ink); }
+  .dept-link:hover::after,
+  .dept-link.is-active::after { transform: scaleX(1); }
+  .dept-link.is-active { color: var(--color-ink); }
+
   /* Marketplace product card */
   .mk-card {
     display: flex;

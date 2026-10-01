@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { AyiinLogo } from "@/components/brand/ayiin-logo";
-import { Icon } from "@/components/ui/icon";
+import { Icon, type IconName } from "@/components/ui/icon";
 import { ModeSwitch } from "@/components/layout/mode-switch";
 import { MegaMenu } from "@/components/layout/mega-menu";
 import { SearchPanel, useSearchController } from "@/components/layout/search";
@@ -110,7 +110,7 @@ export function Header() {
 
   return (
     <>
-      <div aria-hidden className="h-[108px] lg:h-[104px]" />
+      <div aria-hidden className="h-[124px] lg:h-[150px]" />
       {/* Scrim for desktop overlays */}
       <div
         aria-hidden
@@ -119,124 +119,130 @@ export function Header() {
           closeSearch();
         }}
         className={clsx(
-          "fixed inset-0 z-40 bg-ink/40 transition-opacity duration-300",
+          "fixed inset-0 z-40 bg-ink/30 backdrop-blur-[2px] transition-opacity duration-300",
           overlay ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
-      <header ref={headerRef} data-scrolled={compact} className="fixed inset-x-0 top-0 z-50 bg-ink text-white">
-        {/* ── Main bar: logo · deliver to · search · account · orders · cart ── */}
-        <div className="mx-auto flex h-14 max-w-[1520px] items-center gap-2 px-3 sm:px-4 lg:h-16 lg:gap-3">
-          <button type="button" aria-label="Open menu" onClick={() => setMenu(true)} className="hdr-hit grid h-10 w-10 place-items-center lg:hidden">
-            <Icon name="menu" size={22} />
-          </button>
-
-          <Link href="/" aria-label="Ayiin home" className="hdr-hit flex shrink-0 items-center px-1.5 py-1">
-            <AyiinLogo on="dark" priority className="h-7 lg:h-9" />
-          </Link>
-
-          <button type="button" className="hdr-hit hidden shrink-0 items-center gap-1 px-2 py-1 text-left leading-tight xl:flex" title="Delivery dates are calculated for this address">
-            <Icon name="pin" size={18} className="mt-2.5 self-start text-white/80" />
-            <span>
-              <span className="block text-[12px] text-white/70">Deliver to</span>
-              <span className="block text-[14px] font-semibold">San Francisco 94107</span>
+      <header ref={headerRef} data-scrolled={compact} className="fixed inset-x-0 top-0 z-50">
+        {/* ── 1 · Charcoal strip ── */}
+        <div className="hidden bg-ink text-white lg:block">
+          <div className="mx-auto flex h-8 max-w-[1520px] items-center justify-between px-6 text-[12.5px] text-white/80">
+            <span className="flex items-center gap-1.5">
+              <Icon name="pin" size={13} className="text-brand" /> Deliver to <span className="font-semibold text-white">San Francisco 94107</span>
             </span>
-          </button>
+            <span className="flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+              {business ? "Northwind Studio · Net 30 · $48,200 credit available" : "Real prices · exact delivery dates · verified sellers"}
+            </span>
+            <nav aria-label="Utility" className="flex items-center gap-5">
+              {!business && <Link href="/business" className="hover:text-white">Ayiin Business</Link>}
+              <Link href="/sell" className="hover:text-white">Sell on Ayiin</Link>
+              <Link href="/help" className="hover:text-white">Help</Link>
+              <LocaleMenu />
+            </nav>
+          </div>
+        </div>
 
-          {/* Desktop search */}
-          <form
-            role="search"
-            onSubmit={(e) => {
-              e.preventDefault();
-              submitSearch();
-            }}
-            className="relative hidden h-11 min-w-0 flex-1 overflow-hidden rounded-lg bg-white focus-within:ring-[3px] focus-within:ring-brand lg:flex"
-          >
-            <label htmlFor="site-search-scope" className="sr-only">
-              Search in
-            </label>
-            <select
-              id="site-search-scope"
-              value={scope}
-              onChange={(e) => setScope(e.target.value)}
-              className="h-full max-w-[150px] shrink-0 cursor-pointer border-r border-line bg-mist pl-3 pr-2 text-[12.5px] text-ink-2 outline-none hover:bg-soft"
-            >
-              <option value="">All</option>
-              {categories.map((c) => (
-                <option key={c.slug} value={c.slug}>
-                  {c.name}
-                </option>
-              ))}
-            </select>
-            <label htmlFor="site-search" className="sr-only">
-              Search Ayiin
-            </label>
-            <input
-              ref={inputRef}
-              id="site-search"
-              type="search"
-              role="combobox"
-              aria-expanded={searchOpen}
-              aria-controls="search-panel"
-              aria-autocomplete="list"
-              aria-activedescendant={search.activeId}
-              autoComplete="off"
-              value={search.query}
-              onChange={(e) => search.setQuery(e.target.value)}
-              onFocus={() => {
-                setMegaOpen(false);
-                openSearch();
-              }}
-              onKeyDown={search.onKeyDown}
-              placeholder={business ? "Search products, SKUs or describe a purchase" : "Search Ayiin"}
-              className="h-full min-w-0 flex-1 bg-white px-3 text-[15px] text-ink outline-none placeholder:text-mute"
-            />
-            <button type="submit" aria-label="Search" className="grid h-full w-12 shrink-0 place-items-center bg-brand text-ink transition-colors hover:bg-brand-hover">
-              <Icon name="search" size={21} strokeWidth={2} />
-            </button>
-          </form>
-
-          <div className="flex-1 lg:hidden" />
-
-          <ModeSwitch compact tone="dark" className="hidden md:grid" />
-
-          <nav aria-label="Account" className="flex items-center gap-0.5 lg:gap-1">
-            <div className="hidden px-1 text-[12.5px] text-white xl:block">
-              <LocaleMenu dark />
+        {/* ── 2 · Glass main bar ── */}
+        <div
+          className={clsx(
+            "border-b border-line/80 bg-porcelain/80 backdrop-blur-xl backdrop-saturate-150 transition-shadow duration-300",
+            compact && "shadow-[0_10px_30px_-18px_rgb(var(--rgb-ink)/0.35)]",
+          )}
+        >
+          <div className="mx-auto flex h-16 max-w-[1520px] items-center justify-between gap-3 px-3 sm:px-4 lg:h-[72px] lg:gap-6 lg:px-6">
+            <div className="flex shrink-0 items-center gap-1">
+              <button type="button" aria-label="Open menu" onClick={() => setMenu(true)} className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft lg:hidden">
+                <Icon name="menu" size={22} />
+              </button>
+              <Link href="/" aria-label="Ayiin home" className="flex items-center">
+                <AyiinLogo on="light" priority className="h-8 lg:h-10" />
+              </Link>
             </div>
-            <Link href={business ? "/business" : "/account"} className="hdr-hit hidden px-2 py-1 leading-tight sm:block">
-              <span className="block text-[12px] text-white/70">{business ? "Northwind Studio" : "Hello, sign in"}</span>
-              <span className="flex items-center gap-0.5 text-[14px] font-semibold">
-                {business ? "Business account" : "Account & Lists"} <Icon name="chevronDown" size={13} />
+
+            {/* Search pill */}
+            <form
+              role="search"
+              onSubmit={(e) => {
+                e.preventDefault();
+                submitSearch();
+              }}
+              className="relative hidden h-12 min-w-0 max-w-[760px] flex-1 items-center rounded-full bg-white p-1 shadow-[var(--shadow-hair)] transition-shadow focus-within:shadow-[0_0_0_3px_rgb(var(--rgb-brand)/0.45)] lg:flex"
+            >
+              <label htmlFor="site-search-scope" className="sr-only">
+                Search in
+              </label>
+              <select
+                id="site-search-scope"
+                value={scope}
+                onChange={(e) => setScope(e.target.value)}
+                className="h-full max-w-[160px] shrink-0 cursor-pointer rounded-full bg-mist pl-4 pr-2 text-[13px] font-medium text-ink-2 outline-none hover:bg-soft"
+              >
+                <option value="">All departments</option>
+                {categories.map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+              <label htmlFor="site-search" className="sr-only">
+                Search Ayiin
+              </label>
+              <input
+                ref={inputRef}
+                id="site-search"
+                type="search"
+                role="combobox"
+                aria-expanded={searchOpen}
+                aria-controls="search-panel"
+                aria-autocomplete="list"
+                aria-activedescendant={search.activeId}
+                autoComplete="off"
+                value={search.query}
+                onChange={(e) => search.setQuery(e.target.value)}
+                onFocus={() => {
+                  setMegaOpen(false);
+                  openSearch();
+                }}
+                onKeyDown={search.onKeyDown}
+                placeholder={business ? "Search products, SKUs or describe a purchase" : "What are you looking for?"}
+                className="h-full min-w-0 flex-1 bg-transparent px-4 text-[15px] text-ink outline-none placeholder:text-mute"
+              />
+              <button type="submit" aria-label="Search" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-ink transition-transform hover:scale-105">
+                <Icon name="search" size={19} strokeWidth={2.1} />
+              </button>
+            </form>
+
+            <nav aria-label="Account" className="flex shrink-0 items-center gap-1 sm:gap-2">
+              <ModeSwitch compact className="hidden xl:grid" />
+              <NavIcon href={business ? "/business" : "/account"} icon={business ? "building" : "user"} label={business ? "Business" : "Account"} />
+              <NavIcon href="/track" icon="box" label="Orders" className="hidden md:flex" />
+              <SavedIcon />
+              <CartButton />
+            </nav>
+          </div>
+
+          {/* Mobile search pill */}
+          <div className="px-3 pb-3 lg:hidden">
+            <button
+              type="button"
+              onClick={() => {
+                openSearch();
+                requestAnimationFrame(() => mobileInputRef.current?.focus());
+              }}
+              className="flex h-11 w-full items-center rounded-full bg-white p-1 pl-4 text-left text-[15px] text-mute shadow-[var(--shadow-hair)]"
+            >
+              <span className="flex-1 truncate">{business ? "Search products or SKUs" : "What are you looking for?"}</span>
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-brand text-ink">
+                <Icon name="search" size={18} strokeWidth={2.1} />
               </span>
-            </Link>
-            <Link href="/track" className="hdr-hit hidden px-2 py-1 leading-tight lg:block">
-              <span className="block text-[12px] text-white/70">Returns</span>
-              <span className="block text-[14px] font-semibold">&amp; Orders</span>
-            </Link>
-            <CartButton />
-          </nav>
+            </button>
+          </div>
         </div>
 
-        {/* Mobile search row */}
-        <div className="px-3 pb-2.5 lg:hidden">
-          <button
-            type="button"
-            onClick={() => {
-              openSearch();
-              requestAnimationFrame(() => mobileInputRef.current?.focus());
-            }}
-            className="flex h-11 w-full items-center overflow-hidden rounded-lg bg-white text-left text-[15px] text-mute"
-          >
-            <span className="flex-1 truncate px-3">{business ? "Search products or SKUs" : "Search Ayiin"}</span>
-            <span className="grid h-full w-12 place-items-center bg-brand text-ink">
-              <Icon name="search" size={20} strokeWidth={2} />
-            </span>
-          </button>
-        </div>
-
-        {/* ── Department bar ── */}
-        <div className="hidden bg-graphite-2 lg:block">
-          <nav aria-label="Departments" className="no-scrollbar mx-auto flex h-10 max-w-[1520px] items-center gap-0.5 overflow-x-auto px-3 text-[13.5px] sm:px-4">
+        {/* ── 3 · Departments, justified across the width ── */}
+        <div className="hidden border-b border-line/80 bg-white/85 backdrop-blur-xl lg:block">
+          <nav aria-label="Departments" className="mx-auto flex h-[46px] max-w-[1520px] items-stretch justify-between px-6 text-[13.5px] font-medium text-ink-2">
             <button
               type="button"
               aria-expanded={megaOpen}
@@ -245,14 +251,14 @@ export function Header() {
                 closeSearch();
                 setMegaOpen((o) => !o);
               }}
-              className="hdr-hit flex shrink-0 items-center gap-1.5 px-2 py-1 font-semibold"
+              className={clsx("dept-link flex items-center gap-1.5 font-semibold text-ink", megaOpen && "is-active")}
             >
-              <Icon name="menu" size={18} /> All
+              <Icon name="grid" size={16} /> All departments
             </button>
             {business ? (
               <>
                 <DeptLink href="/business?tab=quick">Quick order</DeptLink>
-                <DeptLink href="/business?tab=quotes">Request a quote</DeptLink>
+                <DeptLink href="/business?tab=quotes">Quotes</DeptLink>
                 <DeptLink href="/business?tab=lists">Reorder</DeptLink>
                 {categories.filter((c) => c.business).map((c) => (
                   <DeptLink key={c.slug} href={`/c/${c.slug}`}>{c.short}</DeptLink>
@@ -260,17 +266,15 @@ export function Header() {
               </>
             ) : (
               <>
-                <DeptLink href="/search?deal=1">Today&apos;s Deals</DeptLink>
-                <DeptLink href="/search?sort=popular">Best Sellers</DeptLink>
+                <DeptLink href="/search?deal=1" accent>
+                  Today&apos;s deals
+                </DeptLink>
+                <DeptLink href="/search?sort=popular">Best sellers</DeptLink>
                 {categories.map((c) => (
                   <DeptLink key={c.slug} href={`/c/${c.slug}`}>{c.short}</DeptLink>
                 ))}
               </>
             )}
-            <span className="flex-1" />
-            {!business && <DeptLink href="/business">Ayiin Business</DeptLink>}
-            <DeptLink href="/sell">Sell</DeptLink>
-            <DeptLink href="/help">Customer Service</DeptLink>
           </nav>
         </div>
 
@@ -347,12 +351,37 @@ function Panel({ open, children, id, className }: { open: boolean; children: Rea
   );
 }
 
-function DeptLink({ href, children }: { href: string; children: React.ReactNode }) {
+function DeptLink({ href, children, accent }: { href: string; children: React.ReactNode; accent?: boolean }) {
   const pathname = usePathname();
   const active = pathname === href.split("?")[0] && !href.includes("?");
   return (
-    <Link href={href} aria-current={active ? "page" : undefined} className={clsx("hdr-hit shrink-0 whitespace-nowrap px-2 py-1", active && "!border-white/70")}>
+    <Link href={href} aria-current={active ? "page" : undefined} className={clsx("dept-link flex items-center whitespace-nowrap", active && "is-active", accent && "text-brand-deep")}>
       {children}
+    </Link>
+  );
+}
+
+function NavIcon({ href, icon, label, className }: { href: string; icon: IconName; label: string; className?: string }) {
+  return (
+    <Link href={href} className={clsx("group flex flex-col items-center gap-0.5 px-1.5 text-[11px] font-medium text-ink-2 hover:text-ink", className)}>
+      <span className="grid h-10 w-10 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] transition-colors group-hover:bg-brand-soft">
+        <Icon name={icon} size={19} />
+      </span>
+      <span className="hidden lg:block">{label}</span>
+    </Link>
+  );
+}
+
+function SavedIcon() {
+  const hydrated = useHydrated();
+  const count = useShop((s) => s.wishlist.length);
+  return (
+    <Link href="/wishlist" aria-label={`Saved${hydrated && count ? `, ${count}` : ""}`} className="group relative hidden flex-col items-center gap-0.5 px-1.5 text-[11px] font-medium text-ink-2 hover:text-ink sm:flex">
+      <span className="grid h-10 w-10 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] transition-colors group-hover:bg-brand-soft">
+        <Icon name="heart" size={19} />
+      </span>
+      <span className="hidden lg:block">Saved</span>
+      {hydrated && count > 0 && <span className="num absolute right-1 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-ink px-1 text-[10px] text-white">{count}</span>}
     </Link>
   );
 }
@@ -367,13 +396,13 @@ function CartButton() {
       type="button"
       onClick={openCart}
       aria-label={`Cart, ${shown} ${shown === 1 ? "item" : "items"}`}
-      className="hdr-hit relative flex items-end gap-1 px-2 py-1"
+      className="group relative flex flex-col items-center gap-0.5 px-1.5 text-[11px] font-medium text-ink-2 hover:text-ink"
     >
-      <span className="relative">
-        <Icon name="bag" size={28} />
-        <span className="num absolute -top-1 left-1/2 -translate-x-1/2 text-[13px] font-bold text-brand">{shown > 99 ? "99+" : shown}</span>
+      <span className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white transition-colors group-hover:bg-graphite">
+        <Icon name="bag" size={19} />
       </span>
-      <span className="hidden pb-0.5 text-[14px] font-semibold sm:block">Cart</span>
+      <span className="hidden lg:block">Cart</span>
+      <span className="num absolute -right-0.5 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-brand px-1 text-[11px] font-bold text-ink ring-2 ring-porcelain">{shown > 99 ? "99+" : shown}</span>
     </button>
   );
 }
@@ -392,7 +421,7 @@ function LocaleMenu({ dark }: { dark?: boolean }) {
   }, [open]);
   return (
     <div ref={ref} className="relative">
-      <button type="button" aria-expanded={open} aria-haspopup="listbox" onClick={() => setOpen((o) => !o)} className="hdr-hit flex items-center gap-1.5 px-2 py-2 text-[13px] font-semibold">
+      <button type="button" aria-expanded={open} aria-haspopup="listbox" onClick={() => setOpen((o) => !o)} className="flex items-center gap-1.5 hover:text-white">
         <Icon name="globe" size={14} />
         EN · <span className="num">{currency}</span>
         <Icon name="chevronDown" size={12} />
