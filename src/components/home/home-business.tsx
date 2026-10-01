@@ -10,7 +10,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { Money } from "@/components/ui/money";
 import { InlinePill } from "@/components/home/inline-pill";
-import { QuestionMarquee } from "@/components/home/home-personal";
+import { QuestionMarquee } from "@/components/home/question-marquee";
 import { QuickOrder } from "@/components/business/quick-order";
 import { VolumeExplorer } from "@/components/business/volume-explorer";
 import { ReorderLists } from "@/components/business/reorder-lists";

@@ -22,11 +22,10 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
   if (!c) notFound();
   const { mode } = await getPrefs();
   const items = productsByCategory(slug);
-  const hero = items.find((p) => p.kind === c.kind) ?? items[0];
   const activeSub = typeof sp.sub === "string" ? sp.sub : undefined;
 
   return (
-    <div className="shell pt-6 lg:pt-8">
+    <div className="mx-auto max-w-[1520px] px-3 pt-4 sm:px-4">
       <nav aria-label="Breadcrumb" className="text-[13px] text-mute">
         <ol className="flex items-center gap-1.5">
           <li>
@@ -41,36 +40,50 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
         </ol>
       </nav>
 
-      <header className="mt-6 grid items-end gap-8 lg:grid-cols-[1.3fr_1fr]">
-        <div className="min-w-0">
-          <h1 className="display text-balance text-[48px] sm:text-[88px] lg:text-[112px]">{c.name}</h1>
-          <p className="mt-4 max-w-xl text-[17px] leading-relaxed text-ink-2">{c.blurb}</p>
-          <div className="scroll-x -mx-[var(--gutter)] mt-6 flex gap-2 px-[var(--gutter)]">
-            <Link href={`/c/${c.slug}`} className="chip shrink-0" data-active={!activeSub ? "true" : undefined}>
-              All {c.short.toLowerCase()}
-            </Link>
-            {c.subcategories.map((s) => (
-              <Link key={s} href={`/c/${c.slug}?sub=${encodeURIComponent(s)}`} className="chip shrink-0" data-active={activeSub === s ? "true" : undefined}>
-                {s}
-              </Link>
-            ))}
+      {/* Department banner — marketplace style: title, subcategory tiles, buying guide */}
+      <header className="mt-4 overflow-hidden rounded-xl bg-white shadow-[var(--shadow-hair)]">
+        <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_380px]">
+          <div className="min-w-0">
+            <h1 className="text-[28px] font-semibold leading-tight tracking-[-0.02em] sm:text-[34px]">{c.name}</h1>
+            <p className="mt-2 max-w-2xl text-[15px] text-ink-2">{c.blurb}</p>
+            <ul className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
+              <li>
+                <Link href={`/c/${c.slug}`} aria-current={!activeSub ? "page" : undefined} className="group flex flex-col items-center text-center">
+                  <span className={`grid aspect-square w-full place-items-center rounded-full bg-mist text-[13px] font-semibold ring-1 ${!activeSub ? "ring-2 ring-brand" : "ring-line"}`}>All</span>
+                  <span className="mt-1.5 text-[12.5px] font-medium">All {c.short.toLowerCase()}</span>
+                </Link>
+              </li>
+              {c.subcategories.map((sub) => {
+                const p = items.find((x) => x.subcategory === sub);
+                const on = activeSub === sub;
+                return (
+                  <li key={sub}>
+                    <Link href={`/c/${c.slug}?sub=${encodeURIComponent(sub)}`} aria-current={on ? "page" : undefined} className="group flex flex-col items-center text-center">
+                      {p ? (
+                        <ProductImage product={p} sizes="96px" className={`aspect-square w-full overflow-hidden rounded-full ring-1 ${on ? "ring-2 ring-brand" : "ring-line group-hover:ring-brand"}`} />
+                      ) : (
+                        <span className="aspect-square w-full rounded-full bg-mist ring-1 ring-line" />
+                      )}
+                      <span className="mt-1.5 text-[12.5px] font-medium group-hover:text-brand-deep">{sub}</span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
-        </div>
-        <div className="relative min-w-0 overflow-hidden rounded-[28px]" style={{ background: c.tint }}>
-          <ProductImage product={hero} feather preload sizes="(min-width: 1024px) 420px, 60vw" className="absolute -right-10 top-0 aspect-square h-full" />
-          <div className="relative max-w-[62%] p-6">
-            <p className="eyebrow flex items-center gap-2 !text-ink-2">
+          <aside aria-label="Buying guide" className="rounded-lg bg-brand-soft p-5">
+            <p className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.1em] text-brand-deep">
               <Icon name="sparkle" size={13} /> Buying guide
             </p>
-            <p className="mt-2 text-[17px] font-medium leading-snug tracking-[-0.01em]">{c.guide.title}</p>
-            <ul className="mt-3 space-y-2 text-[13px] text-ink-2">
+            <p className="mt-2 text-[16px] font-semibold leading-snug">{c.guide.title}</p>
+            <ul className="mt-3 space-y-2 text-[13.5px] text-ink-2">
               {c.guide.points.map((pt) => (
                 <li key={pt} className="flex gap-2">
-                  <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-ink" /> {pt}
+                  <Icon name="check" size={15} strokeWidth={2.2} className="mt-0.5 shrink-0 text-brand-deep" /> {pt}
                 </li>
               ))}
             </ul>
-          </div>
+          </aside>
         </div>
       </header>
 

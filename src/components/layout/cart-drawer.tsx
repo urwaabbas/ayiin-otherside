@@ -50,7 +50,7 @@ export function CartDrawer() {
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label="Your bag"
+        aria-label="Your cart"
         inert={!open}
         className={clsx(
           "fixed inset-y-0 right-0 z-[71] flex w-full max-w-[460px] flex-col bg-porcelain outline-none transition-transform duration-500 ease-[var(--ease-out-expo)] sm:inset-y-2 sm:right-2 sm:rounded-[28px] sm:shadow-[var(--shadow-float)]",
@@ -60,7 +60,7 @@ export function CartDrawer() {
         <div className="flex items-center justify-between px-6 pb-4 pt-5">
           <div>
             <h2 className="text-[20px] font-medium tracking-[-0.02em]">
-              {business ? "Purchase cart" : "Your bag"} <span className="num text-mute">({sum.count})</span>
+              {business ? "Purchase cart" : "Your cart"} <span className="num text-mute">({sum.count})</span>
             </h2>
             {business && <p className="text-[12.5px] text-mute">Northwind Studio · Contract & volume pricing applied</p>}
           </div>
@@ -144,7 +144,7 @@ export function CartDrawer() {
                 {business ? "Checkout with PO or terms" : "Checkout — no account needed"}
               </Link>
               <Link href="/cart" onClick={close} className="btn btn-ghost w-full">
-                {business ? "Review cart & send for approval" : "View bag"}
+                {business ? "Review cart & send for approval" : "View cart"}
               </Link>
             </div>
           </div>

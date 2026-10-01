@@ -38,7 +38,7 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
   return (
     <div className="shell pt-6 lg:pt-8">
       <p className="eyebrow">{q ? "Results for" : "Browse"}</p>
-      <h1 className="display mt-3 max-w-5xl text-balance text-[44px] sm:text-[72px] lg:text-[88px]">{q ? <>“{title}”</> : title}</h1>
+      <h1 className="mt-2 max-w-5xl text-balance text-[26px] font-semibold tracking-[-0.02em] sm:text-[32px]">{q ? <>“{title}”</> : title}</h1>
 
       {intent && intent.chips.length > 0 && (
         <div className="mt-6 flex flex-wrap items-center gap-2">

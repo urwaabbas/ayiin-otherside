@@ -73,7 +73,7 @@ export function MobileNav() {
         ) : (
           <Item icon="heart" label="Saved" href="/wishlist" active={pathname.startsWith("/wishlist")} />
         )}
-        <Item icon="bag" label="Bag" onClick={openCart} badge={hydrated && count ? count : undefined} />
+        <Item icon="bag" label="Cart" onClick={openCart} badge={hydrated && count ? count : undefined} />
       </div>
     </nav>
   );

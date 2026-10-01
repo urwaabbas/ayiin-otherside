@@ -307,6 +307,27 @@
   .btn-on-dark:hover:not(:disabled) { border-color: var(--color-porcelain); background: rgb(var(--rgb-porcelain) / 0.06); }
   .btn-on-dark:disabled { background: transparent; border-color: var(--color-graphite-line); color: var(--color-mute-dark); }
 
+  /* Marketplace header hit area: a thin outline on hover/focus, as on the dark nav bars of large marketplaces. */
+  .hdr-hit {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: border-color 120ms;
+  }
+  .hdr-hit:hover { border-color: rgb(255 255 255 / 0.85); }
+  .hdr-hit:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 0; }
+
+  /* Marketplace product card */
+  .mk-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--color-white);
+    border: 1px solid var(--color-line);
+    border-radius: 10px;
+    transition: box-shadow 180ms, border-color 180ms;
+  }
+  .mk-card:hover { border-color: var(--color-line-strong); box-shadow: 0 6px 20px -10px rgb(var(--rgb-ink) / 0.25); }
+
   /* Chips */
   .chip {
     display: inline-flex;

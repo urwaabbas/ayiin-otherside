@@ -44,7 +44,7 @@ export function Toast() {
               }}
               className="rounded-xl px-3 py-2 text-[13px] font-medium text-brand hover:bg-graphite"
             >
-              View bag
+              View cart
             </button>
           )}
         </div>

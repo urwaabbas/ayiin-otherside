@@ -161,8 +161,8 @@ export function QuickView({ product: p, initialVariant, onClose }: { product: Pr
 
           <div className="mt-auto flex items-center gap-3 pt-6">
             <QtyStepper value={qty} onChange={setQty} min={business ? Math.max(p.b2b.moq, 1) : 1} label={`Quantity of ${p.name}`} />
-            <button type="button" onClick={add} className="btn btn-ink btn-lg flex-1">
-              <Icon name="bag" size={17} /> {business ? "Add to cart" : "Add to bag"}
+            <button type="button" onClick={add} className="btn btn-brand btn-lg flex-1">
+              <Icon name="bag" size={17} /> {business ? "Add to cart" : "Add to cart"}
             </button>
           </div>
           <Link href={`/p/${p.slug}`} onClick={onClose} className="mt-4 inline-flex items-center gap-1.5 self-start text-[14px] font-medium underline-offset-4 hover:underline">

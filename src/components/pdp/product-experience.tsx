@@ -81,7 +81,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
   const add = (andOpen = false) => {
     addToCart(p.id, variant.id, qty, business);
     if (andOpen) openCart();
-    else notify(business ? "Added to cart" : "Added to bag", `${qty > 1 ? `${qty} × ` : ""}${p.name} · Arrives ${arrives}`);
+    else notify(business ? "Added to cart" : "Added to cart", `${qty > 1 ? `${qty} × ` : ""}${p.name} · Arrives ${arrives}`);
   };
 
   return (
@@ -312,8 +312,8 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
           {/* Actions */}
           <div ref={buyRef} className="mt-6 flex flex-wrap items-center gap-3">
             <QtyStepper value={qty} onChange={setQty} min={business ? p.b2b.moq : 1} size="lg" label="Quantity" />
-            <button type="button" onClick={() => add()} className="btn btn-ink btn-lg min-w-[180px] flex-1">
-              <Icon name="bag" size={18} /> {business ? `Add to cart · ${fmt(unit * qty)}` : "Add to bag"}
+            <button type="button" onClick={() => add()} className="btn btn-brand btn-lg min-w-[180px] flex-1">
+              <Icon name="bag" size={18} /> {business ? `Add to cart · ${fmt(unit * qty)}` : "Add to cart"}
             </button>
           </div>
           {nt && (
@@ -353,7 +353,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               </>
             ) : (
               <>
-                <button type="button" onClick={() => add(true)} className="btn btn-brand col-span-2 w-full">
+                <button type="button" onClick={() => add(true)} className="btn btn-ink col-span-2 w-full">
                   <Icon name="bolt" size={17} /> Buy now — guest checkout
                 </button>
               </>
@@ -454,8 +454,8 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               <span className="num text-ink">{fmt(unit * qty, { cents: !Number.isInteger(unit * qty) })}</span> · Arrives {arrives}
             </p>
           </div>
-          <button type="button" onClick={() => add()} className="btn btn-ink btn-sm shrink-0">
-            {business ? "Add to cart" : "Add to bag"}
+          <button type="button" onClick={() => add()} className="btn btn-brand btn-sm shrink-0">
+            {business ? "Add to cart" : "Add to cart"}
           </button>
         </div>
       </div>

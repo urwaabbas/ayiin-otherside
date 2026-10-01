@@ -52,6 +52,15 @@ export function photoUrl(photo: ProductPhoto, width: number, quality = 75) {
   return u.href;
 }
 
+/** The full, uncropped photograph at a given width — for wide banners. */
+export function photoFullUrl(photo: ProductPhoto, width: number, quality = 78) {
+  const u = new URL(photo.src);
+  u.searchParams.set("w", String(width));
+  u.searchParams.set("q", String(quality));
+  u.searchParams.set("auto", "format");
+  return u.href;
+}
+
 /** A URL for the view (falls back to the front view when that view doesn't exist). */
 export function productImageSrc(p: ImageProduct, variantId?: string, view: ImageView = "hero", width = 1200) {
   const photo = productPhoto(p, variantId, view) ?? productPhoto(p, variantId, "hero");

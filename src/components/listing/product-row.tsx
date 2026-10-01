@@ -128,11 +128,11 @@ export function ProductRow({ product: p }: { product: Product }) {
                 type="button"
                 onClick={() => {
                   addToCart(p.id, p.variants[0].id, 1);
-                  notify("Added to bag", `${p.name} · Arrives ${deliveryLabel(p)}`);
+                  notify("Added to cart", `${p.name} · Arrives ${deliveryLabel(p)}`);
                 }}
                 className="btn btn-ink btn-sm flex-1"
               >
-                Add to bag
+                Add to cart
               </button>
               <button
                 type="button"

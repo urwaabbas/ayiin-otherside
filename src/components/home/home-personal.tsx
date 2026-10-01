@@ -1,351 +1,180 @@
 import Link from "next/link";
+import type { Product } from "@/lib/types";
 import { categories } from "@/lib/catalog/categories";
-import { sellers } from "@/lib/catalog/sellers";
+import { products, productBySlug } from "@/lib/catalog/products";
 import { ProductImage } from "@/components/product/product-image";
-import { PriceHistory } from "@/components/product/price-history";
-import { Price } from "@/components/ui/money";
-import { Eyebrow, SignalDot } from "@/components/ui/signal";
-import { SectionHeader } from "@/components/ui/section";
-import { Reveal } from "@/components/ui/reveal";
-import { Icon } from "@/components/ui/icon";
-import { ClarityCard } from "@/components/home/clarity-card";
-import { AskForm } from "@/components/home/ask-form";
-import { InlinePill } from "@/components/home/inline-pill";
-import { ForYou } from "@/components/home/for-you";
-import { CompareTeaser } from "@/components/home/compare-teaser";
-import { BusinessBridge } from "@/components/home/business-bridge";
-import { Lookbook } from "@/components/home/lookbook";
 import { RecentlyViewed } from "@/components/product/recently-viewed";
-import { ProductCard } from "@/components/product/product-card";
-import { priceInsight, deliveryLabel } from "@/lib/commerce";
-import { planPersonalHome } from "@/lib/home-plan";
+import { MarketHero, type HeroSlide } from "@/components/home/market-hero";
+import { ProductRail } from "@/components/home/product-rail";
+import { Icon } from "@/components/ui/icon";
+import { hasView, photoFullUrl, productPhoto, type ImageView } from "@/lib/images";
+import { priceInsight, savingsPct } from "@/lib/commerce";
 import { compact } from "@/lib/format";
-import { readableOn } from "@/lib/color";
-import { clsx } from "clsx";
 
-export const QUESTIONS = [
-  "What should I buy?",
-  "Why should I buy it?",
-  "Is it available?",
-  "When will I receive it?",
-  "Is this seller trustworthy?",
-  "Is there a better option?",
-  "Can I compare it?",
-  "Can I get a better price?",
-  "Can I buy this in bulk?",
-  "Can I reorder it?",
-  "Can I get a quote?",
+/**
+ * The Ayiin home page — a marketplace front door.
+ * Categories first: a department banner, category cards over it, a department strip,
+ * then shelves of identical product cards. Every product and number comes from the catalogue.
+ */
+
+const SHOPPER = new Set(["audio-tech", "home-living", "kitchen", "fashion", "beauty", "office"]);
+const shopper = products.filter((p) => SHOPPER.has(p.category));
+const inCategory = (slug: string) => products.filter((p) => p.category === slug);
+
+/** Departments featured in the banner, each told through one of its own products in context. */
+const BANNER: { category: string; product: string; variant?: string; view: "hero" | "scene"; position: string; title: string; cta: string }[] = [
+  { category: "home-living", product: "loom-lounge-chair", view: "hero", position: "50% 60%", title: "Make home the best seat in the house", cta: "Shop Home & Living" },
+  { category: "kitchen", product: "pour-gooseneck-kettle", view: "scene", position: "60% 45%", title: "Better mornings start in the kitchen", cta: "Shop Kitchen & Coffee" },
+  { category: "audio-tech", product: "kova-book-14-air", view: "scene", position: "50% 55%", title: "Tech that works as hard as you do", cta: "Shop Audio & Tech" },
+  { category: "office", product: "ergo-task-chair-pro", view: "scene", position: "50% 40%", title: "Upgrade the place you work", cta: "Shop Office" },
 ];
 
-export function QuestionMarquee({ tone = "light" }: { tone?: "light" | "dark" }) {
-  const row = (
-    <div className="flex shrink-0 items-center">
-      {QUESTIONS.map((q) => (
-        <span key={q} className="flex items-center">
-          <span className={tone === "dark" ? "text-porcelain/85" : "text-ink/85"}>{q}</span>
-          <span aria-hidden className="mx-8 inline-block h-2.5 w-2.5 rounded-full bg-brand shadow-[0_0_0_1.5px_rgb(var(--rgb-ink)/0.85)]" />
-        </span>
-      ))}
-    </div>
-  );
+function slides(): HeroSlide[] {
+  return BANNER.flatMap((b) => {
+    const c = categories.find((x) => x.slug === b.category);
+    const p = productBySlug(b.product);
+    const photo = p && (productPhoto(p, b.variant, b.view) ?? productPhoto(p, b.variant, "hero"));
+    if (!c || !photo) return [];
+    return [{ href: `/c/${c.slug}`, kicker: c.name, title: b.title, text: c.blurb, cta: b.cta, image: photoFullUrl(photo, 2000), position: b.position }];
+  });
+}
+
+/** A category card: four products from the department, Amazon-style. */
+function CategoryCard({ slug }: { slug: string }) {
+  const c = categories.find((x) => x.slug === slug)!;
+  const top = inCategory(slug)
+    .slice()
+    .sort((a, b) => b.soldLastWeek - a.soldLastWeek)
+    .slice(0, 4);
+  // Four tiles always: a department with fewer products shows more views of the ones it has.
+  const tiles: { p: Product; view: ImageView }[] = top.map((p) => ({ p, view: "hero" }));
+  for (const view of ["scene", "angle", "detail"] as ImageView[]) {
+    for (const p of top) if (tiles.length < 4 && hasView(p, view)) tiles.push({ p, view });
+  }
   return (
-    <div
-      className="relative flex overflow-hidden py-6 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
-      aria-label="Questions Ayiin answers on every product"
-    >
-      <div className="display flex animate-marquee whitespace-nowrap text-[30px] tracking-[-0.03em] sm:text-[40px]" aria-hidden>
-        {row}
-        {row}
-      </div>
-      <ul className="sr-only">
-        {QUESTIONS.map((q) => (
-          <li key={q}>{q}</li>
+    <section aria-label={c.name} className="flex flex-col rounded-xl bg-white p-4 shadow-[var(--shadow-hair)] sm:p-5">
+      <h2 className="text-[19px] font-semibold leading-tight tracking-[-0.01em]">{c.name}</h2>
+      <ul className="mt-3 grid flex-1 grid-cols-2 gap-x-3 gap-y-2.5">
+        {tiles.map(({ p, view }) => (
+          <li key={`${p.id}-${view}`}>
+            <Link href={`/p/${p.slug}`} className="group block">
+              <ProductImage product={p} view={view} sizes="(min-width: 1024px) 140px, 40vw" className="aspect-square w-full rounded-md" />
+              <span className="mt-1 block truncate text-[12.5px] text-ink-2 group-hover:text-brand-deep">{p.subcategory}</span>
+            </Link>
+          </li>
         ))}
       </ul>
-    </div>
+      <Link href={`/c/${c.slug}`} className="mt-3 text-[13.5px] font-medium text-brand-deep hover:underline">
+        Shop {c.short.toLowerCase()} · {compact(1200 + categories.indexOf(c) * 713)} items
+      </Link>
+    </section>
+  );
+}
+
+/** A single-product spotlight card for the grid (deal of the day). */
+function DealCard({ p }: { p: Product }) {
+  const off = savingsPct(p);
+  return (
+    <section aria-label="Deal of the day" className="flex flex-col rounded-xl bg-white p-4 shadow-[var(--shadow-hair)] sm:p-5">
+      <h2 className="text-[19px] font-semibold leading-tight tracking-[-0.01em]">Deal of the day</h2>
+      <Link href={`/p/${p.slug}`} className="group mt-3 block flex-1">
+        <ProductImage product={p} sizes="(min-width: 1024px) 300px, 80vw" className="aspect-square w-full rounded-md" imgClassName="!object-contain" />
+        <span className="mt-3 flex items-center gap-2">
+          {off > 0 && <span className="rounded-md bg-danger px-2 py-1 text-[12px] font-semibold text-white">{off}% off</span>}
+          <span className="text-[12.5px] font-semibold text-danger">{priceInsight(p).label}</span>
+        </span>
+        <span className="mt-1.5 line-clamp-2 block text-[14px] text-ink group-hover:text-brand-deep">{p.name}</span>
+      </Link>
+      <Link href="/search?deal=1" className="mt-3 text-[13.5px] font-medium text-brand-deep hover:underline">
+        See all deals
+      </Link>
+    </section>
+  );
+}
+
+/** Business promo card, sized like the category cards. */
+function BusinessCard() {
+  return (
+    <section aria-label="Ayiin Business" className="flex flex-col justify-between rounded-xl bg-ink p-5 text-white shadow-[var(--shadow-hair)]">
+      <div>
+        <p className="text-[12px] font-semibold uppercase tracking-[0.12em] text-brand">Ayiin Business</p>
+        <h2 className="mt-2 text-[22px] font-semibold leading-tight">Buying for your company?</h2>
+        <ul className="mt-4 space-y-2 text-[14px] text-white/85">
+          {["Volume & contract pricing", "Quotes from several suppliers", "Approvals, POs and net-30 terms"].map((t) => (
+            <li key={t} className="flex items-center gap-2">
+              <Icon name="check" size={16} className="text-brand" strokeWidth={2.2} /> {t}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <Link href="/business" className="btn btn-brand mt-6 h-10 w-full text-[14px]">
+        Create a free business account
+      </Link>
+    </section>
   );
 }
 
 export function HomePersonal() {
-  // Every product on this page comes from one plan, so none appears twice.
-  const { clarity, pill, alternatives, tiles, forYou, lookbook, deals, bestsellers, compare, bridge, delivery, renderedIds } = planPersonalHome();
+  const deals = shopper.filter((p) => priceInsight(p).verifiedDeal).sort((a, b) => savingsPct(b) - savingsPct(a));
+  const dealOfDay = deals[0];
+  const best = shopper.slice().sort((a, b) => b.soldLastWeek - a.soldLastWeek);
+  const topRated = shopper.slice().sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount);
+  const fast = shopper.filter((p) => p.delivery.min <= 1);
+  const firstRow = ["home-living", "audio-tech", "kitchen"];
+  const secondRow = ["fashion", "beauty", "office", "supplies"];
 
   return (
-    <>
-      {/* ── HERO ─────────────────────────────────────────────── */}
-      <section className="shell pt-6 sm:pt-10 lg:pt-12">
-        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-7 xl:col-span-8">
-            <Eyebrow index="Ayiin" className="animate-fade">
-              Intelligent commerce<span className="hidden sm:inline"> · 2.4M products · 18,400 verified sellers</span>
-            </Eyebrow>
-            <h1 className="display mt-6 text-[clamp(58px,9.4vw,142px)] text-balance">
-              <span className="block animate-rise">
-                See more. <InlinePill items={pill} />
-              </span>{" "}
-              <span className="block animate-rise [animation-delay:120ms]">Doubt less.</span>
-            </h1>
-            <p className="mt-7 max-w-[560px] animate-rise text-[17px] leading-relaxed text-ink-2 [animation-delay:220ms] sm:text-[19px]">
-              Every product on Ayiin answers the questions that matter — real price history, an exact delivery date, the seller&apos;s record, and whether there&apos;s a better option — before you have to ask.
-            </p>
-            <AskForm className="mt-8 max-w-[680px] animate-rise [animation-delay:320ms]" />
-          </div>
-          <div className="animate-rise [animation-delay:260ms] lg:col-span-5 xl:col-span-4">
-            <ClarityCard items={clarity} alternatives={alternatives} />
-          </div>
-        </div>
+    <div className="pb-16">
+      <MarketHero slides={slides()} />
 
-        <dl className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-line lg:mt-20 lg:grid-cols-4">
-          {[
-            ["98.7%", "delivered on the exact date promised"],
-            ["12 wks", "of price history behind every deal badge"],
-            ["18,400", "sellers, each verified on four checks"],
-            ["$0", "hidden fees — the total is the total"],
-          ].map(([n, l]) => (
-            <div key={l} className="bg-porcelain p-5 sm:p-7">
-              <dt className="sr-only">{l}</dt>
-              <dd>
-                <span className="display block text-[40px] sm:text-[56px]">{n}</span>
-                <span className="mt-2 block max-w-[220px] text-[13.5px] text-mute">{l}</span>
-              </dd>
-            </div>
+      <div className="relative mx-auto -mt-[110px] max-w-[1520px] space-y-5 px-3 sm:-mt-[130px] sm:px-4 lg:-mt-[170px]">
+        {/* Row 1 — three departments and the deal of the day */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {firstRow.map((s) => (
+            <CategoryCard key={s} slug={s} />
           ))}
-        </dl>
-      </section>
-
-      <section className="mt-10 border-y border-line">
-        <QuestionMarquee />
-      </section>
-
-      {/* ── 01 CATEGORIES ────────────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
-        <SectionHeader
-          index="01"
-          kicker="Discover"
-          title={<>Start anywhere.<br />Arrive somewhere good.</>}
-          description="Eight edited departments, each with a buying guide that tells you what actually matters — and what doesn't."
-          action={{ href: "/search", label: "Browse everything" }}
-        />
-        <div className="mt-12 grid auto-rows-[180px] grid-cols-2 gap-3 sm:auto-rows-[220px] lg:grid-cols-4 lg:gap-4">
-          {categories.map((c, n) => {
-            const hero = tiles[c.slug];
-            const big = n === 0;
-            const tall = n === 3;
-            return (
-              <Reveal key={c.slug} delay={n * 60} className={big ? "col-span-2 row-span-2" : n === 3 ? "row-span-2" : ""}>
-                <Link
-                  href={`/c/${c.slug}`}
-                  className="group relative flex h-full flex-col justify-between overflow-hidden rounded-[26px] p-5 sm:p-6"
-                  style={{ background: c.tint }}
-                >
-                  {hero && <ProductImage
-                    product={hero}
-                    feather
-                    sizes={big ? "(min-width: 1024px) 40vw, 90vw" : "(min-width: 1024px) 22vw, 45vw"}
-                    className={`pointer-events-none absolute transition-transform duration-[1200ms] ease-[var(--ease-out-expo)] group-hover:-translate-y-2 group-hover:scale-[1.04] ${
-                      big ? "-bottom-[6%] -right-[6%] aspect-square h-[88%]" : tall ? "-bottom-[4%] -right-[10%] aspect-square w-[108%]" : "-bottom-[8%] -right-[10%] aspect-square h-[58%] sm:-bottom-[10%] sm:-right-[8%] sm:h-[82%]"
-                    }`}
-                  />}
-                  <div className="relative">
-                    <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink/60">{String(n + 1).padStart(2, "0")}</span>
-                    <h3 className={`display mt-2 ${big ? "text-[40px] sm:text-[64px]" : "text-[20px] sm:max-w-[62%] sm:text-[30px] lg:max-w-[58%]"} ${tall ? "sm:!max-w-full" : ""}`}>{c.name}</h3>
-                    {big && <p className="mt-3 max-w-[300px] text-[15px] text-ink-2">{c.blurb}</p>}
-                  </div>
-                  <div className="relative flex items-center gap-2 text-[12.5px] text-ink-2">
-                    <span className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full bg-white/70 px-2.5 py-1 backdrop-blur">
-                      <SignalDot /> {compact(1200 + n * 713)} items
-                    </span>
-                    <span className="grid h-8 w-8 place-items-center rounded-full bg-ink text-white opacity-0 transition-all duration-500 group-hover:opacity-100">
-                      <Icon name="arrowUpRight" size={15} />
-                    </span>
-                  </div>
-                </Link>
-              </Reveal>
-            );
-          })}
+          {dealOfDay ? <DealCard p={dealOfDay} /> : <CategoryCard slug="safety" />}
         </div>
-      </section>
 
-      {/* ── 02 FOR YOU ───────────────────────────────────────── */}
-      {forYou.length > 0 && (
-        <section className="shell mt-24 lg:mt-32">
-          <ForYou pool={forYou} />
-        </section>
-      )}
-
-      {/* ── 03 LOOKBOOK ──────────────────────────────────────── */}
-      {lookbook.length > 0 && (
-        <section className="shell mt-24 lg:mt-32">
-          <Lookbook index="03" items={lookbook} />
-        </section>
-      )}
-
-      {/* ── 04 VERIFIED DEALS (ink) ──────────────────────────── */}
-      {deals.length > 0 && <section className="panel-ink relative mt-24 overflow-hidden py-20 lg:mx-3 lg:mt-32 lg:rounded-[36px] lg:py-28">
-        <div aria-hidden className="grid-texture-dark pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_at_top,black,transparent_70%)]" />
-        <div className="shell relative">
-          <SectionHeader
-            tone="dark"
-            index="04"
-            kicker="Honest pricing"
-            title={<>Deals you can<br />actually verify.</>}
-            description="Every discount is checked against twelve weeks of real prices. If it isn't a genuine low, we simply don't call it a deal."
-            action={{ href: "/search?deal=1", label: "All verified deals" }}
-          />
-          <div className="scroll-x -mx-[var(--gutter)] mt-12 flex gap-4 px-[var(--gutter)] pb-2">
-            {deals.map((p) => {
-              const ins = priceInsight(p);
+        {/* Shop by department */}
+        <section aria-label="Shop by department" className="rounded-xl bg-white p-4 shadow-[var(--shadow-hair)] sm:p-5">
+          <h2 className="text-[19px] font-semibold tracking-[-0.01em] sm:text-[21px]">Shop by department</h2>
+          <ul className="scroll-x -mx-4 mt-4 flex gap-4 px-4 sm:-mx-5 sm:px-5 lg:grid lg:grid-cols-8">
+            {categories.map((c) => {
+              const p = inCategory(c.slug).sort((a, b) => b.soldLastWeek - a.soldLastWeek)[0];
               return (
-                <Link
-                  key={p.id}
-                  href={`/p/${p.slug}`}
-                  className="group w-[300px] shrink-0 overflow-hidden rounded-[26px] bg-graphite ring-1 ring-graphite-line transition-colors hover:ring-mute-dark sm:w-[340px]"
-                >
-                  <div className="relative">
-                    <ProductImage product={p} sizes="340px" className="aspect-[4/3] w-full" />
-                    <span className="glint absolute left-3 top-3 inline-flex h-7 items-center gap-1.5 rounded-full bg-brand px-2.5 text-[11.5px] font-medium text-ink">
-                      <Icon name="check" size={12} strokeWidth={2.4} /> {ins.label}
-                    </span>
-                  </div>
-                  <div className="p-5">
-                    <p className="line-clamp-1 text-[15px] font-medium">{p.name}</p>
-                    <div className="mt-2 flex items-end justify-between gap-4">
-                      <Price usd={p.price} size="lg" strike={p.compareAt} className="[&_.line-through]:text-mute-dark" />
-                    </div>
-                    <div className="mt-4">
-                      <PriceHistory history={p.history} tone="dark" height={44} />
-                      <div className="mt-1.5 flex justify-between font-mono text-[10px] uppercase tracking-[0.12em] text-mute-dark">
-                        <span>12 wks ago</span>
-                        <span>Today</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                <li key={c.slug} className="w-[104px] shrink-0 lg:w-auto">
+                  <Link href={`/c/${c.slug}`} className="group flex flex-col items-center text-center">
+                    {p && <ProductImage product={p} sizes="120px" className="aspect-square w-full overflow-hidden rounded-full ring-1 ring-line transition-shadow group-hover:ring-2 group-hover:ring-brand" />}
+                    <span className="mt-2 text-[13px] font-medium leading-tight group-hover:text-brand-deep">{c.name}</span>
+                  </Link>
+                </li>
               );
             })}
-          </div>
-        </div>
-      </section>}
-
-      {/* ── 05 BESTSELLERS ───────────────────────────────────── */}
-      {bestsellers.length > 0 && <section className="shell mt-24 lg:mt-32">
-        <SectionHeader
-          index="05"
-          kicker="Social proof, not hype"
-          title="What people bought this week."
-          description="Ranked by verified purchases in the last seven days — not by who paid for placement."
-          action={{ href: "/search?sort=popular", label: "See the full chart" }}
-        />
-        <div className={clsx("mt-12 grid grid-cols-2 gap-x-4 gap-y-10", bestsellers.length >= 4 ? "lg:grid-cols-4" : "lg:max-w-[calc(50%-8px)]")}>
-          {bestsellers.map((p, n) => (
-            <Reveal key={p.id} delay={n * 80}>
-              <ProductCard product={p} rank={n + 1} reason={`${compact(p.soldLastWeek)} bought this week`} />
-            </Reveal>
-          ))}
-        </div>
-      </section>}
-
-      {/* ── 06 COMPARE ───────────────────────────────────────── */}
-      {compare.length > 1 && (
-        <section className="shell mt-24 lg:mt-32">
-          <CompareTeaser items={compare} />
-        </section>
-      )}
-
-      {/* ── 07 SELLERS ───────────────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
-        <SectionHeader
-          index="07"
-          kicker="Trust, measured"
-          title={<>Every seller earns<br />their place.</>}
-          description="Identity, inventory, fulfilment and service — four checks before a seller can list, and live scores after."
-        />
-        <div className="mt-12 grid gap-4 lg:grid-cols-[1fr_2fr]">
-          <div className="rounded-[26px] bg-white p-7 shadow-[var(--shadow-hair)]">
-            <p className="eyebrow">The Ayiin Verified check</p>
-            <ol className="mt-5 space-y-5">
-              {[
-                ["Identity", "Business registration, ownership and bank details verified."],
-                ["Inventory", "Stock levels synced live — no phantom listings."],
-                ["Fulfilment", "On-time rate measured on every order, publicly."],
-                ["Service", "Response time and return rate tracked; below standard, delisted."],
-              ].map(([t, d], n) => (
-                <li key={t} className="flex gap-4">
-                  <span className="num grid h-8 w-8 shrink-0 place-items-center rounded-full bg-ink text-[12px] text-brand">{n + 1}</span>
-                  <div>
-                    <p className="text-[15px] font-medium">{t}</p>
-                    <p className="text-[13.5px] text-mute">{d}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {sellers.filter((s) => !s.business || s.id === "northform" || s.id === "atelier-mesa").slice(0, 4).map((s) => (
-              <div key={s.id} className="flex flex-col justify-between rounded-[26px] bg-white p-6 shadow-[var(--shadow-hair)]">
-                <div className="flex items-center gap-3">
-                  <span className="num grid h-11 w-11 place-items-center rounded-full text-[13px] font-medium" style={{ background: s.color, color: readableOn(s.color) }}>
-                    {s.initials}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="flex items-center gap-1.5 text-[15px] font-medium">
-                      {s.name} <Icon name="shield" size={14} className="text-brand-deep" />
-                    </p>
-                    <p className="truncate text-[12.5px] text-mute">{s.tagline}</p>
-                  </div>
-                </div>
-                <dl className="mt-6 grid grid-cols-3 gap-2 border-t border-line pt-4">
-                  {[
-                    [`${s.onTime}%`, "On time"],
-                    [`${s.rating}`, "Rating"],
-                    [`${s.responseHours}h`, "Replies in"],
-                  ].map(([v, l]) => (
-                    <div key={l}>
-                      <dt className="text-[11.5px] text-mute">{l}</dt>
-                      <dd className="num mt-0.5 text-[18px] font-medium">{v}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <RecentlyViewed exclude={renderedIds} className="shell mt-24 lg:mt-32" />
-
-      {/* ── 08 BUSINESS BRIDGE ───────────────────────────────── */}
-      {bridge && (
-        <section className="shell mt-24 lg:mt-32">
-          <BusinessBridge product={bridge} />
-        </section>
-      )}
-
-      {/* ── Last word: delivery promise ──────────────────────── */}
-      {delivery.length > 0 && <section className="shell mt-24 lg:mt-32">
-        <div className="grid items-end gap-8 lg:grid-cols-2">
-          <h2 className="display text-[44px] sm:text-[64px]">
-            Order by 5pm.
-            <br />
-            <span className="text-mute">Know the day it lands.</span>
-          </h2>
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {delivery.map((p) => (
-              <li key={p.id}>
-                <Link href={`/p/${p.slug}`} className="flex items-center gap-3 rounded-2xl bg-white p-2.5 pr-4 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]">
-                  <ProductImage product={p} sizes="56px" className="h-14 w-14 shrink-0 rounded-xl" />
-                  <span className="min-w-0">
-                    <span className="block truncate text-[13.5px] font-medium">{p.name}</span>
-                    <span className="mt-0.5 flex items-center gap-1.5 text-[12.5px] text-ink-2">
-                      <SignalDot live /> {deliveryLabel(p)}
-                    </span>
-                  </span>
-                </Link>
-              </li>
-            ))}
           </ul>
+        </section>
+
+        <ProductRail title="Today's deals" href="/search?deal=1" products={deals} />
+        <ProductRail title="Best sellers on Ayiin" href="/search?sort=popular" products={best.slice(0, 12)} ranked />
+
+        {/* Row 2 — more departments and Business */}
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {secondRow.slice(0, 3).map((s) => (
+            <CategoryCard key={s} slug={s} />
+          ))}
+          <BusinessCard />
         </div>
-      </section>}
-    </>
+
+        <ProductRail title="Top rated by verified buyers" href="/search?sort=rating" products={topRated.slice(0, 12)} />
+        {fast.length > 0 && <ProductRail title="Arrives tomorrow" href="/search?fast=1" products={fast} />}
+
+        {["home-living", "audio-tech", "kitchen", "fashion"].map((slug) => {
+          const c = categories.find((x) => x.slug === slug)!;
+          return <ProductRail key={slug} title={`Popular in ${c.name}`} href={`/c/${slug}`} products={inCategory(slug).sort((a, b) => b.soldLastWeek - a.soldLastWeek)} />;
+        })}
+
+        <RecentlyViewed />
+      </div>
+    </div>
   );
 }

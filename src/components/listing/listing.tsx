@@ -141,7 +141,7 @@ export function Listing({ base, subcategories, emptyHint }: { base: Product[]; s
             </div>
           </div>
         ) : view === "grid" ? (
-          <div className={clsx("mt-6 grid grid-cols-2 gap-x-4 gap-y-10 transition-opacity md:grid-cols-3", pending && "opacity-60")}>
+          <div className={clsx("mt-4 grid grid-cols-2 gap-3 transition-opacity sm:grid-cols-3 xl:grid-cols-4", pending && "opacity-60")}>
             {results.map((p, i) => (
               <ProductCard key={p.id} product={p} priority={i < 3} />
             ))}

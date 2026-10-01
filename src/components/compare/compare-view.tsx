@@ -160,11 +160,11 @@ export function CompareView() {
                     type="button"
                     onClick={() => {
                       addToCart(p.id, p.variants[0].id, business ? Math.max(p.b2b.moq, 1) : 1, business);
-                      notify(business ? "Added to cart" : "Added to bag", p.name);
+                      notify(business ? "Added to cart" : "Added to cart", p.name);
                     }}
                     className="btn btn-ink btn-sm mt-3 w-full"
                   >
-                    {business ? "Add to cart" : "Add to bag"}
+                    {business ? "Add to cart" : "Add to cart"}
                   </button>
                 </th>
               ))}

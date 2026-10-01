@@ -6,7 +6,7 @@ import type { Mode } from "@/lib/types";
 
 const PROMISES: { icon: IconName; title: string; body: string }[] = [
   { icon: "truck", title: "Exact delivery dates", body: "A real date on every product, not a range." },
-  { icon: "receipt", title: "Total price upfront", body: "Shipping and fees shown before your bag." },
+  { icon: "receipt", title: "Total price upfront", body: "Shipping and fees shown before your cart." },
   { icon: "returns", title: "Free 30-day returns", body: "On every Ayiin Assured item. Label included." },
   { icon: "shield", title: "Verified sellers only", body: "4-point checks. Protected payments." },
 ];
@@ -55,70 +55,66 @@ export function Footer({ mode }: { mode: Mode }) {
   ];
 
   return (
-    <footer className="mt-24 pb-[84px] lg:pb-0">
-      <section aria-label="The Ayiin promise" className="shell">
-        <ul className="grid gap-px overflow-hidden rounded-3xl bg-line sm:grid-cols-2 lg:grid-cols-4">
+    <footer className="mt-10 pb-[84px] text-white lg:pb-0">
+      {/* Promises strip, on the page */}
+      <section aria-label="The Ayiin promise" className="mx-auto max-w-[1520px] px-3 text-ink sm:px-4">
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {PROMISES.map((p) => (
-            <li key={p.title} className="flex gap-4 bg-porcelain p-6">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)]">
+            <li key={p.title} className="flex gap-3 rounded-xl bg-white p-4 shadow-[var(--shadow-hair)]">
+              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-soft text-brand-deep">
                 <Icon name={p.icon} size={19} />
               </span>
               <div>
-                <p className="text-[15px] font-medium">{p.title}</p>
-                <p className="mt-0.5 text-[13.5px] text-mute">{p.body}</p>
+                <p className="text-[14.5px] font-semibold">{p.title}</p>
+                <p className="mt-0.5 text-[13px] text-mute">{p.body}</p>
               </div>
             </li>
           ))}
         </ul>
       </section>
 
-      <div className="panel-ink relative mt-16 overflow-hidden lg:mx-3 lg:mb-3 lg:rounded-[36px]">
-        <div aria-hidden className="grid-texture-dark pointer-events-none absolute inset-0 opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent_70%)]" />
-        <div className="shell relative pt-16">
-          <div className="grid gap-12 lg:grid-cols-[1.1fr_2fr]">
-            <div>
-              <Link href="/" aria-label="Ayiin home" className="inline-flex items-center">
-                <AyiinLogo on="dark" className="h-12" />
-              </Link>
-              <p className="display mt-6 max-w-sm text-[34px] leading-[1.02] text-porcelain">
-                {business ? "Procurement, without the process." : "See more. Doubt less."}
-              </p>
-              <p className="mt-4 max-w-sm text-[14.5px] text-mute-dark">
-                The Ayiin Brief — one short email a week with what&apos;s genuinely worth buying, and why.
-              </p>
+      <a href="#main" className="mt-10 block bg-graphite-2 py-3.5 text-center text-[13.5px] font-medium hover:bg-graphite">
+        Back to top
+      </a>
+
+      <div className="bg-ink">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-6 py-12 sm:grid-cols-2 lg:grid-cols-[1.2fr_repeat(4,1fr)]">
+          <div>
+            <Link href="/" aria-label="Ayiin home" className="inline-flex">
+              <AyiinLogo on="dark" className="h-10" />
+            </Link>
+            <p className="mt-4 max-w-[260px] text-[13.5px] leading-relaxed text-white/70">
+              {business ? "Procurement for teams: volume pricing, quotes, approvals and net terms." : "The marketplace with real prices, exact delivery dates and verified sellers."}
+            </p>
+            <div className="mt-5 max-w-[300px]">
               <NewsletterForm />
             </div>
-            <nav aria-label="Footer" className="grid grid-cols-2 gap-8 sm:grid-cols-4">
-              {cols.map((c) => (
-                <div key={c.title}>
-                  <p className="eyebrow !text-mute-dark">{c.title}</p>
-                  <ul className="mt-4 space-y-2.5 text-[14px]">
-                    {c.links.map(([label, href]) => (
-                      <li key={href}>
-                        <Link href={href} className="link-underline text-porcelain/85 hover:text-porcelain">
-                          {label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </nav>
           </div>
-
-          <AyiinLogo on="dark" className="mb-10 mt-20 !h-auto !w-full" />
-
-          <div className="flex flex-col gap-4 border-t border-graphite-line py-6 text-[12.5px] text-mute-dark sm:flex-row sm:items-center sm:justify-between">
+          {cols.map((col) => (
+            <nav key={col.title} aria-label={col.title}>
+              <p className="text-[15px] font-semibold">{col.title}</p>
+              <ul className="mt-3 space-y-2 text-[13.5px] text-white/70">
+                {col.links.map(([label, href]) => (
+                  <li key={href}>
+                    <Link href={href} className="hover:text-white hover:underline">
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+        </div>
+        <div className="border-t border-white/10">
+          <div className="mx-auto flex max-w-[1200px] flex-col gap-3 px-6 py-6 text-[12.5px] text-white/60 sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 Ayiin Inc. · Multi-vendor marketplace for people and companies.</p>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              <Link href="/help#privacy" className="hover:text-porcelain">Privacy</Link>
-              <Link href="/help#terms" className="hover:text-porcelain">Terms</Link>
-              <Link href="/help#accessibility" className="hover:text-porcelain">Accessibility</Link>
+              <Link href="/help#privacy" className="hover:text-white">Privacy</Link>
+              <Link href="/help#terms" className="hover:text-white">Terms</Link>
+              <Link href="/help#accessibility" className="hover:text-white">Accessibility</Link>
               <span className="flex gap-1.5">
-                {["Visa", "Mastercard", "Amex", "PayPal", "Invoice"].map((m) => (
-                  <span key={m} className="rounded-md border border-graphite-line px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider">
-                    {m}
-                  </span>
+                {["Visa", "Mastercard", "Amex", "PayPal"].map((m) => (
+                  <span key={m} className="rounded border border-white/20 px-1.5 py-0.5 text-[10.5px] text-white/70">{m}</span>
                 ))}
               </span>
             </div>
