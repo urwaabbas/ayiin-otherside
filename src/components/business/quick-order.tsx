@@ -62,7 +62,6 @@ export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "he
         placeholder={`Paste SKUs or describe items — one per line\n${productBySlug("nitrile-gloves-4mil")!.b2b.sku}, 40\n12 cases copy paper`}
         className={clsx(
           "num block w-full resize-none bg-transparent px-5 py-3 text-[14px] leading-[1.7] outline-none",
-          variant === "hero" && "lg:h-[clamp(56px,calc(100svh-var(--hdr)-520px),119px)]",
           dark ? "text-porcelain placeholder:text-mute-dark" : "text-ink placeholder:text-mute",
         )}
       />

@@ -25,8 +25,8 @@ export function SectionHeader({
         <Eyebrow index={index} tone={tone}>
           {kicker}
         </Eyebrow>
-        <h2 className={clsx("display mt-4 text-balance text-[44px] sm:text-[60px] lg:text-[72px] short:mt-[clamp(6px,1.2vh,12px)] short:text-[clamp(36px,6.4vh,52px)]", tone === "dark" && "text-porcelain")}>{title}</h2>
-        {description && <p className={clsx("mt-4 max-w-xl text-[16px] leading-relaxed short:mt-[clamp(6px,1.2vh,10px)] short:text-[clamp(13.5px,2vh,15px)]", tone === "dark" ? "text-mute-dark" : "text-mute")}>{description}</p>}
+        <h2 className={clsx("display mt-4 text-balance text-[44px] sm:text-[60px] lg:text-[72px]", tone === "dark" && "text-porcelain")}>{title}</h2>
+        {description && <p className={clsx("mt-4 max-w-xl text-[16px] leading-relaxed", tone === "dark" ? "text-mute-dark" : "text-mute")}>{description}</p>}
       </div>
       {action && (
         <Link href={action.href} className={clsx("btn shrink-0 self-start md:self-auto", tone === "dark" ? "btn-on-dark" : "btn-ghost")}>

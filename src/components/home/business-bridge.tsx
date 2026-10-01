@@ -11,11 +11,11 @@ export function BusinessBridge({ product: gloves }: { product: Product }) {
   const max = gloves.b2b.tiers[0].price;
   return (
     <div className="relative overflow-hidden rounded-[36px] bg-mist">
-      <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:p-14 short:p-[clamp(28px,5vh,56px)]">
+      <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:p-14">
         <div className="flex flex-col justify-between">
           <div>
             <Eyebrow index="08">Buying for a company?</Eyebrow>
-            <h2 className="display mt-4 text-[44px] sm:text-[64px] short:text-[clamp(38px,7vh,64px)]">
+            <h2 className="display mt-4 text-[44px] sm:text-[64px]">
               Same marketplace.
               <br />
               Built for teams.

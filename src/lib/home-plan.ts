@@ -4,7 +4,6 @@ import { VOLUME_PRODUCT_SLUGS } from "@/lib/catalog/offers";
 import { Shelf } from "@/lib/catalog/shelf";
 import { priceInsight } from "@/lib/commerce";
 import { hasView } from "@/lib/images";
-import { products } from "@/lib/catalog/products";
 
 /**
  * Home page product plans.
@@ -65,12 +64,13 @@ export function planPersonalHome() {
   const compare = shelf.take(COMPARE_SLUGS.length, { prefer: COMPARE_SLUGS, fallback: false });
   const bridge = shelf.takeOne({ prefer: [BRIDGE_SLUG], fallback: false });
 
-  // 2 · Hero: the clarity carousel.
+  // 2 · Hero: the clarity carousel, then the image pill set into the headline.
   const clarity = shelf.take(3, {
     prefer: ["stride-runner-2", "pour-gooseneck-kettle", "arc-table-lamp"],
     where: isConsumer,
     maxPerCategory: 1,
   });
+  const pill = shelf.take(2, { prefer: ["trail-bottle-750", "ember-soy-candle"], where: isConsumer, maxPerCategory: 1 });
 
   // 3 · Rails, top to bottom.
   const tiles = takeCategoryTiles(
@@ -101,10 +101,7 @@ export function planPersonalHome() {
       shelf.takeOne({ where: (x) => x.category === p.category });
   }
 
-  // For You filters across every shopper product when an interest is picked.
-  const catalog = products.filter(isConsumer);
-
-  return { compare, bridge, clarity, catalog, tiles, forYou, lookbook, deals, bestsellers, delivery, alternatives, renderedIds: [...shelf.renderedIds] };
+  return { compare, bridge, clarity, pill, tiles, forYou, lookbook, deals, bestsellers, delivery, alternatives, renderedIds: [...shelf.renderedIds] };
 }
 
 export type BusinessPlan = ReturnType<typeof planBusinessHome>;

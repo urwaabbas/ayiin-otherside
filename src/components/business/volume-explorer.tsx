@@ -30,7 +30,7 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
 
   return (
     <div className="overflow-hidden rounded-[32px] bg-white shadow-[var(--shadow-hair)]">
-      <div role="tablist" aria-label="Product" className="scroll-x flex gap-1 border-b border-line p-2 short:p-1.5">
+      <div role="tablist" aria-label="Product" className="scroll-x flex gap-1 border-b border-line p-2">
         {items.map((vp, i) => (
           <button
             key={vp.id}
@@ -43,21 +43,21 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
               i === pi ? "bg-ink text-white" : "text-ink-2 hover:bg-mist",
             )}
           >
-            <ProductImage product={vp} sizes="36px" className="h-9 w-9 rounded-xl short:h-7 short:w-7 short:rounded-lg" />
+            <ProductImage product={vp} sizes="36px" className="h-9 w-9 rounded-xl" />
             {vp.name.split(/ — |, /)[0]}
           </button>
         ))}
       </div>
 
       <div className="grid gap-0 lg:grid-cols-[1fr_1.15fr]">
-        <div className="border-b border-line p-6 sm:p-8 lg:border-b-0 lg:border-r short:px-6 short:py-[clamp(12px,2.4vh,20px)]">
+        <div className="border-b border-line p-6 sm:p-8 lg:border-b-0 lg:border-r">
           <label htmlFor="vol-qty" className="eyebrow">
             Quantity · {p.b2b.unit}
           </label>
           <div className="mt-3 flex items-end justify-between gap-4">
-            <p className="display text-[64px] leading-none tabular-nums short:text-[clamp(34px,5.5vh,46px)]">{qty.toLocaleString("en-US")}</p>
+            <p className="display text-[64px] leading-none tabular-nums">{qty.toLocaleString("en-US")}</p>
             <div className="text-right">
-              <p className="num text-[28px] font-medium tracking-[-0.03em] short:text-[clamp(20px,3.4vh,28px)]">{fmt(unit, { cents: true })}</p>
+              <p className="num text-[28px] font-medium tracking-[-0.03em]">{fmt(unit, { cents: true })}</p>
               <p className="text-[12.5px] text-mute">per {p.b2b.unit}</p>
             </div>
           </div>
@@ -69,21 +69,21 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
             value={stop}
             onChange={(e) => setStop(Number(e.target.value))}
             aria-valuetext={`${qty} units`}
-            className="mt-6 w-full accent-ink short:mt-3 tiny:mt-2"
+            className="mt-6 w-full accent-ink"
           />
           <div className="mt-1 flex justify-between font-mono text-[10.5px] text-mute">
             <span>1</span>
             <span>1,000</span>
           </div>
 
-          <ol className="mt-6 grid grid-cols-4 gap-2 short:mt-3 tiny:mt-2">
+          <ol className="mt-6 grid grid-cols-4 gap-2">
             {p.b2b.tiers.map((t) => {
               const active = t.min === activeMin;
               return (
                 <li
                   key={t.min}
                   className={clsx(
-                    "rounded-2xl p-3 transition-colors duration-300 short:px-3 short:py-2",
+                    "rounded-2xl p-3 transition-colors duration-300",
                     active ? "bg-brand text-ink shadow-[inset_0_0_0_1.5px_var(--color-ink)]" : "bg-mist text-ink-2",
                   )}
                 >
@@ -94,7 +94,7 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
               );
             })}
           </ol>
-          <div className="mt-6 space-y-1.5 text-[14px] short:mt-3 tiny:mt-2 tiny:grid tiny:grid-cols-2 tiny:gap-x-6 tiny:gap-y-1.5 tiny:space-y-0">
+          <div className="mt-6 space-y-1.5 text-[14px]">
             <p className="flex justify-between">
               <span className="text-mute">Total at list</span> <span className="num text-mute line-through">{fmt(p.price * qty, { cents: true })}</span>
             </p>
@@ -102,19 +102,19 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
               <span>Your total</span> <span className="num">{fmt(unit * qty, { cents: true })}</span>
             </p>
             {nt && (
-              <p className="rounded-xl bg-info-soft px-3 py-2 text-[13px] text-info tiny:col-span-2 tiny:py-1.5">
+              <p className="rounded-xl bg-info-soft px-3 py-2 text-[13px] text-info">
                 Order {nt.min - qty} more to reach {fmt(nt.price, { cents: true })}/{p.b2b.unit} — saves {fmt((unit - nt.price) * nt.min)} on {nt.min}.
               </p>
             )}
           </div>
         </div>
 
-        <div className="p-6 sm:p-8 short:px-6 short:py-[clamp(12px,2.4vh,20px)]">
+        <div className="p-6 sm:p-8">
           <div className="flex items-center justify-between">
             <p className="eyebrow">{offers.length} verified suppliers · landed cost</p>
             <span className="text-[12px] text-mute">incl. delivery</span>
           </div>
-          <ul className="mt-4 space-y-2.5 short:mt-3 short:space-y-2">
+          <ul className="mt-4 space-y-2.5">
             {offers.map((o, i) => {
               const s = sellerById(o.sellerId);
               const best = i === 0 && o.eligible;
@@ -122,7 +122,7 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
                 <li
                   key={o.sellerId}
                   className={clsx(
-                    "rounded-2xl border p-4 transition-colors short:px-4 short:py-[clamp(8px,1.6vh,16px)]",
+                    "rounded-2xl border p-4 transition-colors",
                     best ? "border-ink bg-porcelain" : "border-line",
                     !o.eligible && "opacity-55",
                   )}
@@ -152,18 +152,18 @@ export function VolumeExplorer({ items = VOLUME_PRODUCTS }: { items?: Product[] 
               );
             })}
           </ul>
-          <div className="mt-6 flex flex-wrap gap-2 short:mt-3">
+          <div className="mt-6 flex flex-wrap gap-2">
             <button
               type="button"
               onClick={() => {
                 addToCart(p.id, p.variants[0].id, qty, true);
                 notify("Added to cart", `${qty} × ${p.name.split(" — ")[0]} at ${fmt(unit, { cents: true })}`);
               }}
-              className="btn btn-ink short:h-[clamp(38px,6vh,48px)]"
+              className="btn btn-ink"
             >
               <Icon name="plus" size={16} /> Add {qty.toLocaleString("en-US")} to cart
             </button>
-            <Link href={`/business?tab=quotes&product=${p.slug}&qty=${qty}`} className="btn btn-ghost short:h-[clamp(38px,6vh,48px)]">
+            <Link href={`/business?tab=quotes&product=${p.slug}&qty=${qty}`} className="btn btn-ghost">
               Negotiate a better price
             </Link>
           </div>

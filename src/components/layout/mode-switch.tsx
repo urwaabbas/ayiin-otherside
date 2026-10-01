@@ -43,8 +43,7 @@ export function ModeSwitch({ compact = false, className, tone = "light" }: { com
         aria-hidden
         className={clsx(
           "absolute inset-y-[3px] left-[3px] -z-10 w-[calc(50%-3px)] rounded-full transition-[transform,background-color,box-shadow] duration-500 ease-[var(--ease-out-expo)]",
-          // Business is the amber pill — the brand colour marks the "pro" mode on any surface.
-          business ? "translate-x-full bg-brand shadow-[0_6px_18px_-8px_rgb(var(--rgb-brand)/0.7)]" : "translate-x-0 bg-white shadow-[0_1px_2px_rgb(var(--rgb-ink)/0.08),0_6px_16px_-8px_rgb(var(--rgb-ink)/0.25)]",
+          business ? "translate-x-full bg-ink shadow-[0_6px_18px_-8px_rgb(var(--rgb-ink)/0.7)]" : "translate-x-0 bg-white shadow-[0_1px_2px_rgb(var(--rgb-ink)/0.08),0_6px_16px_-8px_rgb(var(--rgb-ink)/0.25)]",
         )}
       />
       {OPTIONS.map((o, i) => {
@@ -66,7 +65,7 @@ export function ModeSwitch({ compact = false, className, tone = "light" }: { com
               compact ? "h-9" : "h-11",
               active
                 ? o.value === "business"
-                  ? "text-on-brand"
+                  ? "text-porcelain"
                   : "text-ink"
                 : tone === "dark"
                   ? "text-mute-dark hover:text-porcelain"
@@ -76,7 +75,7 @@ export function ModeSwitch({ compact = false, className, tone = "light" }: { com
             {o.value === "business" && (
               <span
                 aria-hidden
-                className={clsx("h-1.5 w-1.5 rounded-full transition-colors", active ? "bg-on-brand" : "bg-current opacity-40")}
+                className={clsx("h-1.5 w-1.5 rounded-full transition-colors", active ? "bg-brand" : "bg-current opacity-40")}
               />
             )}
             <span className="flex flex-col items-start leading-none">

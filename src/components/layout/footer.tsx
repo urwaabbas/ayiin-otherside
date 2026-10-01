@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { AyiinLogo } from "@/components/brand/ayiin-logo";
-import { AyiinFooterMark } from "@/components/brand/ayiin-footer-mark";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { NewsletterForm } from "@/components/layout/newsletter";
 import type { Mode } from "@/lib/types";
@@ -75,7 +74,7 @@ export function Footer({ mode }: { mode: Mode }) {
 
       <div className="panel-ink relative mt-16 overflow-hidden lg:mx-3 lg:mb-3 lg:rounded-[36px]">
         <div aria-hidden className="grid-texture-dark pointer-events-none absolute inset-0 opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent_70%)]" />
-        <div className="shell relative pt-16 short:pt-10">
+        <div className="shell relative pt-16">
           <div className="grid gap-12 lg:grid-cols-[1.1fr_2fr]">
             <div>
               <Link href="/" aria-label="Ayiin home" className="inline-flex items-center">
@@ -107,7 +106,7 @@ export function Footer({ mode }: { mode: Mode }) {
             </nav>
           </div>
 
-          <AyiinFooterMark className="mb-10 mt-20 short:mx-auto short:mb-6 short:mt-8 short:w-[min(100%,calc((100vh-500px)*2.29))]" />
+          <AyiinLogo on="dark" className="mb-10 mt-20 !h-auto !w-full" />
 
           <div className="flex flex-col gap-4 border-t border-graphite-line py-6 text-[12.5px] text-mute-dark sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 Ayiin Inc. · Multi-vendor marketplace for people and companies.</p>

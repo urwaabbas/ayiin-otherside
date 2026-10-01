@@ -139,7 +139,7 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
       </div>
 
       <Link href={`/p/${p.slug}`} className="relative block" aria-label={p.name}>
-        <div className="relative aspect-[16/11] w-full overflow-hidden lg:max-h-[max(110px,calc(100svh-var(--hdr)-420px))]">
+        <div className="relative aspect-[16/11] w-full overflow-hidden">
           {items.map((it, n) => (
             <ProductImage
               key={it.id}
@@ -159,21 +159,21 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
         </span>
       </Link>
 
-      <div className="p-5 sm:p-6 lg:py-[clamp(14px,2.4vh,24px)]">
+      <div className="p-5 sm:p-6">
         <div key={p.id} className="animate-fade">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <p className="text-[12.5px] text-mute">{p.brand}</p>
-              <h3 className="mt-0.5 text-[18px] font-medium leading-tight tracking-[-0.02em] short:text-[17px]">{p.name}</h3>
+              <h3 className="mt-0.5 text-[18px] font-medium leading-tight tracking-[-0.02em]">{p.name}</h3>
             </div>
             <div className="text-right">
               <Price usd={p.price} size="lg" />
               {insight.verifiedDeal && <p className="mt-1 whitespace-nowrap text-[11.5px] font-medium text-brand-deep">✓ {insight.label}</p>}
             </div>
           </div>
-          <dl className="mt-4 divide-y divide-line border-t border-line lg:mt-[clamp(10px,1.6vh,16px)]">
+          <dl className="mt-4 divide-y divide-line border-t border-line">
             {rows.map((r, n) => (
-              <div key={r.q} className="grid animate-rise grid-cols-[118px_1fr] items-baseline gap-3 py-2.5 text-[13.5px] lg:py-[clamp(4px,0.9vh,10px)]" style={{ animationDelay: `${120 + n * 70}ms` }}>
+              <div key={r.q} className="grid animate-rise grid-cols-[118px_1fr] items-baseline gap-3 py-2.5 text-[13.5px]" style={{ animationDelay: `${120 + n * 70}ms` }}>
                 <dt className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.12em] text-mute">
                   <Icon name={r.icon} size={13} className="shrink-0 translate-y-[1px]" />
                   {r.q}
