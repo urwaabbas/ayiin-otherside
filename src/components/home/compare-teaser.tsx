@@ -39,16 +39,16 @@ export function CompareTeaser({ items }: { items: Product[] }) {
           description="Add anything to compare from any page. Ayiin lines up the specs, hides what's identical and marks the strongest option on each line."
         />
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/compare" className="btn btn-ink">
+          <Link href="/compare" className="btn btn-secondary">
             Open compare <Icon name="arrowRight" size={16} />
           </Link>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-[28px] bg-white shadow-[var(--shadow-hair)]">
+      <div className="overflow-hidden rounded-surface bg-white shadow-[var(--shadow-hair)]">
         <div className="flex items-center justify-between border-b border-line px-5 py-3.5">
-          <p className="text-[13.5px] font-medium">Commute audio · 3 products</p>
-          <label className="flex cursor-pointer items-center gap-2.5 text-[13px] text-ink-2">
+          <p className="text-support font-medium">Commute audio · 3 products</p>
+          <label className="flex cursor-pointer items-center gap-2.5 text-support text-ink-2">
             <span>Differences only</span>
             <button
               type="button"
@@ -62,7 +62,7 @@ export function CompareTeaser({ items }: { items: Product[] }) {
           </label>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[560px] text-left text-[13.5px]">
+          <table className="w-full min-w-[560px] text-left text-support">
             <thead>
               <tr>
                 <th className="w-[140px] p-4 align-bottom font-normal text-mute">
@@ -71,8 +71,8 @@ export function CompareTeaser({ items }: { items: Product[] }) {
                 {items.map((p) => (
                   <th key={p.id} scope="col" className="p-3 align-bottom font-normal">
                     <Link href={`/p/${p.slug}`} className="group block">
-                      <ProductImage product={p} className="aspect-square w-full rounded-2xl" />
-                      <span className="mt-2 block text-[13.5px] font-medium leading-snug group-hover:underline">{p.name}</span>
+                      <ProductImage product={p} className="aspect-square w-full rounded-surface" />
+                      <span className="mt-2 block text-support font-medium leading-snug group-hover:underline">{p.name}</span>
                     </Link>
                   </th>
                 ))}

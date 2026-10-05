@@ -15,14 +15,20 @@ export function CompareTray() {
   const ids = useShop((s) => s.compare);
   const toggle = useShop((s) => s.toggleCompare);
   const clear = useShop((s) => s.clearCompare);
-  const hidden = !hydrated || ids.length === 0 || pathname.startsWith("/compare") || pathname.startsWith("/checkout");
+  const hidden =
+    !hydrated ||
+    ids.length === 0 ||
+    pathname.startsWith("/compare") ||
+    pathname.startsWith("/checkout");
   const items = ids.map(productById).filter(Boolean);
 
   return (
     <div
       className={clsx(
         "fixed inset-x-0 bottom-[76px] z-40 flex justify-center px-3 transition-all duration-500 ease-[var(--ease-out-expo)] lg:bottom-6",
-        hidden ? "pointer-events-none translate-y-6 opacity-0" : "translate-y-0 opacity-100",
+        hidden
+          ? "pointer-events-none translate-y-6 opacity-0"
+          : "translate-y-0 opacity-100",
       )}
       inert={hidden}
     >
@@ -30,7 +36,11 @@ export function CompareTray() {
         <ul className="flex -space-x-1.5" aria-label="Products to compare">
           {items.map((p) => (
             <li key={p!.id} className="group relative">
-              <ProductImage product={p!} sizes="40px" className="h-10 w-10 rounded-full ring-2 ring-ink" />
+              <ProductImage
+                product={p!}
+                sizes="40px"
+                className="h-10 w-10 rounded-full ring-2 ring-ink"
+              />
               <button
                 type="button"
                 onClick={() => toggle(p!.id)}
@@ -42,20 +52,37 @@ export function CompareTray() {
             </li>
           ))}
           {Array.from({ length: Math.max(0, 2 - items.length) }).map((_, i) => (
-            <li key={`e${i}`} className="grid h-10 w-10 place-items-center rounded-full border border-dashed border-graphite-line text-mute-dark ring-2 ring-ink">
+            <li
+              key={`e${i}`}
+              className="grid h-10 w-10 place-items-center rounded-full border border-dashed border-graphite-line text-mute-dark ring-2 ring-ink"
+            >
               <Icon name="plus" size={14} />
             </li>
           ))}
         </ul>
-        <span className="hidden px-2 text-[13px] text-mute-dark sm:block">{items.length < 2 ? "Add one more to compare" : `${items.length} of 4 selected`}</span>
+        <span className="hidden px-2 text-support text-mute-dark sm:block">
+          {items.length < 2
+            ? "Add one more to compare"
+            : `${items.length} of 4 selected`}
+        </span>
         <Link
           href="/compare"
           aria-disabled={items.length < 2}
-          className={clsx("btn btn-sm", items.length < 2 ? "pointer-events-none bg-graphite text-mute-dark" : "btn-brand")}
+          className={clsx(
+            "btn",
+            items.length < 2
+              ? "btn-secondary pointer-events-none border-graphite-line bg-graphite text-mute-dark"
+              : "btn-primary",
+          )}
         >
           <Icon name="compare" size={15} /> Compare
         </Link>
-        <button type="button" onClick={clear} aria-label="Clear compare" className="grid h-9 w-9 place-items-center rounded-full text-mute-dark hover:bg-graphite hover:text-porcelain">
+        <button
+          type="button"
+          onClick={clear}
+          aria-label="Clear compare"
+          className="grid h-9 w-9 place-items-center rounded-full text-mute-dark hover:bg-graphite hover:text-porcelain"
+        >
           <Icon name="close" size={16} />
         </button>
       </div>

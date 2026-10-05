@@ -19,33 +19,63 @@ const example = () =>
     "ergonomic chair 8",
   ].join("\n");
 
-export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "hero" | "full"; tone?: "light" | "dark" }) {
+export function QuickOrder({
+  variant = "full",
+  tone = "light",
+}: {
+  variant?: "hero" | "full";
+  tone?: "light" | "dark";
+}) {
   const { fmt } = usePrefs();
   const [text, setText] = useState("");
   const addToCart = useShop((s) => s.addToCart);
   const notify = useUI((s) => s.notify);
   const lines = useMemo(() => parseQuickOrder(text), [text]);
   const matched = lines.filter((l) => l.product);
-  const total = matched.reduce((sum, l) => sum + unitPrice(l.product!, l.qty, { contract: true }) * l.qty, 0);
+  const total = matched.reduce(
+    (sum, l) => sum + unitPrice(l.product!, l.qty, { contract: true }) * l.qty,
+    0,
+  );
   const list = matched.reduce((sum, l) => sum + l.product!.price * l.qty, 0);
   const dark = tone === "dark";
 
   const addAll = () => {
-    matched.forEach((l) => addToCart(l.product!.id, l.product!.variants[0].id, l.qty, true));
-    notify(`${matched.length} lines added to cart`, `Contract & volume pricing applied · ${fmt(total, { cents: true })}`);
+    matched.forEach((l) =>
+      addToCart(l.product!.id, l.product!.variants[0].id, l.qty, true),
+    );
+    notify(
+      `${matched.length} lines added to cart`,
+      `Contract & volume pricing applied · ${fmt(total, { cents: true })}`,
+    );
     setText("");
   };
 
   return (
-    <div className={clsx("overflow-hidden rounded-[26px]", dark ? "bg-graphite ring-1 ring-graphite-line" : "bg-white shadow-[var(--shadow-soft)] ring-1 ring-line")}>
-      <div className={clsx("flex items-center justify-between px-5 pt-4", dark ? "text-porcelain" : "")}>
-        <p className="flex items-center gap-2 text-[14px] font-medium">
-          <Icon name="bolt" size={16} className={dark ? "text-brand" : ""} /> Quick order
+    <div
+      className={clsx(
+        "overflow-hidden rounded-surface",
+        dark
+          ? "bg-graphite ring-1 ring-graphite-line"
+          : "bg-white shadow-[var(--shadow-soft)] ring-1 ring-line",
+      )}
+    >
+      <div
+        className={clsx(
+          "flex items-center justify-between px-5 pt-4",
+          dark ? "text-porcelain" : "",
+        )}
+      >
+        <p className="flex items-center gap-2 text-support font-medium">
+          <Icon name="bolt" size={16} className={dark ? "text-brand" : ""} />{" "}
+          Quick order
         </p>
         <button
           type="button"
           onClick={() => setText(example())}
-          className={clsx("h-7 px-1.5 text-[12.5px] underline-offset-2 hover:underline", dark ? "text-mute-dark" : "text-mute")}
+          className={clsx(
+            "h-7 px-1.5 text-meta underline-offset-2 hover:underline",
+            dark ? "text-mute-dark" : "text-mute",
+          )}
         >
           Try an example
         </button>
@@ -61,33 +91,76 @@ export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "he
         spellCheck={false}
         placeholder={`Paste SKUs or describe items — one per line\n${productBySlug("nitrile-gloves-4mil")!.b2b.sku}, 40\n12 cases copy paper`}
         className={clsx(
-          "num block w-full resize-none bg-transparent px-5 py-3 text-[14px] leading-[1.7] outline-none",
-          dark ? "text-porcelain placeholder:text-mute-dark" : "text-ink placeholder:text-mute",
+          "num block w-full resize-none bg-transparent px-5 py-3 text-support leading-[1.7] outline-none",
+          dark
+            ? "text-porcelain placeholder:text-mute-dark"
+            : "text-ink placeholder:text-mute",
         )}
       />
       {lines.length > 0 && (
-        <ul className={clsx("max-h-[260px] overflow-y-auto border-t px-3 py-2 thin-scroll", dark ? "border-graphite-line" : "border-line")}>
+        <ul
+          className={clsx(
+            "max-h-[260px] overflow-y-auto border-t px-3 py-2 thin-scroll",
+            dark ? "border-graphite-line" : "border-line",
+          )}
+        >
           {lines.map((l, i) => {
             const p = l.product;
             const unit = p ? unitPrice(p, l.qty, { contract: true }) : 0;
             return (
-              <li key={i} className="flex items-center gap-3 rounded-xl px-2 py-2">
+              <li
+                key={i}
+                className="flex items-center gap-3 rounded-control px-2 py-2"
+              >
                 {p ? (
-                  <ProductImage product={p} sizes="40px" className="h-10 w-10 shrink-0 rounded-lg" />
+                  <ProductImage
+                    product={p}
+                    sizes="40px"
+                    className="h-10 w-10 shrink-0 rounded-control"
+                  />
                 ) : (
-                  <span className={clsx("grid h-10 w-10 shrink-0 place-items-center rounded-lg", dark ? "bg-graphite-2" : "bg-mist")}>
+                  <span
+                    className={clsx(
+                      "grid h-10 w-10 shrink-0 place-items-center rounded-control",
+                      dark ? "bg-graphite-2" : "bg-mist",
+                    )}
+                  >
                     <Icon name="help" size={16} />
                   </span>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className={clsx("truncate text-[13.5px] font-medium", dark ? "text-porcelain" : "")}>
-                    {p ? p.name : <span className="text-danger">No match for “{l.raw}”</span>}
+                  <p
+                    className={clsx(
+                      "truncate text-support font-medium",
+                      dark ? "text-porcelain" : "",
+                    )}
+                  >
+                    {p ? (
+                      p.name
+                    ) : (
+                      <span className="text-danger">
+                        No match for “{l.raw}”
+                      </span>
+                    )}
                   </p>
-                  <p className={clsx("truncate text-[11.5px]", dark ? "text-mute-dark" : "text-mute")}>
+                  <p
+                    className={clsx(
+                      "truncate text-meta",
+                      dark ? "text-mute-dark" : "text-mute",
+                    )}
+                  >
                     {p ? (
                       <>
-                        {l.match === "sku" ? "SKU match" : "Matched by description"} · {p.b2b.sku}
-                        {tierSavingPct(p, unit) > 0 && <span className={dark ? "text-brand" : "text-sale"}> · −{tierSavingPct(p, unit)}% volume</span>}
+                        {l.match === "sku"
+                          ? "SKU match"
+                          : "Matched by description"}{" "}
+                        · {p.b2b.sku}
+                        {tierSavingPct(p, unit) > 0 && (
+                          <span className={dark ? "text-brand" : "text-sale"}>
+                            {" "}
+                            · −{tierSavingPct(p, unit)}% volume
+                          </span>
+                        )}
                       </>
                     ) : (
                       "Try a SKU or a simpler description"
@@ -95,9 +168,21 @@ export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "he
                   </p>
                 </div>
                 {p && (
-                  <div className={clsx("text-right text-[12.5px]", dark ? "text-porcelain" : "")}>
-                    <p className="num font-medium">{fmt(unit * l.qty, { cents: true })}</p>
-                    <p className={clsx("num", dark ? "text-mute-dark" : "text-mute")}>
+                  <div
+                    className={clsx(
+                      "text-right text-meta",
+                      dark ? "text-porcelain" : "",
+                    )}
+                  >
+                    <p className="num font-medium">
+                      {fmt(unit * l.qty, { cents: true })}
+                    </p>
+                    <p
+                      className={clsx(
+                        "num",
+                        dark ? "text-mute-dark" : "text-mute",
+                      )}
+                    >
                       {l.qty} × {fmt(unit, { cents: true })}
                     </p>
                   </div>
@@ -107,12 +192,26 @@ export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "he
           })}
         </ul>
       )}
-      <div className={clsx("flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3.5", dark ? "border-graphite-line" : "border-line")}>
-        <p className={clsx("text-[12.5px]", dark ? "text-mute-dark" : "text-mute")}>
+      <div
+        className={clsx(
+          "flex flex-wrap items-center justify-between gap-3 border-t px-5 py-3.5",
+          dark ? "border-graphite-line" : "border-line",
+        )}
+      >
+        <p className={clsx("text-meta", dark ? "text-mute-dark" : "text-mute")}>
           {matched.length ? (
             <>
-              <span className={clsx("num text-[15px] font-medium", dark ? "text-porcelain" : "text-ink")}>{fmt(total, { cents: true })}</span>
-              {list > total && <span className="num"> · saves {fmt(list - total)}</span>}
+              <span
+                className={clsx(
+                  "num text-body font-medium",
+                  dark ? "text-porcelain" : "text-ink",
+                )}
+              >
+                {fmt(total, { cents: true })}
+              </span>
+              {list > total && (
+                <span className="num"> · saves {fmt(list - total)}</span>
+              )}
             </>
           ) : (
             "SKUs, product names or spreadsheet rows all work"
@@ -120,11 +219,16 @@ export function QuickOrder({ variant = "full", tone = "light" }: { variant?: "he
         </p>
         <div className="flex gap-2">
           {variant === "hero" && (
-            <Link href="/business?tab=quick" className={clsx("btn btn-sm", dark ? "btn-on-dark" : "btn-ghost")}>
+            <Link href="/business?tab=quick" className="btn btn-secondary">
               Upload CSV
             </Link>
           )}
-          <button type="button" disabled={!matched.length} onClick={addAll} className={clsx("btn btn-sm", dark ? "btn-brand" : "btn-ink")}>
+          <button
+            type="button"
+            disabled={!matched.length}
+            onClick={addAll}
+            className="btn btn-primary"
+          >
             Add {matched.length || ""} to cart
           </button>
         </div>

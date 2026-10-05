@@ -18,10 +18,10 @@ export function ProductRail({
 }) {
   if (!products.length) return null;
   return (
-    <section aria-label={title} className="rounded-xl bg-white p-4 shadow-[var(--shadow-hair)] sm:p-5">
+    <section aria-label={title} className="rounded-control bg-white p-4 shadow-[var(--shadow-hair)] sm:p-5">
       <div className="flex items-baseline justify-between gap-4">
-        <h2 className="text-[19px] font-semibold tracking-[-0.01em] sm:text-[21px]">{title}</h2>
-        <Link href={href} className="shrink-0 text-[13.5px] font-medium text-brand-deep hover:underline">
+        <h2 className="text-emphasis font-semibold tracking-[-0.01em] sm:text-emphasis">{title}</h2>
+        <Link href={href} className="shrink-0 text-support font-medium text-brand-deep hover:underline">
           See all
         </Link>
       </div>

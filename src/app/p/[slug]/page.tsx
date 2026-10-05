@@ -77,7 +77,7 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
   return (
     <div className="shell pt-6">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-      <nav aria-label="Breadcrumb" className="mb-6 text-[13px] text-mute">
+      <nav aria-label="Breadcrumb" className="mb-6 text-support text-mute">
         <ol className="flex flex-wrap items-center gap-1.5">
           <li><Link href="/" className="hover:text-ink">Home</Link></li>
           <li aria-hidden>/</li>
@@ -93,17 +93,17 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
       <section aria-labelledby="brief" className="mt-24">
         <Eyebrow index="01">Ayiin Brief</Eyebrow>
         <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_2fr]">
-          <h2 id="brief" className="display text-[44px] sm:text-[56px]">
+          <h2 id="brief" className="display text-display-sm sm:text-display-md">
             The short version, from <span className="tabular-nums">{p.reviewCount.toLocaleString("en-US")}</span> owners.
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
-            <div className="panel-ink rounded-[24px] p-6">
+            <div className="panel-ink rounded-surface p-6">
               <p className="eyebrow !text-mute-dark">Best for</p>
-              <p className="mt-3 text-[20px] font-medium leading-snug tracking-[-0.02em]">{p.brief.bestFor}</p>
+              <p className="mt-3 text-emphasis font-medium leading-snug tracking-[-0.02em]">{p.brief.bestFor}</p>
             </div>
-            <div className="rounded-[24px] bg-white p-6 shadow-[var(--shadow-hair)]">
+            <div className="rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]">
               <p className="eyebrow">What owners love</p>
-              <ul className="mt-3 space-y-2.5 text-[14.5px]">
+              <ul className="mt-3 space-y-2.5 text-support">
                 {p.brief.pros.map((x) => (
                   <li key={x} className="flex gap-2.5">
                     <span className="mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-brand shadow-[inset_0_0_0_1px_var(--color-ink)]">
@@ -114,9 +114,9 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
                 ))}
               </ul>
             </div>
-            <div className="rounded-[24px] bg-white p-6 shadow-[var(--shadow-hair)]">
+            <div className="rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]">
               <p className="eyebrow">Worth knowing</p>
-              <ul className="mt-3 space-y-2.5 text-[14.5px]">
+              <ul className="mt-3 space-y-2.5 text-support">
                 {p.brief.cons.map((x) => (
                   <li key={x} className="flex gap-2.5">
                     <span className="mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-soft">
@@ -137,20 +137,20 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
               <Eyebrow index="02">Is there a better option?</Eyebrow>
-              <h2 id="better" className="display mt-4 text-[44px] sm:text-[56px]">Maybe. Here&apos;s the honest answer.</h2>
+              <h2 id="better" className="display mt-4 text-display-sm sm:text-display-md">Maybe. Here&apos;s the honest answer.</h2>
             </div>
-            <Link href={`/compare?ids=${[p.id, ...alts.map((a) => a.product.id)].join(",")}`} className="btn btn-ghost shrink-0">
+            <Link href={`/compare?ids=${[p.id, ...alts.map((a) => a.product.id)].join(",")}`} className="btn btn-secondary shrink-0">
               <Icon name="compare" size={16} /> Compare all {alts.length + 1}
             </Link>
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-3">
             {alts.map(({ product: a, label, why }) => (
-              <Link key={a.id} href={`/p/${a.slug}`} className="group flex gap-4 rounded-[24px] bg-white p-4 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]">
-                <ProductImage product={a} sizes="112px" className="h-28 w-28 shrink-0 rounded-2xl" />
+              <Link key={a.id} href={`/p/${a.slug}`} className="group flex gap-4 rounded-surface bg-white p-4 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]">
+                <ProductImage product={a} sizes="112px" className="h-28 w-28 shrink-0 rounded-surface" />
                 <div className="min-w-0 py-1">
-                  <span className="inline-flex rounded-full bg-mist px-2.5 py-1 text-[11.5px] font-medium">{label}</span>
-                  <p className="mt-2 line-clamp-2 text-[14.5px] font-medium leading-snug group-hover:underline">{a.name}</p>
-                  <p className="mt-1 text-[12.5px] text-mute">{why}</p>
+                  <span className="inline-flex rounded-full bg-mist px-2.5 py-1 text-meta font-medium">{label}</span>
+                  <p className="mt-2 line-clamp-2 text-support font-medium leading-snug group-hover:underline">{a.name}</p>
+                  <p className="mt-1 text-meta text-mute">{why}</p>
                   <p className="mt-2"><Price usd={a.price} size="sm" /></p>
                 </div>
               </Link>
@@ -163,23 +163,23 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
       <section aria-labelledby="details" className="mt-24 grid gap-10 lg:grid-cols-2 lg:gap-16">
         <div>
           <Eyebrow index="03">Details</Eyebrow>
-          <h2 id="details" className="display mt-4 text-[44px] sm:text-[56px]">What you&apos;re getting.</h2>
+          <h2 id="details" className="display mt-4 text-display-sm sm:text-display-md">What you&apos;re getting.</h2>
           <ul className="mt-8 grid gap-3 sm:grid-cols-2">
             {p.highlights.map((h) => (
-              <li key={h} className="rounded-2xl bg-white p-4 text-[14.5px] font-medium shadow-[var(--shadow-hair)]">
+              <li key={h} className="rounded-surface bg-white p-4 text-support font-medium shadow-[var(--shadow-hair)]">
                 <SignalDot tone="mute" className="mr-2" /> {h}
               </li>
             ))}
           </ul>
-          <div className="mt-8 rounded-[24px] bg-white p-6 shadow-[var(--shadow-hair)]">
+          <div className="mt-8 rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]">
             <div className="flex items-center justify-between">
-              <p className="text-[15px] font-medium">Price history · 12 weeks</p>
-              <span className={insight.verifiedDeal ? "rounded-full bg-brand px-2.5 py-1 text-[12px] font-medium" : "rounded-full bg-mist px-2.5 py-1 text-[12px]"}>
+              <p className="text-body font-medium">Price history · 12 weeks</p>
+              <span className={insight.verifiedDeal ? "rounded-full bg-brand px-2.5 py-1 text-meta font-medium" : "rounded-full bg-mist px-2.5 py-1 text-meta"}>
                 {insight.label}
               </span>
             </div>
             <PriceHistory history={p.history} height={110} className="mt-5" />
-            <div className="mt-3 flex justify-between text-[12.5px] text-mute">
+            <div className="mt-3 flex justify-between text-meta text-mute">
               <span>Low <Money usd={Math.min(...p.history)} /></span>
               <span>Typical <Money usd={Math.round(insight.typical)} /></span>
               <span>High <Money usd={Math.max(...p.history)} /></span>
@@ -187,14 +187,14 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
           </div>
         </div>
         <div>
-          <dl className="divide-y divide-line overflow-hidden rounded-[24px] bg-white shadow-[var(--shadow-hair)] lg:mt-[120px]">
+          <dl className="divide-y divide-line overflow-hidden rounded-surface bg-white shadow-[var(--shadow-hair)] lg:mt-[120px]">
             {Object.entries(p.specs).map(([k, v]) => (
-              <div key={k} className="grid grid-cols-[150px_1fr] gap-4 px-6 py-4 text-[14px]">
+              <div key={k} className="grid grid-cols-[150px_1fr] gap-4 px-6 py-4 text-support">
                 <dt className="text-mute">{k}</dt>
                 <dd>{v}</dd>
               </div>
             ))}
-            <div className="grid grid-cols-[150px_1fr] gap-4 px-6 py-4 text-[14px]">
+            <div className="grid grid-cols-[150px_1fr] gap-4 px-6 py-4 text-support">
               <dt className="text-mute">SKU</dt>
               <dd className="num">{p.b2b.sku}</dd>
             </div>
@@ -206,7 +206,7 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
       {bundle.length > 1 && (
         <section aria-labelledby="together" className="mt-24">
           <Eyebrow index="04">Bought together</Eyebrow>
-          <h2 id="together" className="display mb-8 mt-4 text-[44px] sm:text-[56px]">Complete it in one delivery.</h2>
+          <h2 id="together" className="display mb-8 mt-4 text-display-sm sm:text-display-md">Complete it in one delivery.</h2>
           <Bundle items={bundle} />
         </section>
       )}
@@ -214,7 +214,7 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
       {/* Reviews */}
       <section id="reviews" aria-labelledby="reviews-h" className="mt-24 scroll-mt-24">
         <Eyebrow index="05">Reviews</Eyebrow>
-        <h2 id="reviews-h" className="display mb-10 mt-4 text-[44px] sm:text-[56px]">Only from people who bought it.</h2>
+        <h2 id="reviews-h" className="display mb-10 mt-4 text-display-sm sm:text-display-md">Only from people who bought it.</h2>
         <Reviews product={p} />
       </section>
 

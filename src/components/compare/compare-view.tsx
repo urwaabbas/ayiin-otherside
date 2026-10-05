@@ -47,16 +47,16 @@ export function CompareView() {
   if (items.length === 0) {
     const suggestions = [...products].sort((a, b) => b.soldLastWeek - a.soldLastWeek).slice(0, 4);
     return (
-      <div className="mt-10 rounded-[32px] bg-white p-8 text-center shadow-[var(--shadow-hair)] sm:p-14">
+      <div className="mt-10 rounded-surface bg-white p-8 text-center shadow-[var(--shadow-hair)] sm:p-14">
         <span className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-mist">
           <Icon name="compare" size={24} />
         </span>
-        <p className="display mt-6 text-[40px]">Nothing to compare yet.</p>
-        <p className="mx-auto mt-3 max-w-md text-[15px] text-mute">Tap the compare icon on any product. Ayiin lines them up and hides everything that&apos;s identical.</p>
+        <p className="display mt-6 text-display-sm">Nothing to compare yet.</p>
+        <p className="mx-auto mt-3 max-w-md text-body text-mute">Tap the compare icon on any product. Ayiin lines them up and hides everything that&apos;s identical.</p>
         <div className="mx-auto mt-8 grid max-w-3xl grid-cols-2 gap-3 sm:grid-cols-4">
           {suggestions.map((p) => (
-            <button key={p.id} type="button" onClick={() => toggle(p.id)} className="group rounded-2xl bg-porcelain p-2 text-left text-[13px]">
-              <ProductImage product={p} className="aspect-square w-full rounded-xl" />
+            <button key={p.id} type="button" onClick={() => toggle(p.id)} className="group rounded-surface bg-porcelain p-2 text-left text-support">
+              <ProductImage product={p} className="aspect-square w-full rounded-control" />
               <span className="mt-2 flex items-center justify-between gap-2 px-1">
                 <span className="truncate">{p.name}</span>
                 <Icon name="plus" size={14} className="shrink-0" />
@@ -108,11 +108,11 @@ export function CompareView() {
   return (
     <div className="mt-8">
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-[14px] text-ink-2">
+        <p className="text-support text-ink-2">
           {items.length} products · {rows.filter((r) => new Set(r.raw).size > 1).length} differences
         </p>
         <div className="flex items-center gap-3">
-          <label className="flex cursor-pointer items-center gap-2.5 text-[13.5px]">
+          <label className="flex cursor-pointer items-center gap-2.5 text-support">
             Differences only
             <button type="button" role="switch" aria-checked={diffOnly} onClick={() => setDiffOnly((d) => !d)} className={clsx("relative h-6 w-10 rounded-full transition-colors", diffOnly ? "bg-ink" : "bg-line-strong")}>
               <span className={clsx("absolute top-1 h-4 w-4 rounded-full transition-all", diffOnly ? "left-5 bg-brand" : "left-1 bg-white")} />
@@ -123,8 +123,8 @@ export function CompareView() {
           </button>
         </div>
       </div>
-      <div className="overflow-x-auto rounded-[28px] bg-white shadow-[var(--shadow-hair)] thin-scroll">
-        <table className="w-full min-w-[720px] table-fixed border-collapse text-left text-[14px]">
+      <div className="overflow-x-auto rounded-surface bg-white shadow-[var(--shadow-hair)] thin-scroll">
+        <table className="w-full min-w-[720px] table-fixed border-collapse text-left text-support">
           <colgroup>
             <col className="w-[180px]" />
             {items.map((p) => (
@@ -133,7 +133,7 @@ export function CompareView() {
           </colgroup>
           <thead className="sticky top-0 z-10 bg-white">
             <tr>
-              <th scope="col" className="p-5 align-bottom text-[13px] font-normal text-mute">
+              <th scope="col" className="p-5 align-bottom text-support font-normal text-mute">
                 {items.length < 4 && (
                   <Link href="/search" className="flex h-full flex-col items-start gap-2 text-ink-2 hover:text-ink">
                     <span className="grid h-10 w-10 place-items-center rounded-full border border-dashed border-line-strong">
@@ -150,10 +150,10 @@ export function CompareView() {
                       <Icon name="close" size={14} />
                     </button>
                     <Link href={`/p/${p.slug}`} aria-label={p.name} tabIndex={-1}>
-                      <ProductImage product={p} sizes="(min-width: 1024px) 22vw, 45vw" className="aspect-[4/3] w-full rounded-2xl" />
+                      <ProductImage product={p} sizes="(min-width: 1024px) 22vw, 45vw" className="aspect-[4/3] w-full rounded-surface" />
                     </Link>
                   </div>
-                  <Link href={`/p/${p.slug}`} className="mt-3 block text-[15px] font-medium leading-snug hover:underline">
+                  <Link href={`/p/${p.slug}`} className="mt-3 block text-body font-medium leading-snug hover:underline">
                     {p.name}
                   </Link>
                   <button
@@ -162,7 +162,7 @@ export function CompareView() {
                       addToCart(p.id, p.variants[0].id, business ? Math.max(p.b2b.moq, 1) : 1, business);
                       notify(business ? "Added to cart" : "Added to cart", p.name);
                     }}
-                    className="btn btn-ink btn-sm mt-3 w-full"
+                    className="btn btn-secondary mt-3 w-full"
                   >
                     {business ? "Add to cart" : "Add to cart"}
                   </button>
@@ -173,7 +173,7 @@ export function CompareView() {
           {groups.map((g) => (
             <tbody key={g}>
               <tr>
-                <th colSpan={items.length + 1} scope="colgroup" className="bg-porcelain px-5 py-2.5 font-mono text-[10.5px] font-normal uppercase tracking-[0.14em] text-mute">
+                <th colSpan={items.length + 1} scope="colgroup" className="bg-porcelain px-5 py-2.5 font-mono text-meta font-normal uppercase tracking-[0.14em] text-mute">
                   {g}
                 </th>
               </tr>

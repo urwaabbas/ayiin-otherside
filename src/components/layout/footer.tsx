@@ -60,20 +60,20 @@ export function Footer({ mode }: { mode: Mode }) {
       <section aria-label="The Ayiin promise" className="mx-auto max-w-[1520px] px-3 text-ink sm:px-4">
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {PROMISES.map((p) => (
-            <li key={p.title} className="flex gap-3 rounded-xl bg-white p-4 shadow-[var(--shadow-hair)]">
+            <li key={p.title} className="flex gap-3 rounded-control bg-white p-4 shadow-[var(--shadow-hair)]">
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-soft text-brand-deep">
                 <Icon name={p.icon} size={19} />
               </span>
               <div>
-                <p className="text-[14.5px] font-semibold">{p.title}</p>
-                <p className="mt-0.5 text-[13px] text-mute">{p.body}</p>
+                <p className="text-support font-semibold">{p.title}</p>
+                <p className="mt-0.5 text-support text-mute">{p.body}</p>
               </div>
             </li>
           ))}
         </ul>
       </section>
 
-      <a href="#main" className="mt-10 block bg-graphite py-3 text-center text-[13px] font-medium text-white/90 hover:text-brand">
+      <a href="#main" className="mt-10 block bg-graphite py-3 text-center text-support font-medium text-white/90 hover:text-brand">
         Back to top
       </a>
 
@@ -85,11 +85,11 @@ export function Footer({ mode }: { mode: Mode }) {
         <div className="mx-auto max-w-[1520px] px-4 pt-10 sm:px-6">
           <div className="grid gap-4 lg:grid-cols-[1.1fr_2fr]">
             {/* Brand + newsletter — glass panel */}
-            <div className="rounded-2xl bg-white/[0.06] p-6 ring-1 ring-white/10 backdrop-blur-xl">
+            <div className="rounded-surface bg-white/[0.06] p-6 ring-1 ring-white/10 backdrop-blur-xl">
               <Link href="/" aria-label="Ayiin home" className="inline-flex">
                 <AyiinLogo on="dark" className="h-10" />
               </Link>
-              <p className="mt-4 max-w-[320px] text-[14px] leading-relaxed text-white/75">
+              <p className="mt-4 max-w-[320px] text-support leading-relaxed text-white/75">
                 {business ? "Procurement for teams: volume pricing, quotes, approvals and net terms." : "The marketplace with real prices, exact delivery dates and verified sellers."}
               </p>
               <div className="mt-5 max-w-[340px]">
@@ -97,11 +97,11 @@ export function Footer({ mode }: { mode: Mode }) {
               </div>
             </div>
             {/* Link columns — glass panel */}
-            <div className="grid grid-cols-2 gap-6 rounded-2xl bg-white/[0.06] p-6 ring-1 ring-white/10 backdrop-blur-xl sm:grid-cols-4">
+            <div className="grid grid-cols-2 gap-6 rounded-surface bg-white/[0.06] p-6 ring-1 ring-white/10 backdrop-blur-xl sm:grid-cols-4">
               {cols.map((col) => (
                 <nav key={col.title} aria-label={col.title}>
-                  <p className="text-[14.5px] font-semibold">{col.title}</p>
-                  <ul className="mt-3 space-y-2 text-[13.5px] text-white/70">
+                  <p className="text-support font-semibold">{col.title}</p>
+                  <ul className="mt-3 space-y-2 text-support text-white/70">
                     {col.links.map(([label, href]) => (
                       <li key={href}>
                         <Link href={href} className="hover:text-brand">
@@ -115,12 +115,11 @@ export function Footer({ mode }: { mode: Mode }) {
             </div>
           </div>
 
-          {/* The big logo */}
-          <Link href="/" aria-label="Ayiin home" className="mt-14 block">
+          <Link href="/" aria-label="Ayiin home" className="mx-auto mt-12 block w-full max-w-[300px]">
             <AyiinLogo on="dark" className="!h-auto !w-full opacity-95" />
           </Link>
 
-          <div className="mt-10 flex flex-col gap-3 border-t border-white/10 py-6 text-[12.5px] text-white/60 sm:flex-row sm:items-center sm:justify-between">
+          <div className="mt-10 flex flex-col gap-3 border-t border-white/10 py-6 text-meta text-white/60 sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 Ayiin Inc. · Multi-vendor marketplace for people and companies.</p>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
               <Link href="/help#privacy" className="hover:text-white">Privacy</Link>
@@ -128,7 +127,7 @@ export function Footer({ mode }: { mode: Mode }) {
               <Link href="/help#accessibility" className="hover:text-white">Accessibility</Link>
               <span className="flex gap-1.5">
                 {["Visa", "Mastercard", "Amex", "PayPal"].map((m) => (
-                  <span key={m} className="rounded-md bg-white/[0.06] px-1.5 py-0.5 text-[10.5px] text-white/75 ring-1 ring-white/15 backdrop-blur">{m}</span>
+                  <span key={m} className="rounded-compact bg-white/[0.06] px-1.5 py-0.5 text-meta text-white/75 ring-1 ring-white/15 backdrop-blur">{m}</span>
                 ))}
               </span>
             </div>

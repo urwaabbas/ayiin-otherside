@@ -108,7 +108,7 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
 
   return (
     <div
-      className="relative overflow-hidden rounded-[32px] bg-white shadow-[var(--shadow-lift)]"
+      className="relative overflow-hidden rounded-surface bg-white shadow-[var(--shadow-lift)]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -153,7 +153,7 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
             />
           ))}
         </div>
-        <span className="absolute bottom-4 left-5 inline-flex items-center gap-2 rounded-full bg-white/90 py-1.5 pl-3 pr-3 text-[12px] font-medium shadow-[var(--shadow-hair)] backdrop-blur">
+        <span className="absolute bottom-4 left-5 inline-flex items-center gap-2 rounded-full bg-white/90 py-1.5 pl-3 pr-3 text-meta font-medium shadow-[var(--shadow-hair)] backdrop-blur">
           <AyiinLogo on="light" className="h-4" />
           Clarity
         </span>
@@ -163,18 +163,18 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
         <div key={p.id} className="animate-fade">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
-              <p className="text-[12.5px] text-mute">{p.brand}</p>
-              <h3 className="mt-0.5 text-[18px] font-medium leading-tight tracking-[-0.02em]">{p.name}</h3>
+              <p className="text-meta text-mute">{p.brand}</p>
+              <h3 className="mt-0.5 text-emphasis font-medium leading-tight tracking-[-0.02em]">{p.name}</h3>
             </div>
             <div className="text-right">
               <Price usd={p.price} size="lg" />
-              {insight.verifiedDeal && <p className="mt-1 whitespace-nowrap text-[11.5px] font-medium text-brand-deep">✓ {insight.label}</p>}
+              {insight.verifiedDeal && <p className="mt-1 whitespace-nowrap text-meta font-medium text-brand-deep">✓ {insight.label}</p>}
             </div>
           </div>
           <dl className="mt-4 divide-y divide-line border-t border-line">
             {rows.map((r, n) => (
-              <div key={r.q} className="grid animate-rise grid-cols-[118px_1fr] items-baseline gap-3 py-2.5 text-[13.5px]" style={{ animationDelay: `${120 + n * 70}ms` }}>
-                <dt className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.12em] text-mute">
+              <div key={r.q} className="grid animate-rise grid-cols-[118px_1fr] items-baseline gap-3 py-2.5 text-support" style={{ animationDelay: `${120 + n * 70}ms` }}>
+                <dt className="flex items-center gap-2 font-mono text-meta uppercase tracking-[0.12em] text-mute">
                   <Icon name={r.icon} size={13} className="shrink-0 translate-y-[1px]" />
                   {r.q}
                 </dt>

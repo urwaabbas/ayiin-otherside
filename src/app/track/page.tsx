@@ -8,8 +8,8 @@ export default function TrackPage() {
   return (
     <div className="shell pt-6 lg:pt-8">
       <p className="eyebrow">Track order</p>
-      <h1 className="display mt-3 text-[48px] sm:text-[80px]">Where it is, exactly.</h1>
-      <Suspense fallback={<div className="mt-10 h-[400px] rounded-[28px] bg-mist" />}>
+      <h1 className="display mt-3 text-display-sm sm:text-display-lg">Where it is, exactly.</h1>
+      <Suspense fallback={<div className="mt-10 h-[400px] rounded-surface bg-mist" />}>
         <TrackView />
       </Suspense>
     </div>

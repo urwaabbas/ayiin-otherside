@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Order confirmed", robots: { index: f
 export default function ConfirmationPage() {
   return (
     <div className="shell pt-6 lg:pt-8">
-      <Suspense fallback={<div className="mt-10 h-[500px] rounded-[28px] bg-mist" />}>
+      <Suspense fallback={<div className="mt-10 h-[500px] rounded-surface bg-mist" />}>
         <ConfirmationView />
       </Suspense>
     </div>

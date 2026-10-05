@@ -22,9 +22,9 @@ export function ConfirmationView() {
   if (!hydrated) return <Loading label="Loading order"><SplitSkeleton rows={2} tall /></Loading>;
   if (!order) {
     return (
-      <div className="mt-10 rounded-[32px] bg-white p-12 text-center shadow-[var(--shadow-hair)]">
-        <p className="display text-[40px]">We couldn&apos;t find that order.</p>
-        <Link href="/track" className="btn btn-ink mt-6">Track an order</Link>
+      <div className="mt-10 rounded-surface bg-white p-12 text-center shadow-[var(--shadow-hair)]">
+        <p className="display text-display-sm">We couldn&apos;t find that order.</p>
+        <Link href="/track" className="btn btn-secondary mt-6">Track an order</Link>
       </div>
     );
   }
@@ -48,14 +48,14 @@ export function ConfirmationView() {
 
   return (
     <div className="mt-8 grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:gap-12">
-      <div className="panel-ink relative overflow-hidden rounded-[32px] p-7 sm:p-10">
+      <div className="panel-ink relative overflow-hidden rounded-surface p-7 sm:p-10">
         <div aria-hidden className="grid-texture-dark pointer-events-none absolute inset-0 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
         <div className="relative">
           <span className="grid h-12 w-12 place-items-center rounded-full bg-brand text-ink">
             <Icon name={awaiting ? "clock" : "check"} size={22} strokeWidth={2.2} />
           </span>
-          <h1 className="display mt-6 text-[44px] sm:text-[64px]">{awaiting ? "Sent for approval." : "It’s on its way."}</h1>
-          <p className="mt-3 max-w-md text-[15px] text-mute-dark">
+          <h1 className="display mt-6 text-display-sm sm:text-display-md">{awaiting ? "Sent for approval." : "It’s on its way."}</h1>
+          <p className="mt-3 max-w-md text-body text-mute-dark">
             Order <span className="num text-porcelain">{order.id}</span>
             {order.po && (
               <>
@@ -72,22 +72,22 @@ export function ConfirmationView() {
                   {done ? <Icon name="check" size={13} strokeWidth={2.6} /> : <span className="h-1.5 w-1.5 rounded-full bg-mute-dark" />}
                 </span>
                 <div>
-                  <p className="text-[15px] font-medium">{label}</p>
-                  <p className="text-[13px] text-mute-dark">{when}</p>
+                  <p className="text-body font-medium">{label}</p>
+                  <p className="text-support text-mute-dark">{when}</p>
                 </div>
               </li>
             ))}
           </ol>
           <div className="mt-10 flex flex-wrap gap-3">
-            <Link href={`/track?order=${order.id}`} className="btn btn-brand">Track order</Link>
-            <Link href="/" className="btn btn-on-dark">Keep browsing</Link>
+            <Link href={`/track?order=${order.id}`} className="btn btn-primary">Track order</Link>
+            <Link href="/" className="btn btn-secondary">Keep browsing</Link>
           </div>
         </div>
       </div>
 
       <div className="space-y-4">
-        <div className="rounded-[28px] bg-white p-6 shadow-[var(--shadow-hair)]">
-          <p className="text-[16px] font-medium">What you ordered</p>
+        <div className="rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]">
+          <p className="text-body font-medium">What you ordered</p>
           <ul className="mt-4 space-y-3">
             {order.items.map((i) => {
               const p = productById(i.productId);
@@ -95,12 +95,12 @@ export function ConfirmationView() {
               const variant = p.variants.find((v) => v.id === i.variantId) ?? p.variants[0];
               return (
                 <li key={i.productId + i.variantId} className="flex items-center gap-3">
-                  <ProductImage product={p} variant={variant.id} sizes="56px" className="h-14 w-14 shrink-0 rounded-xl" />
+                  <ProductImage product={p} variant={variant.id} sizes="56px" className="h-14 w-14 shrink-0 rounded-control" />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13.5px] font-medium">{p.name}</span>
-                    <span className="block text-[12px] text-mute">Qty {i.qty} · {variant.name}</span>
+                    <span className="block truncate text-support font-medium">{p.name}</span>
+                    <span className="block text-meta text-mute">Qty {i.qty} · {variant.name}</span>
                   </span>
-                  <span className="num text-[13.5px]">{fmt(i.price * i.qty, { cents: true })}</span>
+                  <span className="num text-support">{fmt(i.price * i.qty, { cents: true })}</span>
                 </li>
               );
             })}
@@ -109,32 +109,32 @@ export function ConfirmationView() {
             const items = order.items.reduce((s, i) => s + i.price * i.qty, 0);
             const extras = Math.max(0, order.total - items);
             return (
-              <dl className="mt-5 space-y-1.5 border-t border-line pt-4 text-[13.5px]">
+              <dl className="mt-5 space-y-1.5 border-t border-line pt-4 text-support">
                 <div className="flex justify-between"><dt className="text-ink-2">Items</dt><dd className="num">{fmt(items, { cents: true })}</dd></div>
                 <div className="flex justify-between"><dt className="text-ink-2">Delivery & tax</dt><dd className="num">{fmt(extras, { cents: true })}</dd></div>
-                <div className="flex justify-between pt-1 text-[15px] font-medium"><dt>{order.status === "awaiting-approval" ? "Total (on approval)" : "Total paid"}</dt><dd className="num">{fmt(order.total, { cents: true })}</dd></div>
+                <div className="flex justify-between pt-1 text-body font-medium"><dt>{order.status === "awaiting-approval" ? "Total (on approval)" : "Total paid"}</dt><dd className="num">{fmt(order.total, { cents: true })}</dd></div>
               </dl>
             );
           })()}
         </div>
         {order.mode === "personal" && (
-          <div className="rounded-[28px] bg-white p-6 shadow-[var(--shadow-hair)]">
+          <div className="rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]">
             {saved ? (
-              <p className="flex items-center gap-2 text-[14.5px] font-medium">
+              <p className="flex items-center gap-2 text-support font-medium">
                 <Icon name="check" size={18} /> Saved. Next time checkout takes one tap.
               </p>
             ) : (
               <>
-                <p className="text-[16px] font-medium">Save your details for next time?</p>
-                <p className="mt-1 text-[13.5px] text-mute">No password — we&apos;ll email a sign-in link. Your order history, returns and tracking in one place.</p>
-                <button type="button" onClick={() => setSaved(true)} className="btn btn-ink btn-sm mt-4">
+                <p className="text-body font-medium">Save your details for next time?</p>
+                <p className="mt-1 text-support text-mute">No password — we&apos;ll email a sign-in link. Your order history, returns and tracking in one place.</p>
+                <button type="button" onClick={() => setSaved(true)} className="btn btn-secondary mt-4">
                   Save with one tap
                 </button>
               </>
             )}
           </div>
         )}
-        <div className="rounded-[28px] bg-white p-6 text-[13.5px] text-ink-2 shadow-[var(--shadow-hair)]">
+        <div className="rounded-surface bg-white p-6 text-support text-ink-2 shadow-[var(--shadow-hair)]">
           <p className="flex items-center gap-2 font-medium text-ink"><Icon name="returns" size={16} /> Changed your mind?</p>
           <p className="mt-1">Free returns for 30 days after delivery. Start one from the tracking page — label included.</p>
         </div>

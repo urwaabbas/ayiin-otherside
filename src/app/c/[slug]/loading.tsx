@@ -14,7 +14,7 @@ export default function CategoryLoading() {
             ))}
           </div>
         </div>
-        <Skeleton className="h-[220px] w-full !rounded-[28px]" />
+        <Skeleton className="h-[220px] w-full !rounded-surface" />
       </div>
       <div className="mt-12 grid gap-8 lg:grid-cols-[260px_1fr]">
         <div className="hidden space-y-4 lg:block">

@@ -31,7 +31,7 @@ export function Lookbook({ index = "03", items }: { index?: string; items: Produ
               delay={n * 70}
               className={clsx(big && "col-span-2 row-span-2", !big && rest === 2 && "lg:col-span-2", !big && rest === 3 && n === 3 && "col-span-2")}
             >
-              <Link href={`/p/${p.slug}`} className="group relative block h-full overflow-hidden rounded-[26px]" aria-label={`${p.name} — shop the scene`}>
+              <Link href={`/p/${p.slug}`} className="group relative block h-full overflow-hidden rounded-surface" aria-label={`${p.name} — shop the scene`}>
                 <ProductImage
                   product={p}
                   view="scene"
@@ -44,14 +44,14 @@ export function Lookbook({ index = "03", items }: { index?: string; items: Produ
                 </span>
                 <span
                   className={clsx(
-                    "absolute bottom-3 left-3 right-3 flex items-center gap-3 rounded-2xl bg-white/88 p-2.5 pr-3.5 shadow-[var(--shadow-hair)] backdrop-blur-md transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1",
+                    "absolute bottom-3 left-3 right-3 flex items-center gap-3 rounded-surface bg-white/88 p-2.5 pr-3.5 shadow-[var(--shadow-hair)] backdrop-blur-md transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1",
                     big ? "sm:bottom-5 sm:left-5 sm:right-auto sm:max-w-[380px]" : "",
                   )}
                 >
-                  <ProductImage product={p} sizes="48px" className="hidden h-11 w-11 shrink-0 rounded-xl sm:block" />
+                  <ProductImage product={p} sizes="48px" className="hidden h-11 w-11 shrink-0 rounded-control sm:block" />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13.5px] font-medium">{p.name}</span>
-                    <span className="mt-0.5 flex items-center gap-2 text-[12.5px] text-ink-2">
+                    <span className="block truncate text-support font-medium">{p.name}</span>
+                    <span className="mt-0.5 flex items-center gap-2 text-meta text-ink-2">
                       <Price usd={p.price} size="sm" />
                       <span className="text-mute">· {p.brand}</span>
                     </span>

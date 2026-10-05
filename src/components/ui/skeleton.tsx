@@ -2,7 +2,7 @@ import { clsx } from "clsx";
 
 /** Shimmering placeholder block. Decorative — wrap groups in <Loading> for a single announcement. */
 export function Skeleton({ className, dark }: { className?: string; dark?: boolean }) {
-  return <div aria-hidden className={clsx("shimmer rounded-xl", dark && "shimmer-dark", className)} />;
+  return <div aria-hidden className={clsx("shimmer rounded-control", dark && "shimmer-dark", className)} />;
 }
 
 export function Loading({ label = "Loading", children, className }: { label?: string; children: React.ReactNode; className?: string }) {
@@ -17,7 +17,7 @@ export function Loading({ label = "Loading", children, className }: { label?: st
 export function ProductCardSkeleton() {
   return (
     <div>
-      <Skeleton className="aspect-[4/4.4] w-full !rounded-[22px]" />
+      <Skeleton className="aspect-[4/4.4] w-full !rounded-surface" />
       <div className="mt-3.5 space-y-2 px-1">
         <div className="flex justify-between gap-4">
           <Skeleton className="h-3 w-20" />
@@ -44,8 +44,8 @@ export function ProductGridSkeleton({ count = 8, cols = "grid-cols-2 lg:grid-col
 
 export function RowSkeleton() {
   return (
-    <div className="flex gap-4 rounded-[22px] bg-white p-3 shadow-[var(--shadow-hair)]">
-      <Skeleton className="h-24 w-24 shrink-0 !rounded-2xl sm:h-32 sm:w-32" />
+    <div className="flex gap-4 rounded-surface bg-white p-3 shadow-[var(--shadow-hair)]">
+      <Skeleton className="h-24 w-24 shrink-0 !rounded-surface sm:h-32 sm:w-32" />
       <div className="flex-1 space-y-2.5 py-2">
         <Skeleton className="h-3 w-32" />
         <Skeleton className="h-4 w-3/4" />
@@ -78,10 +78,10 @@ export function ProductPageSkeleton() {
       <div className="flex flex-col-reverse gap-3 sm:flex-row lg:col-span-7">
         <div className="flex gap-2 sm:flex-col">
           {Array.from({ length: 4 }).map((_, i) => (
-            <Skeleton key={i} className="aspect-square w-[72px] !rounded-2xl sm:w-[84px]" />
+            <Skeleton key={i} className="aspect-square w-[72px] !rounded-surface sm:w-[84px]" />
           ))}
         </div>
-        <Skeleton className="aspect-square flex-1 !rounded-[32px]" />
+        <Skeleton className="aspect-square flex-1 !rounded-surface" />
       </div>
       <div className="space-y-4 lg:col-span-5">
         <Skeleton className="h-3 w-40" />
@@ -94,12 +94,12 @@ export function ProductPageSkeleton() {
             <Skeleton key={i} className="h-10 w-10 !rounded-full" />
           ))}
         </div>
-        <Skeleton className="h-[148px] w-full !rounded-[22px]" />
+        <Skeleton className="h-[148px] w-full !rounded-surface" />
         <div className="flex gap-3">
           <Skeleton className="h-12 flex-1 !rounded-full" />
           <Skeleton className="h-12 flex-1 !rounded-full" />
         </div>
-        <Skeleton className="h-[120px] w-full !rounded-[22px]" />
+        <Skeleton className="h-[120px] w-full !rounded-surface" />
       </div>
     </div>
   );
@@ -111,8 +111,8 @@ export function SplitSkeleton({ rows = 3, tall }: { rows?: number; tall?: boolea
     <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_380px]">
       <div className="space-y-3">
         {Array.from({ length: rows }).map((_, i) => (
-          <div key={i} className="flex gap-4 rounded-[22px] bg-white p-4 shadow-[var(--shadow-hair)]">
-            <Skeleton className={clsx("shrink-0 !rounded-2xl", tall ? "h-14 w-14" : "h-24 w-24 sm:h-28 sm:w-28")} />
+          <div key={i} className="flex gap-4 rounded-surface bg-white p-4 shadow-[var(--shadow-hair)]">
+            <Skeleton className={clsx("shrink-0 !rounded-surface", tall ? "h-14 w-14" : "h-24 w-24 sm:h-28 sm:w-28")} />
             <div className="flex-1 space-y-2.5 py-1">
               <Skeleton className="h-4 w-3/5" />
               <Skeleton className="h-3 w-2/5" />
@@ -122,7 +122,7 @@ export function SplitSkeleton({ rows = 3, tall }: { rows?: number; tall?: boolea
           </div>
         ))}
       </div>
-      <div className="space-y-3 rounded-[26px] bg-white p-6 shadow-[var(--shadow-hair)]">
+      <div className="space-y-3 rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]">
         <Skeleton className="h-5 w-32" />
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="flex justify-between">
@@ -141,8 +141,8 @@ export function PanelsSkeleton({ count = 4, className = "md:grid-cols-2 lg:grid-
   return (
     <div className={clsx("mt-10 grid gap-4", className)}>
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="space-y-3 rounded-[26px] bg-white p-5 shadow-[var(--shadow-hair)]">
-          <Skeleton className="aspect-[4/3] w-full !rounded-2xl" />
+        <div key={i} className="space-y-3 rounded-surface bg-white p-5 shadow-[var(--shadow-hair)]">
+          <Skeleton className="aspect-[4/3] w-full !rounded-surface" />
           <Skeleton className="h-4 w-3/4" />
           <Skeleton className="h-3 w-1/2" />
           <Skeleton className="h-3 w-2/3" />

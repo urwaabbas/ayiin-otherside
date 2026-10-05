@@ -27,12 +27,12 @@ function Item({
       <span className="relative">
         <Icon name={icon} size={22} strokeWidth={active ? 1.9 : 1.6} />
         {badge ? (
-          <span className="num absolute -right-2.5 -top-1.5 grid h-[17px] min-w-[17px] place-items-center rounded-full bg-brand px-1 text-[10px] font-semibold text-ink ring-2 ring-porcelain">
+          <span className="num absolute -right-2.5 -top-1.5 grid h-[17px] min-w-[17px] place-items-center rounded-full bg-brand px-1 text-meta font-semibold text-ink ring-2 ring-porcelain">
             {badge}
           </span>
         ) : null}
       </span>
-      <span className={clsx("text-[10.5px] tracking-[-0.01em]", active ? "font-medium text-ink" : "text-mute")}>{label}</span>
+      <span className={clsx("text-meta tracking-[-0.01em]", active ? "font-medium text-ink" : "text-mute")}>{label}</span>
       <span aria-hidden className={clsx("absolute top-0 h-[2px] w-6 rounded-full bg-ink transition-opacity", active ? "opacity-100" : "opacity-0")} />
     </>
   );

@@ -96,12 +96,12 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               overlay={
                 <div className="pointer-events-none absolute left-4 right-16 top-4 flex flex-wrap gap-2">
                   {insight.verifiedDeal && !business && (
-                    <span className="glint inline-flex h-8 items-center gap-1.5 rounded-full bg-brand px-3 text-[12.5px] font-medium">
+                    <span className="glint inline-flex h-8 items-center gap-1.5 rounded-full bg-brand px-3 text-meta font-medium">
                       <Icon name="check" size={13} strokeWidth={2.4} /> {insight.label}
                     </span>
                   )}
                   {p.tags.includes("assured") && (
-                    <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/90 px-3 text-[12.5px] font-medium shadow-[var(--shadow-hair)] backdrop-blur">
+                    <span className="inline-flex h-8 items-center gap-1.5 rounded-full bg-white/90 px-3 text-meta font-medium shadow-[var(--shadow-hair)] backdrop-blur">
                       <Icon name="shield" size={13} /> Ayiin Assured
                     </span>
                   )}
@@ -113,7 +113,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
 
         {/* ── Buy box ─────────────────────────────────── */}
         <div className="min-w-0 lg:col-span-5">
-          <div className="flex items-center justify-between gap-3 text-[13px]">
+          <div className="flex items-center justify-between gap-3 text-support">
             <Link href={`/search?q=${encodeURIComponent(p.brand)}`} className="font-medium text-ink-2 hover:text-ink">
               {p.brand}
             </Link>
@@ -149,8 +149,8 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               </button>
             </div>
           </div>
-          <h1 className="mt-1 text-[28px] font-medium leading-[1.12] tracking-[-0.03em] sm:text-[34px]">{p.name}</h1>
-          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px]">
+          <h1 className="mt-1 text-heading font-medium leading-[1.12] tracking-[-0.03em] sm:text-heading">{p.name}</h1>
+          <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-support">
             <a href="#reviews" className="hover:underline">
               <Rating value={p.rating} count={p.reviewCount} />
             </a>
@@ -159,27 +159,27 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
             </span>
             {business && <span className="num text-mute">SKU {p.b2b.sku}</span>}
           </div>
-          <p className="mt-4 text-[15px] leading-relaxed text-ink-2">{p.summary}</p>
+          <p className="mt-4 text-body leading-relaxed text-ink-2">{p.summary}</p>
 
           {/* Price */}
-          <div className="mt-6 rounded-[24px] bg-white p-5 shadow-[var(--shadow-hair)]">
+          <div className="mt-6 rounded-surface bg-white p-5 shadow-[var(--shadow-hair)]">
             {business ? (
               <>
                 <div className="flex items-end justify-between gap-4">
                   <div>
                     <Price usd={unit} size="xl" />
-                    <p className="mt-1 text-[13px] text-mute">
+                    <p className="mt-1 text-support text-mute">
                       per {p.b2b.unit} at {qty.toLocaleString("en-US")} · list <span className="num line-through">{fmt(p.price, { cents: true })}</span>
                     </p>
                   </div>
-                  {tierSavingPct(p, unit) > 0 && <span className="rounded-full bg-brand px-3 py-1.5 text-[13px] font-medium">−{tierSavingPct(p, unit)}%</span>}
+                  {tierSavingPct(p, unit) > 0 && <span className="rounded-full bg-brand px-3 py-1.5 text-support font-medium">−{tierSavingPct(p, unit)}%</span>}
                 </div>
                 {p.b2b.contractPrice && (
-                  <p className="mt-3 flex items-center gap-2 rounded-xl bg-info-soft px-3 py-2 text-[12.5px] text-info">
+                  <p className="mt-3 flex items-center gap-2 rounded-control bg-info-soft px-3 py-2 text-meta text-info">
                     <Icon name="file" size={14} /> Northwind contract price {fmt(p.b2b.contractPrice, { cents: true })} applies at any quantity
                   </p>
                 )}
-                <table className="mt-4 w-full text-[13px]">
+                <table className="mt-4 w-full text-support">
                   <caption className="sr-only">Volume pricing</caption>
                   <thead>
                     <tr className="text-left text-mute">
@@ -207,7 +207,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                     })}
                   </tbody>
                 </table>
-                <p className="mt-3 text-[12.5px] text-mute">
+                <p className="mt-3 text-meta text-mute">
                   MOQ {p.b2b.moq} · {p.b2b.caseQty > 1 ? `Case of ${p.b2b.caseQty} · ` : ""}Lead time {p.b2b.leadDays} business {p.b2b.leadDays === 1 ? "day" : "days"}
                   {p.b2b.taxExemptEligible && " · Tax-exempt eligible"}
                 </p>
@@ -220,7 +220,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                     <PriceHistory history={p.history} height={34} />
                   </div>
                 </div>
-                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-[13px]">
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 text-support">
                   <span className={clsx("inline-flex items-center gap-1.5", insight.verifiedDeal ? "font-medium text-brand-deep" : "text-ink-2")}>
                     {insight.verifiedDeal ? <Icon name="check" size={14} strokeWidth={2.2} /> : <Icon name="trend" size={14} />}
                     {insight.label}
@@ -230,7 +230,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                     <Icon name="bell" size={14} fill={alert ? "currentColor" : "none"} /> {alert ? "Alert on" : "Price alert"}
                   </button>
                 </div>
-                <p className="mt-3 border-t border-line pt-3 text-[13px] text-ink-2">
+                <p className="mt-3 border-t border-line pt-3 text-support text-ink-2">
                   Total to your door: <span className="num font-medium text-ink">{fmt(p.price + shippingCost, { cents: !Number.isInteger(p.price + shippingCost) })}</span>
                   <span className="text-mute"> · {shippingCost ? `includes ${fmt(shippingCost)} delivery` : "free delivery"} · no fees at checkout</span>
                 </p>
@@ -241,7 +241,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
           {/* Variants */}
           {p.variants.length > 1 && (
             <fieldset className="mt-6">
-              <legend className="text-[13.5px]">
+              <legend className="text-support">
                 <span className="text-mute">{p.kind === "serum" || p.kind === "coffeebag" ? "Option" : "Colour"}:</span> <span className="font-medium">{variant.name}</span>
               </legend>
               <div className="mt-2.5 flex flex-wrap gap-2">
@@ -252,7 +252,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                     aria-pressed={variant.id === v.id}
                     onClick={() => setVariant(v)}
                     className={clsx(
-                      "flex items-center gap-2 rounded-full border py-1.5 pl-1.5 pr-3.5 text-[13px] transition-colors",
+                      "flex items-center gap-2 rounded-full border py-1.5 pl-1.5 pr-3.5 text-support transition-colors",
                       variant.id === v.id ? "border-ink bg-white" : "border-line hover:border-line-strong",
                     )}
                   >
@@ -265,17 +265,17 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
           )}
 
           {/* Delivery */}
-          <div className="mt-6 overflow-hidden rounded-[24px] border border-line">
+          <div className="mt-6 overflow-hidden rounded-surface border border-line">
             <div className="flex items-start gap-3 p-4">
               <span className="mt-0.5 grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand shadow-[inset_0_0_0_1.5px_var(--color-ink)]">
                 <Icon name="truck" size={17} />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-[15px]">
+                <p className="text-body">
                   Arrives <span className="font-medium">{arrives}</span>
                   {!express && p.delivery.min !== p.delivery.max && <span className="text-mute"> · 94% on the first date</span>}
                 </p>
-                <p className="mt-0.5 text-[13px] text-mute">
+                <p className="mt-0.5 text-support text-mute">
                   {cutoff ? (
                     <>
                       Order within <span className="num text-ink">{cutoff}</span> · to San Francisco 94107
@@ -287,7 +287,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
               </div>
             </div>
             {!business && (
-              <div className="grid grid-cols-2 border-t border-line text-[13px]">
+              <div className="grid grid-cols-2 border-t border-line text-support">
                 {[
                   { on: !express, label: "Standard", sub: `${deliveryLabel(p)} · ${p.shipping ? fmt(p.shipping) : "Free"}`, set: () => setExpress(false) },
                   { on: express, label: "Express", sub: `${relativeDay(expressDate)} · ${fmt(expressFee)}`, set: () => setExpress(true) },
@@ -302,7 +302,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                 ))}
               </div>
             )}
-            <div className="flex items-center gap-2 border-t border-line px-4 py-3 text-[13px] text-ink-2">
+            <div className="flex items-center gap-2 border-t border-line px-4 py-3 text-support text-ink-2">
               <SignalDot tone={stock.tone} live={stock.tone === "success"} />
               {stock.label}
               <span className="text-mute">· ships from {seller.location.split(" · ")[0]}</span>
@@ -312,12 +312,12 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
           {/* Actions */}
           <div ref={buyRef} className="mt-6 flex flex-wrap items-center gap-3">
             <QtyStepper value={qty} onChange={setQty} min={business ? p.b2b.moq : 1} size="lg" label="Quantity" />
-            <button type="button" onClick={() => add()} className="btn btn-brand btn-lg min-w-[180px] flex-1">
+            <button type="button" onClick={() => add()} className="btn btn-primary min-w-[180px] flex-1">
               <Icon name="bag" size={18} /> {business ? `Add to cart · ${fmt(unit * qty)}` : "Add to cart"}
             </button>
           </div>
           {nt && (
-            <p className="mt-2 text-[13px] text-info">
+            <p className="mt-2 text-support text-info">
               Add {nt.min - qty} more to pay {fmt(nt.price, { cents: true })}/{p.b2b.unit} — saves {fmt((unit - nt.price) * nt.min)}
             </p>
           )}
@@ -325,11 +325,11 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
             {business ? (
               <>
                 <div className="relative">
-                  <button type="button" onClick={() => setListOpen((o) => !o)} aria-expanded={listOpen} className="btn btn-ghost w-full">
+                  <button type="button" onClick={() => setListOpen((o) => !o)} aria-expanded={listOpen} className="btn btn-secondary w-full">
                     <Icon name="list" size={17} /> Add to list
                   </button>
                   {listOpen && (
-                    <div className="absolute left-0 right-0 top-[52px] z-20 rounded-2xl bg-white p-1.5 shadow-[var(--shadow-float)]">
+                    <div className="absolute left-0 right-0 top-[52px] z-20 rounded-surface bg-white p-1.5 shadow-[var(--shadow-float)]">
                       {lists.map((l) => (
                         <button
                           key={l.id}
@@ -339,7 +339,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                             setListOpen(false);
                             notify(`Added to “${l.name}”`, `${qty} × ${p.name}`, { label: "View list", href: `/business?tab=lists&list=${l.id}` });
                           }}
-                          className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-[13px] hover:bg-mist"
+                          className="flex w-full items-center justify-between rounded-control px-3 py-2.5 text-left text-support hover:bg-mist"
                         >
                           {l.name} <span className="text-mute">{l.items.length}</span>
                         </button>
@@ -347,13 +347,13 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                     </div>
                   )}
                 </div>
-                <Link href={`/business?tab=quotes&product=${p.slug}&qty=${qty}`} className="btn btn-ghost w-full">
+                <Link href={`/business?tab=quotes&product=${p.slug}&qty=${qty}`} className="btn btn-secondary w-full">
                   <Icon name="file" size={17} /> Request quote
                 </Link>
               </>
             ) : (
               <>
-                <button type="button" onClick={() => add(true)} className="btn btn-ink col-span-2 w-full">
+                <button type="button" onClick={() => add(true)} className="btn btn-secondary col-span-2 w-full">
                   <Icon name="bolt" size={17} /> Buy now — guest checkout
                 </button>
               </>
@@ -361,7 +361,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
           </div>
 
           {/* Assurance */}
-          <ul className="mt-6 divide-y divide-line rounded-[24px] bg-white text-[13.5px] shadow-[var(--shadow-hair)]">
+          <ul className="mt-6 divide-y divide-line rounded-surface bg-white text-support shadow-[var(--shadow-hair)]">
             <li className="flex gap-3 p-4">
               <Icon name="returns" size={18} className="mt-0.5 shrink-0" />
               <div>
@@ -390,16 +390,16 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
           </ul>
 
           {/* Seller */}
-          <div className="mt-4 rounded-[24px] bg-white p-4 shadow-[var(--shadow-hair)]">
+          <div className="mt-4 rounded-surface bg-white p-4 shadow-[var(--shadow-hair)]">
             <div className="flex items-center gap-3">
-              <span className="num grid h-11 w-11 shrink-0 place-items-center rounded-full text-[13px] font-medium" style={{ background: seller.color, color: readableOn(seller.color) }}>
+              <span className="num grid h-11 w-11 shrink-0 place-items-center rounded-full text-support font-medium" style={{ background: seller.color, color: readableOn(seller.color) }}>
                 {seller.initials}
               </span>
               <div className="min-w-0 flex-1">
-                <p className="flex items-center gap-1.5 text-[14.5px] font-medium">
+                <p className="flex items-center gap-1.5 text-support font-medium">
                   Sold by {seller.name} {seller.verified && <Icon name="shield" size={14} className="text-brand-deep" />}
                 </p>
-                <p className="truncate text-[12.5px] text-mute">
+                <p className="truncate text-meta text-mute">
                   {seller.tagline} · on Ayiin since {seller.since}
                 </p>
               </div>
@@ -412,15 +412,15 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
                 [`${seller.returnRate}%`, "Returns"],
               ].map(([v, l]) => (
                 <div key={l}>
-                  <dd className="num text-[16px] font-medium">{v}</dd>
-                  <dt className="text-[11.5px] text-mute">{l}</dt>
+                  <dd className="num text-body font-medium">{v}</dd>
+                  <dt className="text-meta text-mute">{l}</dt>
                 </div>
               ))}
             </dl>
             {business && offers.length > 1 && (
               <div className="mt-4 border-t border-line pt-3">
                 <p className="eyebrow mb-2">Also stocked by</p>
-                <ul className="space-y-1.5 text-[13px]">
+                <ul className="space-y-1.5 text-support">
                   {offers
                     .filter((o) => o.sellerId !== p.sellerId)
                     .map((o) => (
@@ -447,14 +447,14 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
         inert={!showBar}
       >
         <div className="mx-auto flex max-w-[1520px] items-center gap-3 lg:px-6">
-          <ProductImage product={p} variant={variant.id} sizes="44px" className="hidden h-11 w-11 rounded-xl sm:block" />
+          <ProductImage product={p} variant={variant.id} sizes="44px" className="hidden h-11 w-11 rounded-control sm:block" />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-[13.5px] font-medium">{p.name}</p>
-            <p className="truncate text-[12px] text-mute">
+            <p className="truncate text-support font-medium">{p.name}</p>
+            <p className="truncate text-meta text-mute">
               <span className="num text-ink">{fmt(unit * qty, { cents: !Number.isInteger(unit * qty) })}</span> · Arrives {arrives}
             </p>
           </div>
-          <button type="button" onClick={() => add()} className="btn btn-brand btn-sm shrink-0">
+          <button type="button" onClick={() => add()} className="btn btn-primary shrink-0">
             {business ? "Add to cart" : "Add to cart"}
           </button>
         </div>

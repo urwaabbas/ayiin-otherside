@@ -46,10 +46,18 @@ function listDepartments(list: ProcurementList) {
     const p = productById(i.productId);
     if (p) lines.set(p.category, (lines.get(p.category) ?? 0) + 1);
   }
-  return categories.filter((c) => lines.has(c.slug)).map((c) => ({ c, lines: lines.get(c.slug)! }));
+  return categories
+    .filter((c) => lines.has(c.slug))
+    .map((c) => ({ c, lines: lines.get(c.slug)! }));
 }
 
-export function ReorderLists({ limit = 3, thumbnails = true }: { limit?: number; thumbnails?: boolean }) {
+export function ReorderLists({
+  limit = 3,
+  thumbnails = true,
+}: {
+  limit?: number;
+  thumbnails?: boolean;
+}) {
   const { fmt } = usePrefs();
   const hydrated = useHydrated();
   const lists = useShop((s) => s.lists);
@@ -59,24 +67,36 @@ export function ReorderLists({ limit = 3, thumbnails = true }: { limit?: number;
 
   const reorder = (l: ProcurementList) => {
     l.items.forEach((i) => addToCart(i.productId, i.variantId, i.qty, true));
-    notify(`“${l.name}” added to cart`, `${l.items.length} items · ${fmt(listTotal(l), { cents: true })}`);
+    notify(
+      `“${l.name}” added to cart`,
+      `${l.items.length} items · ${fmt(listTotal(l), { cents: true })}`,
+    );
   };
 
   return (
-    <div className={clsx("grid gap-4 md:grid-cols-3", !hydrated && "opacity-90")}>
+    <div
+      className={clsx("grid gap-4 md:grid-cols-3", !hydrated && "opacity-90")}
+    >
       {shown.map((l) => {
         const run = nextRun(l);
         return (
-          <div key={l.id} className="flex flex-col rounded-[26px] bg-white p-6 shadow-[var(--shadow-hair)]">
+          <div
+            key={l.id}
+            className="flex flex-col rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]"
+          >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-[16px] font-medium leading-snug">{l.name}</p>
-                <p className="mt-1 flex items-center gap-1.5 text-[12.5px] text-mute">
+                <p className="text-body font-medium leading-snug">{l.name}</p>
+                <p className="mt-1 flex items-center gap-1.5 text-meta text-mute">
                   <Icon name="repeat" size={13} /> {SCHEDULE_LABEL[l.schedule]}
                   {run && <> · next {run}</>}
                 </p>
               </div>
-              <Link href={`/business?tab=lists&list=${l.id}`} aria-label={`Edit ${l.name}`} className="grid h-9 w-9 place-items-center rounded-full hover:bg-mist">
+              <Link
+                href={`/business?tab=lists&list=${l.id}`}
+                aria-label={`Edit ${l.name}`}
+                className="grid h-9 w-9 place-items-center rounded-full hover:bg-mist"
+              >
                 <Icon name="more" size={18} />
               </Link>
             </div>
@@ -86,15 +106,31 @@ export function ReorderLists({ limit = 3, thumbnails = true }: { limit?: number;
                   const p = productById(i.productId);
                   if (!p) return null;
                   return (
-                    <ProductImage key={i.productId} product={p} variant={i.variantId} sizes="48px" className="h-12 w-12 rounded-xl ring-2 ring-white" />
+                    <ProductImage
+                      key={i.productId}
+                      product={p}
+                      variant={i.variantId}
+                      sizes="48px"
+                      className="h-12 w-12 rounded-control ring-2 ring-white"
+                    />
                   );
                 })}
               </div>
             ) : (
-              <ul className="mt-5 flex min-h-12 flex-wrap content-start gap-1.5" aria-label="Departments in this list">
+              <ul
+                className="mt-5 flex min-h-12 flex-wrap content-start gap-1.5"
+                aria-label="Departments in this list"
+              >
                 {listDepartments(l).map(({ c, lines }) => (
-                  <li key={c.slug} className="inline-flex h-7 items-center gap-1.5 rounded-full bg-mist px-2.5 text-[12px] text-ink-2">
-                    <span aria-hidden className="h-1.5 w-1.5 rounded-full" style={{ background: c.accent }} />
+                  <li
+                    key={c.slug}
+                    className="inline-flex h-7 items-center gap-1.5 rounded-full bg-mist px-2.5 text-meta text-ink-2"
+                  >
+                    <span
+                      aria-hidden
+                      className="h-1.5 w-1.5 rounded-full"
+                      style={{ background: c.accent }}
+                    />
                     {c.short}
                     <span className="num text-mute">{lines}</span>
                   </li>
@@ -103,10 +139,19 @@ export function ReorderLists({ limit = 3, thumbnails = true }: { limit?: number;
             )}
             <div className="mt-5 flex items-end justify-between border-t border-line pt-4">
               <div>
-                <p className="text-[12px] text-mute">{l.items.length} lines · {l.items.reduce((n, i) => n + i.qty, 0)} units</p>
-                <p className="num text-[20px] font-medium tracking-[-0.02em]">{fmt(listTotal(l), { cents: true })}</p>
+                <p className="text-meta text-mute">
+                  {l.items.length} lines ·{" "}
+                  {l.items.reduce((n, i) => n + i.qty, 0)} units
+                </p>
+                <p className="num text-emphasis font-medium tracking-[-0.02em]">
+                  {fmt(listTotal(l), { cents: true })}
+                </p>
               </div>
-              <button type="button" onClick={() => reorder(l)} className="btn btn-ink btn-sm">
+              <button
+                type="button"
+                onClick={() => reorder(l)}
+                className="btn btn-primary"
+              >
                 <Icon name="repeat" size={15} /> Reorder
               </button>
             </div>

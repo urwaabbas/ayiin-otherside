@@ -33,7 +33,7 @@ export function MegaMenu({ onClose }: { onClose: () => void }) {
                 onMouseEnter={() => setActive(c.slug)}
                 onFocus={() => setActive(c.slug)}
                 className={clsx(
-                  "group flex items-center justify-between rounded-xl px-3 py-2.5 text-[15px] transition-colors",
+                  "group flex items-center justify-between rounded-control px-3 py-2.5 text-body transition-colors",
                   active === c.slug ? "bg-white text-ink shadow-[var(--shadow-hair)]" : "text-ink-2 hover:text-ink",
                 )}
               >
@@ -41,7 +41,7 @@ export function MegaMenu({ onClose }: { onClose: () => void }) {
                   <span className="h-2 w-2 rounded-full" style={{ background: active === c.slug ? c.accent : "transparent", boxShadow: `inset 0 0 0 1.5px ${c.accent}` }} />
                   {c.name}
                 </span>
-                {business && c.business && <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-mute">Bulk</span>}
+                {business && c.business && <span className="font-mono text-meta uppercase tracking-[0.12em] text-mute">Bulk</span>}
               </Link>
             </li>
           ))}
@@ -50,29 +50,29 @@ export function MegaMenu({ onClose }: { onClose: () => void }) {
 
       <div className="min-w-0">
         <div className="flex items-baseline justify-between gap-6">
-          <h2 className="display text-[40px]">{cat.name}</h2>
-          <Link href={`/c/${cat.slug}`} onClick={onClose} className="link-underline shrink-0 text-[14px] font-medium">
+          <h2 className="display text-display-sm">{cat.name}</h2>
+          <Link href={`/c/${cat.slug}`} onClick={onClose} className="link-underline shrink-0 text-support font-medium">
             Shop all {cat.short.toLowerCase()} →
           </Link>
         </div>
-        <p className="mt-2 max-w-xl text-[15px] text-mute">{cat.blurb}</p>
+        <p className="mt-2 max-w-xl text-body text-mute">{cat.blurb}</p>
         <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-1 sm:grid-cols-3">
           {cat.subcategories.map((s) => (
             <Link
               key={s}
               href={`/c/${cat.slug}?sub=${encodeURIComponent(s)}`}
               onClick={onClose}
-              className="border-b border-line py-2.5 text-[14.5px] text-ink-2 transition-colors hover:border-ink hover:text-ink"
+              className="border-b border-line py-2.5 text-support text-ink-2 transition-colors hover:border-ink hover:text-ink"
             >
               {s}
             </Link>
           ))}
         </div>
-        <div className="mt-6 rounded-2xl bg-white p-5 shadow-[var(--shadow-hair)]">
+        <div className="mt-6 rounded-surface bg-white p-5 shadow-[var(--shadow-hair)]">
           <p className="eyebrow flex items-center gap-2">
             <Icon name="sparkle" size={13} /> {cat.guide.title}
           </p>
-          <ul className="mt-3 grid gap-2 text-[13.5px] text-ink-2 sm:grid-cols-3">
+          <ul className="mt-3 grid gap-2 text-support text-ink-2 sm:grid-cols-3">
             {cat.guide.points.map((pt) => (
               <li key={pt} className="flex gap-2">
                 <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-ink" />
@@ -101,12 +101,12 @@ export function MegaMenu({ onClose }: { onClose: () => void }) {
       <Link
         href={`/c/${cat.slug}`}
         onClick={onClose}
-        className="group relative hidden flex-col justify-between overflow-hidden rounded-3xl p-6 shadow-[var(--shadow-hair)] lg:flex"
+        className="group relative hidden flex-col justify-between overflow-hidden rounded-surface p-6 shadow-[var(--shadow-hair)] lg:flex"
         style={{ background: cat.tint }}
       >
         <div>
           <p className="eyebrow">{business && cat.business ? "Bulk-ready department" : "This department"}</p>
-          <p className="display mt-3 text-[34px] leading-[1.02]">{cat.short}</p>
+          <p className="display mt-3 text-heading leading-[1.02]">{cat.short}</p>
         </div>
         <dl className="mt-8 grid grid-cols-2 gap-x-4 gap-y-5">
           {[
@@ -118,13 +118,13 @@ export function MegaMenu({ onClose }: { onClose: () => void }) {
             <div key={l}>
               <dt className="sr-only">{l}</dt>
               <dd>
-                <span className="num block text-[28px] font-medium tracking-[-0.03em]">{v}</span>
-                <span className="block text-[12.5px] text-ink-2">{l}</span>
+                <span className="num block text-heading font-medium tracking-[-0.03em]">{v}</span>
+                <span className="block text-meta text-ink-2">{l}</span>
               </dd>
             </div>
           ))}
         </dl>
-        <span className="mt-8 inline-flex items-center gap-2 text-[14px] font-medium">
+        <span className="mt-8 inline-flex items-center gap-2 text-support font-medium">
           Shop {cat.short.toLowerCase()}
           <Icon name="arrowRight" size={16} className="transition-transform group-hover:translate-x-0.5" />
         </span>

@@ -59,7 +59,7 @@ export function SpendChart({ data }: { data: { m: string; v: number }[] }) {
       </svg>
       {hover != null && (
         <div
-          className="pointer-events-none absolute -translate-x-1/2 rounded-xl bg-ink px-3 py-2 text-[12px] text-porcelain shadow-[var(--shadow-float)]"
+          className="pointer-events-none absolute -translate-x-1/2 rounded-control bg-ink px-3 py-2 text-meta text-porcelain shadow-[var(--shadow-float)]"
           style={{ left: `${((padL + band * hover + band / 2) / W) * 100}%`, top: `${(y(data[hover].v) / H) * 100 - 22}%` }}
         >
           <span className="text-mute-dark">{data[hover].m} 2026</span> · <span className="num">{fmt(data[hover].v)}</span>

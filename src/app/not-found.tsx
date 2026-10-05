@@ -7,11 +7,20 @@ export default function NotFound() {
       <div>
         <AyiinLogo on="light" className="mx-auto h-16" />
         <p className="eyebrow mt-8">404</p>
-        <h1 className="display mt-3 text-[48px] sm:text-[80px]">Nothing to see here.</h1>
-        <p className="mx-auto mt-4 max-w-md text-[16px] text-mute">Which is rare for us. The page may have moved — try searching, or describe what you need.</p>
+        <h1 className="display mt-3 text-display-sm sm:text-display-lg">
+          Nothing to see here.
+        </h1>
+        <p className="mx-auto mt-4 max-w-md text-body text-mute">
+          Which is rare for us. The page may have moved — try searching, or
+          describe what you need.
+        </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link href="/" className="btn btn-ink">Home</Link>
-          <Link href="/search" className="btn btn-ghost">Browse everything</Link>
+          <Link href="/" className="btn btn-secondary">
+            Home
+          </Link>
+          <Link href="/search" className="btn btn-primary">
+            Browse everything
+          </Link>
         </div>
       </div>
     </div>

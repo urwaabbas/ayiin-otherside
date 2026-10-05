@@ -59,7 +59,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
             aria-label={vw.label}
             onClick={() => setView(vw.id)}
             className={clsx(
-              "w-[72px] shrink-0 overflow-hidden rounded-2xl ring-offset-2 ring-offset-porcelain transition-shadow sm:w-[84px]",
+              "w-[72px] shrink-0 overflow-hidden rounded-surface ring-offset-2 ring-offset-porcelain transition-shadow sm:w-[84px]",
               view === vw.id ? "ring-[1.5px] ring-ink" : "ring-1 ring-line hover:ring-line-strong",
             )}
           >
@@ -72,7 +72,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
         id={`${id}-panel`}
         role="tabpanel"
         aria-labelledby={`${id}-tab-${view}`}
-        className="group/stage relative flex-1 touch-pan-y overflow-hidden rounded-[32px] bg-white"
+        className="group/stage relative flex-1 touch-pan-y overflow-hidden rounded-surface bg-white"
         onPointerDown={(e) => {
           if (e.pointerType !== "mouse") swipe.current = e.clientX;
         }}
@@ -116,7 +116,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
           <Icon name="expand" size={17} />
         </button>
         <div className="absolute inset-x-4 bottom-4 flex items-center justify-between gap-3">
-          <p className="rounded-full bg-white/85 px-3 py-1.5 text-[12px] text-ink-2 backdrop-blur">
+          <p className="rounded-full bg-white/85 px-3 py-1.5 text-meta text-ink-2 backdrop-blur">
             {photo ? (
               <>
                 {current.label} · Photo by{" "}
@@ -154,7 +154,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
       >
         <div className="flex h-full flex-col">
           <div className="flex items-center justify-between gap-4 px-5 py-4 sm:px-8">
-            <p className="min-w-0 truncate text-[14px] font-medium">
+            <p className="min-w-0 truncate text-support font-medium">
               {p.name} <span className="text-mute">· {variant.name} · {current.label}</span>
             </p>
             <form method="dialog">
@@ -164,7 +164,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
             </form>
           </div>
           <div className="relative mx-auto min-h-0 w-full max-w-[min(100%,calc(100dvh-180px))] flex-1 px-5 sm:px-8">
-            <div className="relative mx-auto aspect-square max-h-full w-full overflow-hidden rounded-[28px]">
+            <div className="relative mx-auto aspect-square max-h-full w-full overflow-hidden rounded-surface">
               <ProductImage key={`${variant.id}-${view}-lb`} product={p} variant={variant.id} view={view} alt={alt} sizes="100vw" className="h-full w-full animate-fade" />
             </div>
             <button type="button" onClick={() => go(-1)} aria-label="Previous view" hidden={single} className="absolute left-2 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] sm:left-4">
@@ -182,7 +182,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
                 aria-label={vw.label}
                 aria-pressed={vw.id === view}
                 onClick={() => setView(vw.id)}
-                className={clsx("w-16 overflow-hidden rounded-xl transition-shadow", vw.id === view ? "ring-[1.5px] ring-ink" : "ring-1 ring-line")}
+                className={clsx("w-16 overflow-hidden rounded-control transition-shadow", vw.id === view ? "ring-[1.5px] ring-ink" : "ring-1 ring-line")}
               >
                 <ProductImage product={p} variant={variant.id} view={vw.id} sizes="64px" className="aspect-square w-full" />
               </button>

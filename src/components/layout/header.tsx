@@ -126,7 +126,7 @@ export function Header() {
       <header ref={headerRef} data-scrolled={compact} className="fixed inset-x-0 top-0 z-50">
         {/* ── 1 · Charcoal strip ── */}
         <div className="hidden bg-ink text-white lg:block">
-          <div className="mx-auto flex h-8 max-w-[1520px] items-center justify-between px-6 text-[12.5px] text-white/80">
+          <div className="mx-auto flex h-8 max-w-[1520px] items-center justify-between px-6 text-meta text-white/80">
             <span className="flex items-center gap-1.5">
               <Icon name="pin" size={13} className="text-brand" /> Deliver to <span className="font-semibold text-white">San Francisco 94107</span>
             </span>
@@ -172,19 +172,7 @@ export function Header() {
               <label htmlFor="site-search-scope" className="sr-only">
                 Search in
               </label>
-              <select
-                id="site-search-scope"
-                value={scope}
-                onChange={(e) => setScope(e.target.value)}
-                className="h-full max-w-[160px] shrink-0 cursor-pointer rounded-full bg-mist pl-4 pr-2 text-[13px] font-medium text-ink-2 outline-none hover:bg-soft"
-              >
-                <option value="">All departments</option>
-                {categories.map((c) => (
-                  <option key={c.slug} value={c.slug}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
+              <DepartmentScope value={scope} onChange={setScope} onOpen={closeSearch} />
               <label htmlFor="site-search" className="sr-only">
                 Search Ayiin
               </label>
@@ -206,7 +194,7 @@ export function Header() {
                 }}
                 onKeyDown={search.onKeyDown}
                 placeholder={business ? "Search products, SKUs or describe a purchase" : "What are you looking for?"}
-                className="h-full min-w-0 flex-1 bg-transparent px-4 text-[15px] text-ink outline-none placeholder:text-mute"
+                className="h-full min-w-0 flex-1 bg-transparent px-4 text-body text-ink outline-none placeholder:text-mute"
               />
               <button type="submit" aria-label="Search" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-ink transition-transform hover:scale-105">
                 <Icon name="search" size={19} strokeWidth={2.1} />
@@ -230,7 +218,7 @@ export function Header() {
                 openSearch();
                 requestAnimationFrame(() => mobileInputRef.current?.focus());
               }}
-              className="flex h-11 w-full items-center rounded-full bg-white p-1 pl-4 text-left text-[15px] text-mute shadow-[var(--shadow-hair)]"
+              className="flex h-11 w-full items-center rounded-full bg-white p-1 pl-4 text-left text-body text-mute shadow-[var(--shadow-hair)]"
             >
               <span className="flex-1 truncate">{business ? "Search products or SKUs" : "What are you looking for?"}</span>
               <span className="grid h-9 w-9 place-items-center rounded-full bg-brand text-ink">
@@ -242,7 +230,7 @@ export function Header() {
 
         {/* ── 3 · Departments, justified across the width ── */}
         <div className="hidden border-b border-line/80 bg-white/85 backdrop-blur-xl lg:block">
-          <nav aria-label="Departments" className="mx-auto flex h-[46px] max-w-[1520px] items-stretch justify-between px-6 text-[13.5px] font-medium text-ink-2">
+          <nav aria-label="Departments" className="mx-auto flex h-[46px] max-w-[1520px] items-stretch justify-between px-6 text-support font-medium text-ink-2">
             <button
               type="button"
               aria-expanded={megaOpen}
@@ -316,10 +304,10 @@ export function Header() {
               onChange={(e) => mobileSearch.setQuery(e.target.value)}
               onKeyDown={mobileSearch.onKeyDown}
               placeholder="Describe what you need…"
-              className="h-12 w-full rounded-full border border-ink bg-white pl-10 pr-4 text-[16px] outline-none"
+              className="h-12 w-full rounded-full border border-ink bg-white pl-10 pr-4 text-body outline-none"
             />
           </div>
-          <button type="button" onClick={closeSearch} className="h-12 px-2 text-[14.5px] font-medium">
+          <button type="button" onClick={closeSearch} className="h-12 px-2 text-support font-medium">
             Cancel
           </button>
         </div>
@@ -332,6 +320,150 @@ export function Header() {
 
       <MobileMenu open={menuOpen} onClose={() => setMenu(false)} />
     </>
+  );
+}
+
+function DepartmentScope({ value, onChange, onOpen }: { value: string; onChange: (value: string) => void; onOpen: () => void }) {
+  const [open, setOpen] = useState(false);
+  const selectedIndex = Math.max(0, categories.findIndex((category) => category.slug === value) + 1);
+  const [activeIndex, setActiveIndex] = useState(selectedIndex);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const options = [
+    { slug: "", name: "All departments", detail: `Search across ${categories.length} departments`, accent: null as string | null },
+    ...categories.map((category) => ({
+      slug: category.slug,
+      name: category.name,
+      detail: category.subcategories.join(" · "),
+      accent: category.accent,
+    })),
+  ];
+  const selected = options[selectedIndex];
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (event: MouseEvent) => {
+      if (rootRef.current && !rootRef.current.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  const choose = (index: number) => {
+    onChange(options[index].slug);
+    setActiveIndex(index);
+    setOpen(false);
+  };
+
+  const openMenu = () => {
+    onOpen();
+    setActiveIndex(selectedIndex);
+    setOpen(true);
+  };
+
+  const onTriggerKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+      setOpen(true);
+      setActiveIndex((current) => {
+        if (!open) return selectedIndex;
+        return (current + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
+      });
+    } else if (open && event.key === "Home") {
+      event.preventDefault();
+      setActiveIndex(0);
+    } else if (open && event.key === "End") {
+      event.preventDefault();
+      setActiveIndex(options.length - 1);
+    } else if (open && (event.key === "Enter" || event.key === " ")) {
+      event.preventDefault();
+      choose(activeIndex);
+    } else if (open && event.key === "Escape") {
+      event.preventDefault();
+      event.stopPropagation();
+      setOpen(false);
+    }
+  };
+
+  return (
+    <div
+      ref={rootRef}
+      className="relative h-full w-[168px] shrink-0"
+      onPointerEnter={(event) => {
+        if (event.pointerType === "mouse" && !open) openMenu();
+      }}
+      onPointerLeave={(event) => {
+        if (event.pointerType === "mouse" && !rootRef.current?.contains(document.activeElement)) setOpen(false);
+      }}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
+      }}
+    >
+      <button
+        id="site-search-scope"
+        type="button"
+        role="combobox"
+        aria-label={`Search in ${selected.name}`}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls="search-department-options"
+        aria-activedescendant={open ? `search-department-option-${activeIndex}` : undefined}
+        onClick={() => {
+          if (open) setOpen(false);
+          else openMenu();
+        }}
+        onKeyDown={onTriggerKeyDown}
+        className="flex h-full w-full items-center justify-between gap-2 rounded-full bg-mist pl-4 pr-3 text-left text-support font-medium text-ink-2 transition-colors hover:bg-soft focus-visible:bg-white"
+      >
+        <span className="min-w-0 flex-1 truncate">{selected.name}</span>
+        <Icon name="chevronDown" size={14} className={clsx("shrink-0 transition-transform duration-200", open && "rotate-180")} />
+      </button>
+      <div
+        hidden={!open}
+        inert={!open}
+        className="absolute left-0 top-full z-20 w-[min(340px,calc(100vw-24px))] pt-2"
+      >
+        <div className="max-h-[70vh] overflow-y-auto rounded-surface border border-line bg-white p-2 text-ink shadow-[var(--shadow-float)]">
+          <p className="px-3 pb-2 pt-2 font-mono text-meta uppercase tracking-[0.14em] text-mute">Choose a department</p>
+          <div id="search-department-options" role="listbox" aria-label="Departments" className="space-y-0.5">
+            {options.map((option, index) => {
+              const isSelected = value === option.slug;
+              const isActive = activeIndex === index;
+              return (
+              <div
+                key={option.slug || "all"}
+                id={`search-department-option-${index}`}
+                role="option"
+                aria-selected={isSelected}
+                onMouseDown={(event) => event.preventDefault()}
+                onMouseEnter={() => setActiveIndex(index)}
+                onClick={() => choose(index)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    choose(index);
+                  }
+                }}
+                className={clsx(
+                  "flex w-full cursor-pointer items-center gap-3 rounded-control px-3 py-2.5 text-left transition-colors",
+                  isSelected ? "bg-brand-soft text-ink" : "text-ink-2 hover:bg-mist hover:text-ink",
+                  isActive && "ring-1 ring-inset ring-brand-deep",
+                )}
+                >
+                  <span className={clsx("grid h-9 w-9 shrink-0 place-items-center rounded-control", option.accent ? "bg-mist" : "bg-brand-soft")}>
+                    {option.accent ? <span aria-hidden className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: option.accent }} /> : <Icon name="grid" size={16} />}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-support font-medium">{option.name}</span>
+                    <span className="line-clamp-2 block text-meta leading-snug text-mute">{option.detail}</span>
+                  </span>
+                  {isSelected && <Icon name="check" size={15} className="shrink-0 text-brand-deep" />}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -363,7 +495,7 @@ function DeptLink({ href, children, accent }: { href: string; children: React.Re
 
 function NavIcon({ href, icon, label, className }: { href: string; icon: IconName; label: string; className?: string }) {
   return (
-    <Link href={href} className={clsx("group flex flex-col items-center gap-0.5 px-1.5 text-[11px] font-medium text-ink-2 hover:text-ink", className)}>
+    <Link href={href} className={clsx("group flex flex-col items-center gap-0.5 px-1.5 text-meta font-medium text-ink-2 hover:text-ink", className)}>
       <span className="grid h-10 w-10 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] transition-colors group-hover:bg-brand-soft">
         <Icon name={icon} size={19} />
       </span>
@@ -376,12 +508,12 @@ function SavedIcon() {
   const hydrated = useHydrated();
   const count = useShop((s) => s.wishlist.length);
   return (
-    <Link href="/wishlist" aria-label={`Saved${hydrated && count ? `, ${count}` : ""}`} className="group relative hidden flex-col items-center gap-0.5 px-1.5 text-[11px] font-medium text-ink-2 hover:text-ink sm:flex">
+    <Link href="/wishlist" aria-label={`Saved${hydrated && count ? `, ${count}` : ""}`} className="group relative hidden flex-col items-center gap-0.5 px-1.5 text-meta font-medium text-ink-2 hover:text-ink sm:flex">
       <span className="grid h-10 w-10 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] transition-colors group-hover:bg-brand-soft">
         <Icon name="heart" size={19} />
       </span>
       <span className="hidden lg:block">Saved</span>
-      {hydrated && count > 0 && <span className="num absolute right-1 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-ink px-1 text-[10px] text-white">{count}</span>}
+      {hydrated && count > 0 && <span className="num absolute right-1 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-ink px-1 text-meta text-white">{count}</span>}
     </Link>
   );
 }
@@ -396,13 +528,13 @@ function CartButton() {
       type="button"
       onClick={openCart}
       aria-label={`Cart, ${shown} ${shown === 1 ? "item" : "items"}`}
-      className="group relative flex flex-col items-center gap-0.5 px-1.5 text-[11px] font-medium text-ink-2 hover:text-ink"
+      className="group relative flex flex-col items-center gap-0.5 px-1.5 text-meta font-medium text-ink-2 hover:text-ink"
     >
       <span className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white transition-colors group-hover:bg-graphite">
         <Icon name="bag" size={19} />
       </span>
       <span className="hidden lg:block">Cart</span>
-      <span className="num absolute -right-0.5 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-brand px-1 text-[11px] font-bold text-ink ring-2 ring-porcelain">{shown > 99 ? "99+" : shown}</span>
+      <span className="num absolute -right-0.5 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-brand px-1 text-meta font-bold text-ink ring-2 ring-porcelain">{shown > 99 ? "99+" : shown}</span>
     </button>
   );
 }
@@ -431,15 +563,15 @@ function LocaleMenu({ dark }: { dark?: boolean }) {
           role="listbox"
           aria-label="Currency"
           className={clsx(
-            "absolute right-0 top-8 z-10 w-56 rounded-2xl p-1.5 shadow-[var(--shadow-float)]",
+            "absolute right-0 top-8 z-10 w-56 rounded-surface p-1.5 shadow-[var(--shadow-float)]",
             dark ? "bg-graphite text-porcelain" : "bg-white text-ink",
           )}
         >
-          <p className={clsx("px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-[0.14em]", dark ? "text-mute-dark" : "text-mute")}>Language</p>
-          <p className="flex items-center justify-between rounded-xl px-3 py-2 text-[13px]">
+          <p className={clsx("px-3 pb-1 pt-2 font-mono text-meta uppercase tracking-[0.14em]", dark ? "text-mute-dark" : "text-mute")}>Language</p>
+          <p className="flex items-center justify-between rounded-control px-3 py-2 text-support">
             English (US) <Icon name="check" size={14} />
           </p>
-          <p className={clsx("px-3 pb-1 pt-2 font-mono text-[10px] uppercase tracking-[0.14em]", dark ? "text-mute-dark" : "text-mute")}>Currency</p>
+          <p className={clsx("px-3 pb-1 pt-2 font-mono text-meta uppercase tracking-[0.14em]", dark ? "text-mute-dark" : "text-mute")}>Currency</p>
           {CURRENCIES.map((c) => (
             <button
               key={c.code}
@@ -450,7 +582,7 @@ function LocaleMenu({ dark }: { dark?: boolean }) {
                 setCurrency(c.code as Currency);
                 setOpen(false);
               }}
-              className={clsx("flex w-full items-center justify-between rounded-xl px-3 py-2 text-left text-[13px]", dark ? "hover:bg-graphite-2" : "hover:bg-mist")}
+              className={clsx("flex w-full items-center justify-between rounded-control px-3 py-2 text-left text-support", dark ? "hover:bg-graphite-2" : "hover:bg-mist")}
             >
               <span>
                 <span className="num mr-2 inline-block w-4">{c.symbol}</span>
@@ -499,7 +631,7 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
           <ul className="divide-y divide-line border-y border-line">
             {categories.map((c) => (
               <li key={c.slug}>
-                <Link href={`/c/${c.slug}`} onClick={onClose} className="flex items-center justify-between py-3.5 text-[16px]">
+                <Link href={`/c/${c.slug}`} onClick={onClose} className="flex items-center justify-between py-3.5 text-body">
                   <span className="flex items-center gap-3">
                     <span className="h-2 w-2 rounded-full" style={{ background: c.accent }} />
                     {c.name}
@@ -525,12 +657,12 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
                   ["/compare", "compare", "Compare"],
                 ] as const)
             ).map(([href, icon, label]) => (
-              <Link key={href} href={href} onClick={onClose} className="flex items-center gap-2.5 rounded-2xl bg-white p-3.5 text-[14px] shadow-[var(--shadow-hair)]">
+              <Link key={href} href={href} onClick={onClose} className="flex items-center gap-2.5 rounded-surface bg-white p-3.5 text-support shadow-[var(--shadow-hair)]">
                 <Icon name={icon} size={18} /> {label}
               </Link>
             ))}
           </div>
-          <ul className="mt-7 space-y-3 text-[15px] text-ink-2">
+          <ul className="mt-7 space-y-3 text-body text-ink-2">
             <li><Link href="/track" onClick={onClose}>Track order</Link></li>
             <li><Link href="/help" onClick={onClose}>Help & returns</Link></li>
             <li><Link href="/sell" onClick={onClose}>Sell on Ayiin</Link></li>

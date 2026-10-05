@@ -58,7 +58,7 @@ export function QtyStepper({
         onChange={(e) => setDraft(e.target.value)}
         onBlur={(e) => commit(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && commit((e.target as HTMLInputElement).value)}
-        className={clsx("num h-full bg-transparent text-center font-medium outline-none", size === "sm" ? "w-9 text-[13px]" : size === "lg" ? "w-20 text-[17px]" : "w-14 text-[15px]")}
+        className={clsx("num h-full bg-transparent text-center font-medium outline-none", size === "sm" ? "w-9 text-support" : size === "lg" ? "w-20 text-body" : "w-14 text-body")}
       />
       <button
         type="button"

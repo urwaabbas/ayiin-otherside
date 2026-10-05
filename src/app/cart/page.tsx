@@ -9,7 +9,7 @@ export default async function CartPage() {
   return (
     <div className="shell pt-6 lg:pt-8">
       <p className="eyebrow">{mode === "business" ? "Purchase cart" : "Your cart"}</p>
-      <h1 className="display mt-3 text-[48px] sm:text-[80px]">{mode === "business" ? "Ready to order." : "Nearly yours."}</h1>
+      <h1 className="display mt-3 text-display-sm sm:text-display-lg">{mode === "business" ? "Ready to order." : "Nearly yours."}</h1>
       <CartView />
     </div>
   );

@@ -82,7 +82,7 @@ export function SearchPanel({
                 <button
                   type="button"
                   onClick={() => setQuery(ex)}
-                  className="group flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left text-[15px] text-ink-2 transition-colors hover:bg-mist hover:text-ink"
+                  className="group flex w-full items-center justify-between gap-3 rounded-control px-3 py-2.5 text-left text-body text-ink-2 transition-colors hover:bg-mist hover:text-ink"
                 >
                   <span>“{ex}”</span>
                   <Icon name="arrowUpRight" size={16} className="opacity-0 transition-opacity group-hover:opacity-100" />
@@ -90,7 +90,7 @@ export function SearchPanel({
               </li>
             ))}
           </ul>
-          <p className="mt-4 px-3 text-[12.5px] leading-relaxed text-mute">
+          <p className="mt-4 px-3 text-meta leading-relaxed text-mute">
             Ayiin understands budgets, quantities, delivery dates and use-cases — no filters required.
           </p>
         </div>
@@ -99,7 +99,7 @@ export function SearchPanel({
             <div>
               <div className="mb-3 flex items-center justify-between">
                 <p className="eyebrow">Recent</p>
-                <button type="button" onClick={clearSearches} className="text-[12px] text-mute hover:text-ink">
+                <button type="button" onClick={clearSearches} className="text-meta text-mute hover:text-ink">
                   Clear
                 </button>
               </div>
@@ -127,7 +127,7 @@ export function SearchPanel({
               <p className="eyebrow mb-3">Recently viewed</p>
               <div className="grid grid-cols-4 gap-2">
                 {recentProducts.map((p) => (
-                  <Link key={p!.id} href={`/p/${p!.slug}`} onClick={() => onNavigate(`/p/${p!.slug}`)} className="overflow-hidden rounded-xl" title={p!.name}>
+                  <Link key={p!.id} href={`/p/${p!.slug}`} onClick={() => onNavigate(`/p/${p!.slug}`)} className="overflow-hidden rounded-control" title={p!.name}>
                     <ProductImage product={p!} className="aspect-square w-full" />
                   </Link>
                 ))}
@@ -147,7 +147,7 @@ export function SearchPanel({
             <Icon name="sparkle" size={13} /> Understood
           </span>
           {intent.chips.map((c) => (
-            <span key={c.key} className="inline-flex h-7 items-center gap-1.5 rounded-full bg-brand-soft px-2.5 text-[12.5px] font-medium text-ink">
+            <span key={c.key} className="inline-flex h-7 items-center gap-1.5 rounded-full bg-brand-soft px-2.5 text-meta font-medium text-ink">
               <span className="h-1.5 w-1.5 rounded-full bg-ink" />
               {c.label}
             </span>
@@ -158,7 +158,7 @@ export function SearchPanel({
         <div>
           <p className="eyebrow mb-2">{results.length ? "Best matches" : "No exact matches"}</p>
           {results.length === 0 && (
-            <p className="rounded-xl bg-mist p-4 text-[14px] text-ink-2">
+            <p className="rounded-control bg-mist p-4 text-support text-ink-2">
               Nothing matches every condition. Try loosening the budget or delivery date — or{" "}
               <button type="button" className="underline" onClick={() => onNavigate(`/search?q=${encodeURIComponent(intent?.terms.join(" ") ?? "")}`)}>
                 search without constraints
@@ -178,14 +178,14 @@ export function SearchPanel({
                     href={options[idx].href}
                     onClick={() => onNavigate(options[idx].href, query)}
                     className={clsx(
-                      "flex items-center gap-3.5 rounded-2xl p-2 pr-3 transition-colors",
+                      "flex items-center gap-3.5 rounded-surface p-2 pr-3 transition-colors",
                       active === idx ? "bg-mist" : "hover:bg-mist",
                     )}
                   >
-                    <ProductImage product={p} sizes="56px" className="h-14 w-14 shrink-0 rounded-xl" />
+                    <ProductImage product={p} sizes="56px" className="h-14 w-14 shrink-0 rounded-control" />
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[14.5px] font-medium text-ink">{p.name}</span>
-                      <span className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[12.5px] text-mute">
+                      <span className="block truncate text-support font-medium text-ink">{p.name}</span>
+                      <span className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-meta text-mute">
                         <span className="inline-flex items-center gap-1.5">
                           <SignalDot tone={stock.tone} /> Arrives {deliveryLabel(p)}
                         </span>
@@ -198,8 +198,8 @@ export function SearchPanel({
                       </span>
                     </span>
                     <span className="text-right">
-                      <span className="num block text-[15px] font-medium">{fmt(unit)}</span>
-                      {business && qty ? <span className="num block text-[11.5px] text-mute">/unit at {qty.toLocaleString("en-US")}</span> : null}
+                      <span className="num block text-body font-medium">{fmt(unit)}</span>
+                      {business && qty ? <span className="num block text-meta text-mute">/unit at {qty.toLocaleString("en-US")}</span> : null}
                     </span>
                   </Link>
                 </li>
@@ -219,7 +219,7 @@ export function SearchPanel({
                     id={options[idx].id}
                     href={`/c/${c.slug}`}
                     onClick={() => onNavigate(`/c/${c.slug}`, query)}
-                    className={clsx("flex items-center justify-between rounded-xl px-3 py-2.5 text-[14px]", active === idx ? "bg-mist" : "hover:bg-mist")}
+                    className={clsx("flex items-center justify-between rounded-control px-3 py-2.5 text-support", active === idx ? "bg-mist" : "hover:bg-mist")}
                   >
                     {c.name} <Icon name="arrowRight" size={15} />
                   </Link>
@@ -231,11 +231,11 @@ export function SearchPanel({
             <Link
               href={`/business?tab=quotes&q=${encodeURIComponent(query)}`}
               onClick={() => onNavigate(`/business?tab=quotes&q=${encodeURIComponent(query)}`, query)}
-              className="block rounded-2xl bg-ink p-4 text-porcelain"
+              className="block rounded-surface bg-ink p-4 text-porcelain"
             >
               <span className="eyebrow !text-mute-dark">Quantity detected</span>
-              <span className="mt-1 block text-[15px] font-medium">Request quotes for {intent.qty.toLocaleString("en-US")} units</span>
-              <span className="mt-1 block text-[12.5px] text-mute-dark">Median supplier response: 3h 12m</span>
+              <span className="mt-1 block text-body font-medium">Request quotes for {intent.qty.toLocaleString("en-US")} units</span>
+              <span className="mt-1 block text-meta text-mute-dark">Median supplier response: 3h 12m</span>
             </Link>
           ) : null}
           <Link
@@ -243,7 +243,7 @@ export function SearchPanel({
             href={`/search?q=${encodeURIComponent(query)}`}
             onClick={() => onNavigate(`/search?q=${encodeURIComponent(query)}`, query)}
             className={clsx(
-              "flex items-center justify-between rounded-xl border border-line px-3 py-3 text-[14px] font-medium",
+              "flex items-center justify-between rounded-control border border-line px-3 py-3 text-support font-medium",
               active === options.length - 1 ? "border-ink bg-white" : "hover:border-ink",
             )}
           >

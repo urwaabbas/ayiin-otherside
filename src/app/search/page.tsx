@@ -38,7 +38,7 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
   return (
     <div className="shell pt-6 lg:pt-8">
       <p className="eyebrow">{q ? "Results for" : "Browse"}</p>
-      <h1 className="mt-2 max-w-5xl text-balance text-[26px] font-semibold tracking-[-0.02em] sm:text-[32px]">{q ? <>“{title}”</> : title}</h1>
+      <h1 className="mt-2 max-w-5xl text-balance text-section font-semibold tracking-[-0.02em] sm:text-heading">{q ? <>“{title}”</> : title}</h1>
 
       {intent && intent.chips.length > 0 && (
         <div className="mt-6 flex flex-wrap items-center gap-2">
@@ -47,14 +47,14 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
           </span>
           {intent.chips.map((c) =>
             c.kind === "attr" || c.kind === "category" ? (
-              <span key={c.key} className="inline-flex h-8 items-center gap-1.5 rounded-full bg-brand-soft px-3 text-[13px] font-medium">
+              <span key={c.key} className="inline-flex h-8 items-center gap-1.5 rounded-full bg-brand-soft px-3 text-support font-medium">
                 {c.label}
               </span>
             ) : (
               <Link
                 key={c.key}
                 href={`/search?q=${encodeURIComponent(rebuild(intent, c.key))}`}
-                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-brand-soft pl-3 pr-2 text-[13px] font-medium transition-colors hover:bg-brand"
+                className="inline-flex h-8 items-center gap-1.5 rounded-full bg-brand-soft pl-3 pr-2 text-support font-medium transition-colors hover:bg-brand"
                 aria-label={`Remove ${c.label}`}
               >
                 {c.label} <Icon name="close" size={13} />
@@ -65,18 +65,18 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
       )}
 
       {mode === "business" && intent?.qty ? (
-        <div className="mt-6 flex flex-col gap-4 rounded-[24px] bg-ink p-5 text-porcelain sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-[15px]">
+        <div className="mt-6 flex flex-col gap-4 rounded-surface bg-ink p-5 text-porcelain sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-body">
             <span className="font-medium">Buying {intent.qty.toLocaleString("en-US")} units?</span>{" "}
             <span className="text-mute-dark">Prices below already reflect volume tiers. For more, let suppliers compete.</span>
           </p>
-          <Link href={`/business?tab=quotes&q=${encodeURIComponent(q)}`} className="btn btn-brand btn-sm shrink-0">
+          <Link href={`/business?tab=quotes&q=${encodeURIComponent(q)}`} className="btn btn-primary shrink-0">
             Request quotes
           </Link>
         </div>
       ) : null}
 
-      <Suspense fallback={<div className="mt-10 h-[600px] rounded-3xl bg-mist" />}>
+      <Suspense fallback={<div className="mt-10 h-[600px] rounded-surface bg-mist" />}>
         <Listing
           key={`${mode}-${q}`}
           base={base}

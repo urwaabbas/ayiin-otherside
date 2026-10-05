@@ -28,7 +28,7 @@ export function QuestionMarquee({ tone = "light" }: { tone?: "light" | "dark" })
       className="relative flex overflow-hidden py-6 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
       aria-label="Questions Ayiin answers on every product"
     >
-      <div className="display flex animate-marquee whitespace-nowrap text-[30px] tracking-[-0.03em] sm:text-[40px]" aria-hidden>
+      <div className="display flex animate-marquee whitespace-nowrap text-heading tracking-[-0.03em] sm:text-display-sm" aria-hidden>
         {row}
         {row}
       </div>

@@ -31,10 +31,10 @@ export function Price({
   const cents = Math.round((value - whole) * 100);
   const symbol = fmt(0).replace(/[\d.,\s]/g, "");
   const sizes = {
-    sm: "text-[15px]",
-    md: "text-[19px]",
-    lg: "text-[30px]",
-    xl: "text-[44px] sm:text-[52px]",
+    sm: "text-body",
+    md: "text-emphasis",
+    lg: "text-heading",
+    xl: "text-display-sm sm:text-display-md",
   }[size];
   return (
     <span className={clsx("inline-flex items-baseline gap-2", className)}>
@@ -51,7 +51,7 @@ export function Price({
         )}
       </span>
       {strike != null && strike > usd && (
-        <span className="num text-[13px] text-mute line-through decoration-[1px]">
+        <span className="num text-support text-mute line-through decoration-[1px]">
           <span className="sr-only">was </span>
           {fmt(strike)}
         </span>

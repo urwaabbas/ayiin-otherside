@@ -23,7 +23,7 @@ export function Stars({ value, size = 12, className }: { value: number; size?: n
 
 export function Rating({ value, count, className, dense }: { value: number; count?: number; className?: string; dense?: boolean }) {
   return (
-    <span className={clsx("inline-flex shrink-0 items-center gap-1.5 text-[12.5px] text-ink-2", className)}>
+    <span className={clsx("inline-flex shrink-0 items-center gap-1.5 text-meta text-ink-2", className)}>
       {dense ? (
         <>
           <span className="hidden xl:inline-flex">
