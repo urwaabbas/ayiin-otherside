@@ -1,170 +1,385 @@
+"use client";
+
+import { useState, useRef, type FormEvent } from "react";
 import Link from "next/link";
 import { AyiinLogo } from "@/components/brand/ayiin-logo";
 import { Icon, type IconName } from "@/components/ui/icon";
-import { NewsletterForm } from "@/components/layout/newsletter";
 import type { Mode } from "@/lib/types";
 
-const PROMISES: { icon: IconName; title: string; body: string }[] = [
-  { icon: "truck", title: "Exact delivery dates", body: "A real date on every product, not a range." },
-  { icon: "receipt", title: "Total price upfront", body: "Shipping and fees shown before your cart." },
-  { icon: "returns", title: "Free 30-day returns", body: "On every Ayiin Assured item. Label included." },
-  { icon: "shield", title: "Verified sellers only", body: "4-point checks. Protected payments." },
+interface PromiseItem {
+  number: string;
+  category: string;
+  title: string;
+  body: string;
+  icon: IconName;
+}
+
+const PROMISES: PromiseItem[] = [
+  {
+    number: "01",
+    category: "DELIVERY",
+    title: "Exact Delivery Dates",
+    body: "A verified delivery commitment on every listing, never an estimated window.",
+    icon: "truck",
+  },
+  {
+    number: "02",
+    category: "TRANSPARENCY",
+    title: "Upfront Landed Pricing",
+    body: "Freight, duty, and local handling calculated before your cart.",
+    icon: "receipt",
+  },
+  {
+    number: "03",
+    category: "CONFIDENCE",
+    title: "30-Day Managed Returns",
+    body: "Available on all Ayiin Assured inventory with prepaid collection.",
+    icon: "returns",
+  },
+  {
+    number: "04",
+    category: "VETTING",
+    title: "Verified Merchant Escrow",
+    body: "Strict four-point origin validation with protected milestone release.",
+    icon: "shield",
+  },
 ];
+
+interface FooterSection {
+  title: string;
+  links: { label: string; href: string }[];
+}
 
 export function Footer({ mode }: { mode: Mode }) {
   const business = mode === "business";
-  const cols: { title: string; links: [string, string][] }[] = [
+
+  const sections: FooterSection[] = [
     {
       title: "Shop",
       links: [
-        ["Verified deals", "/search?deal=1"],
-        ["Arrives tomorrow", "/search?fast=1"],
-        ["Audio & Tech", "/c/audio-tech"],
-        ["Home & Living", "/c/home-living"],
-        ["Compare", "/compare"],
+        { label: "Verified Deals", href: "/search?deal=1" },
+        { label: "Arrives Tomorrow", href: "/search?fast=1" },
+        { label: "Audio & Acoustics", href: "/c/audio-tech" },
+        { label: "Living & Interiors", href: "/c/home-living" },
+        { label: "Ergonomic Seating", href: "/c/ergonomic-seating" },
+        { label: "Catalogue Compare", href: "/compare" },
       ],
     },
     {
       title: "Ayiin Business",
       links: [
-        ["Business account", "/business"],
-        ["Quick order", "/business?tab=quick"],
-        ["Request a quote", "/business?tab=quotes"],
-        ["Approvals & teams", "/business?tab=approvals"],
-        ["Invoices & terms", "/business?tab=invoices"],
+        { label: "Corporate Account", href: "/business" },
+        { label: "Quick Volume Order", href: "/business?tab=quick" },
+        { label: "Enterprise Quotes", href: "/business?tab=quotes" },
+        { label: "Approval Workflows", href: "/business?tab=approvals" },
+        { label: "Invoices & Net 30", href: "/business?tab=invoices" },
       ],
     },
     {
-      title: "Sell",
+      title: "Vendors & Trade",
       links: [
-        ["Sell on Ayiin", "/sell"],
-        ["Seller standards", "/sell#standards"],
-        ["Fees", "/sell#fees"],
+        { label: "Sell on Ayiin", href: "/sell" },
+        { label: "Seller Quality Code", href: "/sell#standards" },
+        { label: "Designer Trade Tier", href: "/business" },
+        { label: "Transparent Fee Matrix", href: "/sell#fees" },
+        { label: "Brand Verification", href: "/brand" },
       ],
     },
     {
-      title: "Help",
+      title: "Client Care",
       links: [
-        ["Track an order", "/track"],
-        ["Returns", "/help#returns"],
-        ["Delivery", "/help#delivery"],
-        ["Contact", "/help#contact"],
-        ["Brand", "/brand"],
+        { label: "Track Shipment", href: "/track" },
+        { label: "Returns & Exchanges", href: "/help#returns" },
+        { label: "White-Glove Delivery", href: "/help#delivery" },
+        { label: "Concierge Support", href: "/help#contact" },
+        { label: "Security & Escrow", href: "/help" },
       ],
     },
   ];
 
   return (
-    <footer className="mt-10 pb-[84px] text-white lg:pb-0">
-      {/* Promises strip, on the page */}
-      <section aria-label="The Ayiin promise" className="mx-auto max-w-[1520px] px-3 text-ink sm:px-4">
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {PROMISES.map((p) => (
-            <li key={p.title} className="flex gap-3 rounded-control bg-white p-4 shadow-[var(--shadow-hair)]">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand-soft text-brand-deep">
-                <Icon name={p.icon} size={19} />
-              </span>
-              <div>
-                <p className="text-support font-semibold">{p.title}</p>
-                <p className="mt-0.5 text-support text-mute">{p.body}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+    <footer className="mt-20 border-t border-[#2a2622] bg-[#141210] text-white selection:bg-brand selection:text-ink lg:mt-28">
+      {/* ── 1. Editorial Promises Strip (Layaan Minimalist Atelier Style) ── */}
+      <section aria-label="Ayiin Standards" className="border-b border-[#2a2622]">
+        <div className="mx-auto max-w-[1520px] px-4 sm:px-6 lg:px-8">
+          <ul className="grid grid-cols-1 divide-y divide-[#2a2622] sm:grid-cols-2 sm:divide-y-0 sm:divide-x lg:grid-cols-4">
+            {PROMISES.map((p, idx) => (
+              <li
+                key={p.number}
+                className={`py-8 sm:py-10 ${
+                  idx % 2 === 0 ? "sm:pr-8" : "sm:pl-8"
+                } lg:px-8 lg:first:pl-0 lg:last:pr-0`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[11px] font-semibold tracking-[0.18em] text-brand">
+                    {p.number} / {p.category}
+                  </span>
+                  <span className="grid h-7 w-7 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-brand/90">
+                    <Icon name={p.icon} size={14} />
+                  </span>
+                </div>
+                <h3 className="mt-4 text-[15px] font-medium tracking-tight text-white">
+                  {p.title}
+                </h3>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-white/55">
+                  {p.body}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
-      <a href="#main" className="mt-10 block bg-graphite py-3 text-center text-support font-medium text-white/90 hover:text-brand">
-        Back to top
-      </a>
-
-      <div className="relative isolate overflow-hidden bg-ink">
-        {/* Soft amber light behind the glass */}
-        <span aria-hidden className="pointer-events-none absolute -left-40 top-10 -z-10 h-[420px] w-[420px] rounded-full bg-[radial-gradient(closest-side,rgb(255_166_36/0.35),transparent)] blur-2xl" />
-        <span aria-hidden className="pointer-events-none absolute -right-32 bottom-40 -z-10 h-[380px] w-[380px] rounded-full bg-[radial-gradient(closest-side,rgb(253_210_7/0.22),transparent)] blur-2xl" />
-
-        <div className="mx-auto max-w-[1520px] px-4 pt-10 sm:px-6">
-          <div className="grid gap-4 lg:grid-cols-[1.1fr_2fr]">
-            {/* Brand + newsletter — glass panel */}
-            <div className="rounded-surface bg-white/[0.06] p-6 ring-1 ring-white/10 backdrop-blur-xl">
-              <Link href="/" aria-label="Ayiin home" className="inline-flex">
-                <AyiinLogo on="dark" className="h-10" />
+      {/* ── 2. Main Editorial Navigation & Brand Column ── */}
+      <div className="mx-auto max-w-[1520px] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+          {/* Brand & Newsletter Invitation (Col 1-5) */}
+          <div className="flex flex-col justify-between lg:col-span-5">
+            <div>
+              <Link href="/" aria-label="Ayiin home" className="inline-block transition-opacity hover:opacity-90">
+                <AyiinLogo on="dark" className="!h-8 !w-auto" />
               </Link>
-              <p className="mt-4 max-w-[320px] text-support leading-relaxed text-white/75">
-                {business ? "Procurement for teams: volume pricing, quotes, approvals and net terms." : "The marketplace with real prices, exact delivery dates and verified sellers."}
+
+              <p className="mt-5 max-w-sm font-sans text-[13.5px] leading-relaxed text-white/65">
+                {business
+                  ? "Procurement infrastructure for high-growth teams — volume pricing, net terms, and centralized approval controls."
+                  : "A curated commerce marketplace for modern workspaces and refined interiors — verified vendors, upfront pricing, exact delivery dates."}
               </p>
-              <div className="mt-5 max-w-[340px]">
-                <NewsletterForm />
+
+              {/* Newsletter / The Ayiin Dispatch Form */}
+              <div className="mt-9">
+                <p className="font-mono text-[11px] font-semibold tracking-[0.2em] text-brand/90 uppercase">
+                  Stay Informed
+                </p>
+                <p className="mt-1 text-[13px] text-white/50">
+                  Receive private inventory drops, trade allowances, and design briefs.
+                </p>
+
+                <FooterNewsletterForm />
               </div>
             </div>
-            {/* Link columns — glass panel */}
-            <div className="grid grid-cols-2 gap-6 rounded-surface bg-white/[0.06] p-6 ring-1 ring-white/10 backdrop-blur-xl sm:grid-cols-4">
-              {cols.map((col) => (
-                <nav key={col.title} aria-label={col.title}>
-                  <p className="text-support font-semibold">{col.title}</p>
-                  <ul className="mt-3 space-y-2 text-support text-white/70">
-                    {col.links.map(([label, href]) => (
-                      <li key={href}>
-                        <Link href={href} className="hover:text-brand">
-                          {label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-              ))}
+
+            {/* Live Operational Status Signal */}
+            <div className="mt-10 flex items-center gap-3">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              <span className="font-mono text-[11px] tracking-wide text-white/50">
+                Marketplace Operational · 99.98% On-Time Fulfillment
+              </span>
             </div>
           </div>
 
-          {/* ── Big Logo Glassmorphic Showcase ── */}
-          <div className="relative mx-auto mt-14 max-w-[620px]">
-            <Link
-              href="/"
-              aria-label="Ayiin home"
-              className="group relative flex items-center justify-center overflow-hidden rounded-[24px] border border-white/15 bg-white/[0.04] p-8 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.25),0_24px_50px_-20px_rgba(0,0,0,0.7)] backdrop-blur-2xl transition-all duration-500 hover:border-white/25 hover:bg-white/[0.08] hover:shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.35),0_30px_70px_-20px_rgba(255,166,36,0.22)] sm:p-10"
-            >
-              {/* Subtle glass specular highlight / light sweep */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute -inset-full bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.15),transparent_60%)] opacity-60 transition-opacity duration-500 group-hover:opacity-100"
-              />
+          {/* Navigation Columns (Col 6-12) */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:col-span-7">
+            {sections.map((sec) => (
+              <nav key={sec.title} aria-label={sec.title}>
+                <p className="font-mono text-[11px] font-semibold tracking-[0.18em] text-white/45 uppercase">
+                  {sec.title}
+                </p>
+                <ul className="mt-4 space-y-3">
+                  {sec.links.map((link) => (
+                    <li key={link.label}>
+                      <Link
+                        href={link.href}
+                        className="group inline-flex items-center text-[13px] text-white/65 transition-colors duration-200 hover:text-white"
+                      >
+                        <span className="transition-transform duration-200 group-hover:translate-x-1">
+                          {link.label}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
+          </div>
+        </div>
+      </div>
 
-              {/* Ambient brand amber aura behind the logo */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(255,166,36,0.25),transparent_70%)] opacity-80 blur-xl transition-all duration-500 group-hover:opacity-100 group-hover:scale-110"
-              />
+      {/* ── 3. Giant Interactive Watermark Display (Signature Layaan Feature) ── */}
+      <InteractiveBrandWatermark />
 
-              {/* Ultra-fine frosted grid texture accent */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px] opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"
-              />
+      {/* ── 4. Baseline Bar / Copyright / Payment / Back to Top ── */}
+      <div className="border-t border-[#2a2622]">
+        <div className="mx-auto flex max-w-[1520px] flex-col gap-4 px-4 py-6 text-xs text-white/45 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+          <p>© {new Date().getFullYear()} Ayiin Inc. All rights reserved.</p>
 
-              {/* The big Ayiin Logo */}
-              <div className="relative z-10 w-full max-w-[380px] transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]">
-                <AyiinLogo
-                  on="dark"
-                  className="!h-auto !w-full opacity-95 drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
-                />
-              </div>
+          {/* Discreet Legal & Security Links */}
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[12px]">
+            <Link href="/help#privacy" className="transition-colors hover:text-white">
+              Privacy
+            </Link>
+            <Link href="/help#terms" className="transition-colors hover:text-white">
+              Terms
+            </Link>
+            <Link href="/help#accessibility" className="transition-colors hover:text-white">
+              Accessibility
+            </Link>
+            <Link href="/brand" className="transition-colors hover:text-white">
+              Brand Assets
             </Link>
           </div>
 
-          <div className="mt-10 flex flex-col gap-3 border-t border-white/10 py-6 text-meta text-white/60 sm:flex-row sm:items-center sm:justify-between">
-            <p>© 2026 Ayiin Inc. · Multi-vendor marketplace for people and companies.</p>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              <Link href="/help#privacy" className="hover:text-white">Privacy</Link>
-              <Link href="/help#terms" className="hover:text-white">Terms</Link>
-              <Link href="/help#accessibility" className="hover:text-white">Accessibility</Link>
-              <span className="flex gap-1.5">
-                {["Visa", "Mastercard", "Amex", "PayPal"].map((m) => (
-                  <span key={m} className="rounded-compact bg-white/[0.06] px-1.5 py-0.5 text-meta text-white/75 ring-1 ring-white/15 backdrop-blur">{m}</span>
-                ))}
-              </span>
+          {/* Payment Badges & Back to Top */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5 font-mono text-[10px] text-white/60">
+              {["VISA", "MC", "AMEX", "PAYPAL", "WIRE"].map((badge) => (
+                <span
+                  key={badge}
+                  className="rounded border border-white/10 bg-white/[0.04] px-1.5 py-0.5 tracking-wider"
+                >
+                  {badge}
+                </span>
+              ))}
             </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
+              className="group inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-white/50 transition-colors hover:text-brand"
+            >
+              <span>Top</span>
+              <span className="transition-transform duration-200 group-hover:-translate-y-0.5">↑</span>
+            </button>
           </div>
         </div>
       </div>
     </footer>
+  );
+}
+
+/**
+ * High-end Minimalist Newsletter Form matching Layaan's refined hairline design
+ */
+function FooterNewsletterForm() {
+  const [email, setEmail] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    if (/\S+@\S+\.\S+/.test(email)) {
+      setSubmitted(true);
+    }
+  };
+
+  if (submitted) {
+    return (
+      <div className="mt-4 flex items-center gap-2.5 rounded-full border border-emerald-500/30 bg-emerald-950/20 px-4 py-2 text-xs text-emerald-300">
+        <span className="grid h-4 w-4 place-items-center rounded-full bg-emerald-400 text-ink">
+          <Icon name="check" size={10} strokeWidth={2.5} />
+        </span>
+        <span>Subscribed. Welcome to the private dispatch.</span>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="mt-4 flex max-w-sm items-center rounded-full border border-white/15 bg-white/[0.03] p-1 shadow-sm transition-all focus-within:border-brand/70 focus-within:bg-white/[0.05]"
+    >
+      <label htmlFor="footer-newsletter-input" className="sr-only">
+        Work email address
+      </label>
+      <input
+        id="footer-newsletter-input"
+        type="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email..."
+        className="h-9 min-w-0 flex-1 bg-transparent px-3 text-xs text-white placeholder:text-white/35 focus:outline-none"
+      />
+      <button
+        type="submit"
+        className="group inline-flex h-8 items-center gap-1.5 rounded-full bg-brand px-3.5 text-[11px] font-semibold uppercase tracking-wider text-ink transition-all hover:bg-brand-hover hover:shadow-[0_0_15px_rgba(255,166,36,0.4)]"
+      >
+        <span>Join</span>
+        <Icon name="arrowRight" size={12} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+      </button>
+    </form>
+  );
+}
+
+/**
+ * Signature Layaan Interactive Watermark
+ * Features an outlined text base layer with a pointer-tracking golden spotlight mask layer
+ */
+function InteractiveBrandWatermark() {
+  const [mousePos, setMousePos] = useState<{ x: number; y: number; active: boolean }>({
+    x: -999,
+    y: -999,
+    active: false,
+  });
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType !== "mouse") return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+      active: true,
+    });
+  };
+
+  const handlePointerLeave = () => {
+    setMousePos((prev) => ({ ...prev, active: false }));
+  };
+
+  const letters = ["A", "Y", "I", "I", "N"];
+  const typographyClass =
+    "block select-none font-display text-[clamp(4.5rem,1.5rem+15vw,17rem)] font-extrabold leading-[0.8] tracking-[-0.03em] text-center";
+
+  return (
+    <div
+      aria-hidden="true"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      className="relative mx-auto max-w-[1520px] cursor-default select-none overflow-hidden px-4 pt-12 pb-6 sm:px-6 lg:px-8"
+    >
+      {/* Ambient background glow aura */}
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(255,166,36,0.1),transparent_70%)] blur-3xl" />
+
+      {/* 1. Base Layer: Gold Outlined Stroke Typography */}
+      <span
+        className={`${typographyClass}`}
+        style={{
+          WebkitTextStroke: "1px rgba(255, 166, 36, 0.24)",
+          color: "transparent",
+        }}
+      >
+        {letters.map((char, index) => (
+          <span
+            key={index}
+            className="inline-block transition-transform duration-500 hover:scale-[1.02]"
+          >
+            {char}
+          </span>
+        ))}
+      </span>
+
+      {/* 2. Interactive Spotlight Fill Layer (Masked by Pointer Coordinates) */}
+      <span
+        className={`${typographyClass} pointer-events-none absolute inset-x-0 top-12 bg-gradient-to-b from-[#FFF5E6] via-[#FFA624] to-[#A5520C] bg-clip-text text-transparent transition-opacity duration-300 ${
+          mousePos.active ? "opacity-100" : "opacity-0"
+        }`}
+        style={{
+          maskImage: `radial-gradient(circle clamp(120px, 15vw, 260px) at ${mousePos.x}px ${mousePos.y}px, black 30%, transparent 100%)`,
+          WebkitMaskImage: `radial-gradient(circle clamp(120px, 15vw, 260px) at ${mousePos.x}px ${mousePos.y}px, black 30%, transparent 100%)`,
+        }}
+      >
+        {letters.map((char, index) => (
+          <span key={index} className="inline-block">
+            {char}
+          </span>
+        ))}
+      </span>
+    </div>
   );
 }

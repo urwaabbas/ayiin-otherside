@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
 import { ProductImage } from "@/components/product/product-image";
+import { Rating } from "@/components/product/rating";
 import { Price } from "@/components/ui/money";
 import { priceInsight, savingsPct, deliveryLabel } from "@/lib/commerce";
 import { useShop, useUI } from "@/lib/store";
@@ -67,63 +68,89 @@ export function FeaturePlusFour({
       {/* Feature + 4 Composition Grid */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6">
         {/* Large Featured Hero Card (Left Column) */}
-        <div className="group relative flex flex-col justify-between overflow-hidden rounded-[24px] border border-line bg-white p-5 shadow-[var(--shadow-hair)] transition-all duration-300 hover:shadow-[var(--shadow-soft)] sm:p-7 lg:col-span-5">
-          <div>
-            {/* Visual Header Pill */}
-            <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-meta font-medium text-brand-deep">
-                <SignalDot tone="brand" live />
-                Featured Highlight
-              </span>
-              <button
-                type="button"
-                onClick={() => setQuick(true)}
-                suppressHydrationWarning
-                className="inline-flex items-center gap-1 text-meta font-medium text-mute hover:text-ink transition-colors"
-              >
-                <Icon name="sparkle" size={13} />
-                <span>Quick look</span>
-              </button>
-            </div>
-
-            {/* Large Product Lifestyle Image Container */}
-            <Link
-              href={`/p/${featured.slug}`}
-              className="relative mt-5 block aspect-[4/3] w-full overflow-hidden rounded-[18px] bg-porcelain sm:aspect-[4/3]"
+        <div className="group relative flex flex-col overflow-hidden rounded-[24px] border border-line bg-white p-5 shadow-[var(--shadow-hair)] transition-all duration-300 hover:shadow-[var(--shadow-soft)] sm:p-6 lg:col-span-5">
+          {/* Visual Header Pill */}
+          <div className="flex items-center justify-between gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-meta font-medium text-brand-deep">
+              <SignalDot tone="brand" live />
+              Featured Highlight
+            </span>
+            <button
+              type="button"
+              onClick={() => setQuick(true)}
+              suppressHydrationWarning
+              className="inline-flex items-center gap-1 text-meta font-medium text-mute hover:text-ink transition-colors"
             >
-              <ProductImage
-                product={featured}
-                view="hero"
-                sizes="(min-width: 1024px) 45vw, 90vw"
-                className="h-full w-full"
-                imgClassName="object-contain p-4 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-105"
-              />
-              {off > 0 && (
-                <span className="absolute bottom-3 left-3 rounded-full bg-brand px-3 py-1 text-meta font-bold text-ink shadow-sm">
-                  {off}% OFF
-                </span>
-              )}
-            </Link>
+              <Icon name="sparkle" size={13} />
+              <span>Quick look</span>
+            </button>
+          </div>
 
-            {/* Title & Brand */}
-            <div className="mt-5">
+          {/* Large Product Lifestyle Image Container — Expands to fill vertical frame */}
+          <Link
+            href={`/p/${featured.slug}`}
+            className="relative mt-3.5 block w-full flex-1 min-h-[320px] sm:min-h-[380px] lg:min-h-[460px] xl:min-h-[500px] overflow-hidden rounded-[18px] bg-porcelain"
+          >
+            <ProductImage
+              product={featured}
+              view="hero"
+              sizes="(min-width: 1024px) 45vw, 90vw"
+              className="h-full w-full"
+              imgClassName="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-105"
+            />
+            {off > 0 && (
+              <span className="absolute bottom-3 left-3 rounded-full bg-brand px-3 py-1 text-meta font-bold text-ink shadow-sm">
+                {off}% OFF
+              </span>
+            )}
+          </Link>
+
+          {/* Title, Rating, Specs & Pricing (Tightly structured, zero dead space) */}
+          <div className="mt-4 flex flex-col">
+            <div className="flex items-center justify-between gap-2">
               <p className="font-mono text-meta uppercase tracking-[0.14em] text-mute">
                 {featured.brand}
               </p>
-              <Link href={`/p/${featured.slug}`}>
-                <h3 className="display mt-1 text-heading leading-tight tracking-[-0.01em] text-ink group-hover:text-brand-deep transition-colors sm:text-display-xs">
-                  {featured.name}
-                </h3>
-              </Link>
-              <p className="mt-2 text-support text-ink-2 line-clamp-2 leading-relaxed">
-                {featured.summary}
-              </p>
+              <span className="text-meta font-medium text-mute">
+                {featured.subcategory}
+              </span>
             </div>
-          </div>
 
-          {/* Pricing & Commerce Action Bar */}
-          <div className="mt-6 border-t border-line/80 pt-5">
-            <div className="flex items-baseline justify-between">
+            <Link href={`/p/${featured.slug}`}>
+              <h3 className="display mt-1 text-heading leading-tight tracking-[-0.01em] text-ink group-hover:text-brand-deep transition-colors sm:text-display-xs">
+                {featured.name}
+              </h3>
+            </Link>
+
+            <div className="mt-2 flex items-center gap-2">
+              <Rating value={featured.rating} count={featured.reviewCount} />
+              <span className="text-meta text-mute">·</span>
+              <span className="text-meta font-medium text-emerald-700">
+                {featured.stock > 0 && featured.stock <= 10
+                  ? `Only ${featured.stock} left`
+                  : "In stock"}
+              </span>
+            </div>
+
+            <p className="mt-1.5 text-support text-ink-2 line-clamp-2 leading-relaxed">
+              {featured.summary}
+            </p>
+
+            {featured.highlights && featured.highlights.length > 0 && (
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                {featured.highlights.slice(0, 3).map((h) => (
+                  <span
+                    key={h}
+                    className="rounded-full bg-soft px-2.5 py-1 text-meta font-medium text-ink-2"
+                  >
+                    {h}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            {/* Pricing & Commerce Action Bar directly attached */}
+            <div className="mt-4 border-t border-line/80 pt-3.5 flex items-end justify-between gap-3">
               <div>
                 <Price
                   usd={featured.price}
@@ -133,7 +160,7 @@ export function FeaturePlusFour({
                 <p className="mt-0.5 text-meta text-brand-deep font-medium">
                   {insight.label}
                 </p>
-                <p className="mt-0.5 text-meta text-emerald-700 font-medium flex items-center gap-1">
+                <p className="mt-0.5 flex items-center gap-1 text-meta font-medium text-emerald-700">
                   <Icon name="truck" size={12} />
                   <span>Arrives {delivery}</span>
                 </p>
@@ -156,12 +183,7 @@ export function FeaturePlusFour({
         {/* 4 Supporting Products Grid (Right Column: 2x2) */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:col-span-7">
           {supporting.slice(0, 4).map((p) => (
-            <div
-              key={p.id}
-              className="flex flex-col rounded-[20px] border border-line bg-white p-3.5 shadow-[var(--shadow-hair)] transition-all duration-300 hover:shadow-[var(--shadow-soft)] sm:p-4"
-            >
-              <ProductCard product={p} />
-            </div>
+            <ProductCard key={p.id} product={p} className="h-full" />
           ))}
         </div>
       </div>

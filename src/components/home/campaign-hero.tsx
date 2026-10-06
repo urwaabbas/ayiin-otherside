@@ -38,7 +38,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
       onMouseLeave={() => setIsPaused(false)}
       onFocusCapture={() => setIsPaused(true)}
       onBlurCapture={() => setIsPaused(false)}
-      className="relative h-[480px] w-full overflow-hidden bg-ink sm:h-[540px] lg:h-[620px] xl:h-[680px]"
+      className="relative h-[420px] w-full overflow-hidden bg-ink sm:h-[480px] lg:h-[520px] xl:h-[560px] max-h-[calc(100dvh-150px)] min-h-[400px]"
     >
       {slides.map((slide, idx) => {
         const isActive = idx === activeIdx;
@@ -85,7 +85,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
             />
 
             {/* Content Presentation */}
-            <div className="shell relative flex h-full flex-col justify-center pb-12 pt-8 sm:pb-16 sm:pt-12">
+            <div className="shell relative flex h-full flex-col justify-center pb-14 pt-6 sm:pb-16 sm:pt-8">
               <div className="max-w-2xl">
                 {/* Campaign Tag Badge */}
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-meta font-medium tracking-wide text-white backdrop-blur-md">
@@ -98,20 +98,20 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                 </div>
 
                 {/* Headline in Funnel Display */}
-                <h1 className="display mt-5 text-balance text-display-md leading-[0.93] tracking-[-0.035em] text-white sm:text-display-lg lg:text-display-xl">
+                <h1 className="display mt-3.5 sm:mt-4 text-balance text-display-sm leading-[0.95] tracking-[-0.035em] text-white sm:text-display-md lg:text-display-lg xl:text-display-xl">
                   {slide.title}
                 </h1>
 
                 {/* Supporting Editorial Copy */}
-                <p className="mt-4 max-w-xl text-balance text-body leading-relaxed text-white/85 sm:text-emphasis sm:leading-relaxed">
+                <p className="mt-3 sm:mt-4 max-w-xl text-balance text-body leading-relaxed text-white/85 sm:text-emphasis sm:leading-relaxed">
                   {slide.description}
                 </p>
 
                 {/* Call-to-Action Group */}
-                <div className="mt-8 flex flex-wrap items-center gap-3.5">
+                <div className="mt-6 sm:mt-7 flex flex-wrap items-center gap-3.5">
                   <Link
                     href={slide.cta.href}
-                    className="btn btn-primary h-12 px-6 text-support font-semibold shadow-[0_4px_16px_rgba(255,166,36,0.35)] transition-transform hover:scale-[1.02]"
+                    className="btn btn-primary h-11 px-5.5 text-support font-semibold shadow-[0_4px_16px_rgba(255,166,36,0.35)] transition-transform hover:scale-[1.02]"
                   >
                     <span>{slide.cta.label}</span>
                     <Icon name="arrowRight" size={17} />
@@ -120,7 +120,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                   {slide.secondaryCta && (
                     <Link
                       href={slide.secondaryCta.href}
-                      className="btn h-12 border border-white/35 bg-white/10 px-5 text-support font-medium text-white backdrop-blur-md transition-all hover:border-white hover:bg-white/20 hover:text-white"
+                      className="btn h-11 border border-white/35 bg-white/10 px-5 text-support font-medium text-white backdrop-blur-md transition-all hover:border-white hover:bg-white/20 hover:text-white"
                     >
                       <span>{slide.secondaryCta.label}</span>
                     </Link>
@@ -133,7 +133,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
       })}
 
       {/* Progress & Pagination Bar */}
-      <div className="absolute bottom-6 left-0 right-0 z-20">
+      <div className="absolute bottom-4 sm:bottom-5 left-0 right-0 z-20">
         <div className="shell flex items-center justify-between gap-4">
           {/* Segmented Slide Indicators with Animated Fill */}
           <div className="flex flex-1 max-w-md items-center gap-2">

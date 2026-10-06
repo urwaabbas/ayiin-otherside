@@ -26,6 +26,8 @@ export function Header() {
   const { mode } = usePrefs();
   const business = mode === "business";
   const [scrolled, setScrolled] = useState(false);
+  const [rolledUp, setRolledUp] = useState(false);
+  const lastScrollY = useRef(0);
   const [megaOpen, setMegaOpen] = useState(false);
   const [scope, setScope] = useState("");
   const searchOpen = useUI((s) => s.searchOpen);
@@ -43,7 +45,19 @@ export function Header() {
     let raf = 0;
     const on = () => {
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => setScrolled(window.scrollY > 28));
+      raf = requestAnimationFrame(() => {
+        const currentY = window.scrollY;
+        setScrolled(currentY > 28);
+        const diff = currentY - lastScrollY.current;
+        if (currentY <= 60) {
+          setRolledUp(false);
+        } else if (diff > 8) {
+          setRolledUp(true);
+        } else if (diff < -8) {
+          setRolledUp(false);
+        }
+        lastScrollY.current = currentY;
+      });
     };
     on();
     window.addEventListener("scroll", on, { passive: true });
@@ -100,6 +114,7 @@ export function Header() {
 
   const compact = scrolled;
   const overlay = megaOpen || (searchOpen && typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
+  const isHidden = rolledUp && !overlay && !menuOpen;
 
   const submitSearch = () => {
     const q = search.query.trim();
@@ -123,7 +138,14 @@ export function Header() {
           overlay ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
-      <header ref={headerRef} data-scrolled={compact} className="fixed inset-x-0 top-0 z-50">
+      <header
+        ref={headerRef}
+        data-scrolled={compact}
+        className={clsx(
+          "fixed inset-x-0 top-0 z-50 transition-transform duration-300 ease-[var(--ease-out-expo)]",
+          isHidden ? "-translate-y-full" : "translate-y-0",
+        )}
+      >
         {/* ── 1 · Charcoal strip ── */}
         <div className="hidden bg-ink text-white lg:block">
           <div className="mx-auto flex h-8 max-w-[1520px] items-center justify-between px-6 text-meta text-white/80">

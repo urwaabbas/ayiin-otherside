@@ -147,16 +147,16 @@ export function AyiinEdit() {
       <div className="grid gap-5 lg:grid-cols-12">
         {/* Left: Curated Story Spotlight */}
         {featured && (
-          <div className="overflow-hidden rounded-surface border border-line bg-white shadow-[var(--shadow-hair)] lg:col-span-5 flex flex-col justify-between">
+          <div className="overflow-hidden rounded-surface border border-line bg-white shadow-[var(--shadow-hair)] lg:col-span-4 flex flex-col justify-between">
             <Link
               href={`/p/${featured.slug}`}
-              className="group relative block aspect-[16/11] w-full overflow-hidden bg-mist"
+              className="group relative block aspect-[16/9] w-full overflow-hidden bg-mist"
               aria-label={featured.name}
             >
               <ProductImage
                 product={featured}
                 view={story.featuredView ?? "hero"}
-                sizes="(min-width: 1024px) 480px, 95vw"
+                sizes="(min-width: 1024px) 420px, 95vw"
                 className="h-full w-full transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 imgClassName="!object-cover"
               />
@@ -166,18 +166,18 @@ export function AyiinEdit() {
               </span>
             </Link>
 
-            <div className="p-6 sm:p-7 flex flex-col flex-1 justify-between">
+            <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between">
               <div>
                 <p className="eyebrow text-brand-deep">{story.kicker}</p>
-                <h3 className="display mt-2 text-heading leading-tight tracking-[-0.02em]">
+                <h3 className="display mt-1.5 text-heading leading-tight tracking-[-0.02em] sm:text-display-xs">
                   {story.title}
                 </h3>
-                <p className="mt-3 text-body leading-relaxed text-ink-2">
+                <p className="mt-2 text-support leading-relaxed text-ink-2 line-clamp-3">
                   {story.blurb}
                 </p>
               </div>
 
-              <div className="mt-6 flex items-center justify-between border-t border-line/80 pt-5">
+              <div className="mt-5 flex items-center justify-between border-t border-line/80 pt-4">
                 <div>
                   <p className="text-meta text-mute">Featured anchor piece</p>
                   <Link
@@ -189,9 +189,10 @@ export function AyiinEdit() {
                 </div>
                 <Link
                   href={story.href}
-                  className="btn btn-secondary text-support"
+                  className="btn btn-secondary text-support h-10 px-4"
                 >
-                  {story.ctaLabel} <Icon name="arrowRight" size={15} />
+                  <span>{story.ctaLabel}</span>
+                  <Icon name="arrowRight" size={14} />
                 </Link>
               </div>
             </div>
@@ -199,7 +200,7 @@ export function AyiinEdit() {
         )}
 
         {/* Right: Companion Product Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-7 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:col-span-8">
           {sideProducts.map((p) => (
             <div key={p.id} className="animate-fade flex flex-col">
               <ProductCard product={p} className="h-full" />
