@@ -19,7 +19,7 @@ import {
   useUI,
   type CartLine,
 } from "@/lib/store";
-import { company } from "@/lib/business";
+import { company } from "@/lib/b2b/seed";
 import { ProductImage } from "@/components/product/product-image";
 import { QtyStepper } from "@/components/ui/qty-stepper";
 import { SignalDot } from "@/components/ui/signal";

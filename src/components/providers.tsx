@@ -7,6 +7,7 @@ import type { Mode } from "@/lib/types";
 import { money, type Currency } from "@/lib/format";
 import { CURRENCY_COOKIE, MODE_COOKIE, type Prefs } from "@/lib/prefs";
 import { useShop } from "@/lib/store";
+import { useWorkspace } from "@/lib/b2b/workspace";
 
 type PrefsCtx = Prefs & {
   setMode: (m: Mode) => void;
@@ -31,6 +32,7 @@ export function Providers({ initial, children }: { initial: Prefs; children: Rea
 
   useEffect(() => {
     void useShop.persist.rehydrate();
+    void useWorkspace.persist.rehydrate();
   }, []);
 
   useEffect(() => {

@@ -11,8 +11,10 @@ import {
   FREE_SHIPPING_THRESHOLD,
   TAX_RATE,
 } from "@/lib/commerce";
-import { cartSummary, lineUnitPrice, useHydrated, useShop } from "@/lib/store";
-import { addresses, company } from "@/lib/business";
+import { cartSummary, lineUnitPrice, useHydrated, useShop, useUI } from "@/lib/store";
+import { decide } from "@/lib/b2b/policy";
+import { line as priceLine } from "@/lib/b2b/seed";
+import { company, memberName, useWorkspace, VIEWER_ID } from "@/lib/b2b/workspace";
 import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
@@ -100,13 +102,18 @@ export function CheckoutView() {
   const business = mode === "business";
   const cart = useShop((s) => s.cart);
   const placeOrder = useShop((s) => s.placeOrder);
+  const notify = useUI((s) => s.notify);
   const formRef = useRef<HTMLFormElement>(null);
   const [errors, setErrors] = useState<Errors>({});
   const [express, setExpress] = useState(false);
   const [pay, setPay] = useState<"card" | "paypal" | "invoice" | "ach">(
     business ? "invoice" : "card",
   );
-  const [shipTo, setShipTo] = useState(addresses[0].id);
+  const ws = useWorkspace();
+  const viewer = ws.members.find((m) => m.id === VIEWER_ID)!;
+  const addresses = ws.locations.map((l) => ({ id: l.id, label: l.label, line: `${l.line}, ${l.city}`, contact: l.notes || l.contact }));
+  const [shipTo, setShipTo] = useState(ws.locations.find((l) => l.isDefault)?.id ?? ws.locations[0].id);
+  const [costCenterId, setCostCenterId] = useState(viewer.costCenterId);
   const [placing, setPlacing] = useState(false);
   const [card, setCard] = useState("");
   const [exp, setExp] = useState("");
@@ -146,7 +153,14 @@ export function CheckoutView() {
   const tax =
     business && company.taxExempt ? 0 : (sum.subtotal + shipping) * TAX_RATE;
   const total = sum.subtotal + shipping + tax;
-  const needsApproval = business && total > 2500;
+  const businessLines = cart.map((l) => {
+    const p = productById(l.productId)!;
+    return { ...priceLine(p.slug, l.qty, l.variantId), unit: lineUnitPrice(l) };
+  });
+  const decision = business
+    ? decide({ requester: viewer, total, lines: businessLines, costCenterId, rules: ws.rules, costCenters: ws.costCenters })
+    : null;
+  const needsApproval = decision?.kind === "approval";
   const slowest = cart
     .map((l) => productById(l.productId)!)
     .sort((a, b) => b.delivery.max - a.delivery.max)[0];
@@ -184,12 +198,28 @@ export function CheckoutView() {
       return;
     }
     setPlacing(true);
+    if (business) {
+      const res = ws.submit({
+        title: cart.length === 1 ? `${productById(cart[0].productId)?.name ?? "Order"}` : `Checkout — ${cart.length} items`,
+        lines: businessLines,
+        costCenterId,
+        locationId: shipTo,
+        reference: v("po"),
+        note: v("notes") || undefined,
+        source: "checkout",
+      });
+      notify(
+        res.kind === "po" ? `${res.id} issued` : `${res.id} sent for approval`,
+        res.kind === "po" ? "Suppliers have your purchase order." : `${memberName(ws.members, res.approverId)} will review it.`,
+        { label: res.kind === "po" ? "View PO" : "Track", href: res.kind === "po" ? `/business?tab=orders&po=${res.id}` : "/business?tab=approvals" },
+      );
+    }
     const id = placeOrder({
       total,
       mode,
       status: needsApproval ? "awaiting-approval" : "confirmed",
       po: business ? v("po") : undefined,
-      email: business ? "priya@northwind.studio" : v("email"),
+      email: business ? viewer.email : v("email"),
       items: cart.map((l) => ({
         productId: l.productId,
         variantId: l.variantId,
@@ -264,7 +294,7 @@ export function CheckoutView() {
                 <div className="text-support">
                   <p className="font-medium">{company.legal}</p>
                   <p className="text-mute">
-                    Priya Raman · priya@northwind.studio · {company.taxId}
+                    {viewer.name} · {viewer.email} · {company.taxId}
                   </p>
                 </div>
               </div>
@@ -319,9 +349,11 @@ export function CheckoutView() {
                   <label htmlFor="cc" className="field-label">
                     Cost centre
                   </label>
-                  <select id="cc" name="cc" className="field">
-                    {company.costCenters.map((c) => (
-                      <option key={c}>{c}</option>
+                  <select id="cc" name="cc" value={costCenterId} onChange={(e) => setCostCenterId(e.target.value)} className="field">
+                    {ws.costCenters.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -631,8 +663,11 @@ export function CheckoutView() {
             <div className="mt-4 rounded-surface bg-info-soft p-4 text-support text-info">
               <p className="font-medium">Needs approval</p>
               <p className="mt-0.5">
-                Over your $2,500 limit. Priya Raman (Manager) will be notified
-                and can approve from email — median 42 minutes.
+                {decision?.kind === "approval" && (
+                  <>
+                    {decision.reason}. {memberName(ws.members, decision.approverId)} will be notified and can approve from email — median 42 minutes.
+                  </>
+                )}
               </p>
             </div>
           )}

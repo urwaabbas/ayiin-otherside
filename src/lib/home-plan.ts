@@ -22,7 +22,7 @@ import { hasView } from "@/lib/images";
 export const COMPARE_SLUGS = ["aurel-anc-over-ear", "aurel-buds-pro", "halo-speaker-mini"] as const;
 /** The product the business bridge's volume chart is drawn from. */
 export const BRIDGE_SLUG = "nitrile-gloves-4mil";
-/** The product the business home RFQ example is written about. */
+/** The product the seeded open quote request (RFQ-20418) is for. */
 export const RFQ_SLUG = "nitrile-gloves-4mil";
 
 const B2B_ONLY = new Set(["supplies", "safety"]);
@@ -109,13 +109,10 @@ export type BusinessPlan = ReturnType<typeof planBusinessHome>;
 export function planBusinessHome() {
   const shelf = new Shelf();
 
-  // 1 · Pinned: the RFQ example is written about this product.
+  // 1 · Pinned: the live quote board opens on a request for this product.
   const rfq = shelf.takeOne({ prefer: [RFQ_SLUG], fallback: false });
 
-  // 2 · Hero pill: workplace kit.
-  const pill = shelf.take(3, { prefer: ["kova-book-14-air", "kova-vista-27-4k", "kova-keys-low-profile"] });
-
-  // 3 · Rails, top to bottom.
+  // 2 · Rails, top to bottom.
   const volume = shelf.take(4, { prefer: VOLUME_PRODUCT_SLUGS, where: isBulk, rank: bySales });
   const tiles = takeCategoryTiles(
     shelf,
@@ -124,5 +121,5 @@ export function planBusinessHome() {
   );
   const bulk = shelf.takeGrid(8, { min: 2, step: 2, where: isBulk, rank: bySales });
 
-  return { rfq, pill, volume, tiles, bulk, renderedIds: [...shelf.renderedIds] };
+  return { rfq, volume, tiles, bulk, renderedIds: [...shelf.renderedIds] };
 }

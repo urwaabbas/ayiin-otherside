@@ -26,6 +26,7 @@ export function VolumeExplorer({
   const p = items[pi];
   const qty = STOPS[stop];
   const unit = unitPrice(p, qty);
+  const contract = unitPrice(p, qty, { contract: true });
   const offers = priceOffers(p, qty);
   const nt = nextTier(p, qty);
   const activeMin = p.b2b.tiers.filter((t) => t.min <= qty).pop()?.min;
@@ -125,10 +126,23 @@ export function VolumeExplorer({
                 {fmt(p.price * qty, { cents: true })}
               </span>
             </p>
-            <p className="flex justify-between font-medium">
-              <span>Your total</span>{" "}
+            <p className="flex justify-between">
+              <span className="text-ink-2">At volume price</span>{" "}
               <span className="num">{fmt(unit * qty, { cents: true })}</span>
             </p>
+            {contract < unit ? (
+              <p className="flex justify-between font-medium">
+                <span className="flex items-center gap-2">
+                  Your contract price
+                  <span className="rounded-full bg-brand-soft px-2 py-0.5 text-meta font-medium text-brand-deep">{fmt(contract, { cents: true })}/{p.b2b.unit.split(" ")[0]}</span>
+                </span>{" "}
+                <span className="num">{fmt(contract * qty, { cents: true })}</span>
+              </p>
+            ) : (
+              <p className="flex justify-between font-medium">
+                <span>Your total</span> <span className="num">{fmt(unit * qty, { cents: true })}</span>
+              </p>
+            )}
             {nt && (
               <p className="rounded-control bg-info-soft px-3 py-2 text-support text-info">
                 Order {nt.min - qty} more to reach{" "}
@@ -208,7 +222,7 @@ export function VolumeExplorer({
                 addToCart(p.id, p.variants[0].id, qty, true);
                 notify(
                   "Added to cart",
-                  `${qty} × ${p.name.split(" — ")[0]} at ${fmt(unit, { cents: true })}`,
+                  `${qty} × ${p.name.split(" — ")[0]} at ${fmt(contract, { cents: true })}`,
                 );
               }}
               className="btn btn-primary"

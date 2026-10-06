@@ -35,7 +35,7 @@ export function Toast() {
             <Link href={toast.action.href} onClick={dismiss} className="rounded-control px-3 py-2 text-support font-medium text-brand hover:bg-graphite">
               {toast.action.label}
             </Link>
-          ) : (
+          ) : toast.action === false ? null : (
             <button
               type="button"
               onClick={() => {

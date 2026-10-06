@@ -22,12 +22,17 @@ const example = () =>
 export function QuickOrder({
   variant = "full",
   tone = "light",
+  initial = "",
+  className,
 }: {
   variant?: "hero" | "full";
   tone?: "light" | "dark";
+  /** Pre-filled lines, e.g. from an uploaded spreadsheet */
+  initial?: string;
+  className?: string;
 }) {
   const { fmt } = usePrefs();
-  const [text, setText] = useState("");
+  const [text, setText] = useState(initial);
   const addToCart = useShop((s) => s.addToCart);
   const notify = useUI((s) => s.notify);
   const lines = useMemo(() => parseQuickOrder(text), [text]);
@@ -54,6 +59,7 @@ export function QuickOrder({
     <div
       className={clsx(
         "overflow-hidden rounded-surface",
+        className,
         dark
           ? "bg-graphite ring-1 ring-graphite-line"
           : "bg-white shadow-[var(--shadow-soft)] ring-1 ring-line",
@@ -67,7 +73,7 @@ export function QuickOrder({
       >
         <p className="flex items-center gap-2 text-support font-medium">
           <Icon name="bolt" size={16} className={dark ? "text-brand" : ""} />{" "}
-          Quick order
+          {variant === "hero" ? "One item per line" : "Quick order"}
         </p>
         <button
           type="button"

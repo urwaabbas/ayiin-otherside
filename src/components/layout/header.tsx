@@ -13,6 +13,8 @@ import { usePrefs } from "@/components/providers";
 import { useHydrated, useShop, useUI } from "@/lib/store";
 import { categories } from "@/lib/catalog/categories";
 import { CURRENCIES, type Currency } from "@/lib/format";
+import { creditAvailable, waitingOn } from "@/lib/b2b/policy";
+import { company, useWorkspace, useWorkspaceReady } from "@/lib/b2b/workspace";
 
 /* ─────────────────────────────────────────────────────────────
    Header
@@ -154,7 +156,7 @@ export function Header() {
             </span>
             <span className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-              {business ? "Northwind Studio · Net 30 · $48,200 credit available" : "Real prices · exact delivery dates · verified sellers"}
+              {business ? <BusinessTicker /> : "Real prices · exact delivery dates · verified sellers"}
             </span>
             <nav aria-label="Utility" className="flex items-center gap-5">
               {!business && <Link href="/business" className="hover:text-white">Ayiin Business</Link>}
@@ -272,6 +274,7 @@ export function Header() {
                 <DeptLink href="/business?tab=quick">Quick order</DeptLink>
                 <DeptLink href="/business?tab=quotes">Quotes</DeptLink>
                 <DeptLink href="/business?tab=lists">Reorder</DeptLink>
+                <DeptLink href="/business?tab=approvals">Approvals</DeptLink>
                 {categories.filter((c) => c.business).map((c) => (
                   <DeptLink key={c.slug} href={`/c/${c.slug}`}>{c.short}</DeptLink>
                 ))}
@@ -703,6 +706,25 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
           </div>
         </div>
       </div>
+    </>
+  );
+}
+
+/** Utility-bar account line in business mode — reads the live workspace. */
+function BusinessTicker() {
+  const ws = useWorkspace();
+  const ready = useWorkspaceReady();
+  const { fmt } = usePrefs();
+  const pending = waitingOn(ws.requisitions).length;
+  if (!ready) return <>{company.name} · {company.terms} · Tax exempt</>;
+  return (
+    <>
+      {company.name} · {company.terms} · {fmt(Math.round(creditAvailable(ws)))} credit available
+      {pending > 0 && (
+        <Link href="/business?tab=approvals" className="ml-1 text-brand hover:underline">
+          · {pending} to approve
+        </Link>
+      )}
     </>
   );
 }

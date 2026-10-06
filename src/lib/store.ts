@@ -265,13 +265,14 @@ type UIState = {
   cartOpen: boolean;
   searchOpen: boolean;
   menuOpen: boolean;
-  toast: { id: number; title: string; body?: string; action?: { label: string; href: string } } | null;
+  toast: { id: number; title: string; body?: string; action?: { label: string; href: string } | false } | null;
   openCart: () => void;
   closeCart: () => void;
   openSearch: () => void;
   closeSearch: () => void;
   setMenu: (open: boolean) => void;
-  notify: (title: string, body?: string, action?: { label: string; href: string }) => void;
+  /** `action: false` shows no button; omitted, the toast offers "View cart". */
+  notify: (title: string, body?: string, action?: { label: string; href: string } | false) => void;
   dismissToast: () => void;
 };
 

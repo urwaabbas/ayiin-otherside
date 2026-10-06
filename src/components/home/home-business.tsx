@@ -1,152 +1,52 @@
 import Link from "next/link";
 import { categories } from "@/lib/catalog/categories";
-import { sellerById } from "@/lib/catalog/sellers";
-import { approvals, company, rfqResponses } from "@/lib/business";
+import { sellers } from "@/lib/catalog/sellers";
+import { products } from "@/lib/catalog/products";
+import { planBusinessHome } from "@/lib/home-plan";
 import { ProductImage } from "@/components/product/product-image";
 import { ProductCard } from "@/components/product/product-card";
-import { Eyebrow, SignalDot } from "@/components/ui/signal";
 import { SectionHeader } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
-import { Icon, type IconName } from "@/components/ui/icon";
-import { Money } from "@/components/ui/money";
-import { InlinePill } from "@/components/home/inline-pill";
-import { QuestionMarquee } from "@/components/home/question-marquee";
-import { QuickOrder } from "@/components/business/quick-order";
+import { Icon } from "@/components/ui/icon";
 import { VolumeExplorer } from "@/components/business/volume-explorer";
 import { ReorderLists } from "@/components/business/reorder-lists";
-import { ApprovalQueue } from "@/components/business/approval-queue";
-
-import { planBusinessHome } from "@/lib/home-plan";
+import { DeskHero } from "@/components/home/business/desk-hero";
+import { ControlGrid, RfqBoard } from "@/components/home/business/live-sections";
 
 export function HomeBusiness() {
   // Every product on this page comes from one plan, so none appears twice.
-  const { pill, volume, rfq: gloves, tiles, bulk } = planBusinessHome();
-  const available = company.creditLimit - company.creditUsed;
+  const { volume, tiles, bulk } = planBusinessHome();
+
+  // Network figures are computed from the supplier roster, not written as copy.
+  const network = sellers.filter((s) => s.business && s.verified);
+  const onTime = network.reduce((s, x) => s + x.onTime, 0) / network.length;
+  const response = [...network.map((s) => s.responseHours)].sort((a, b) => a - b)[Math.floor(network.length / 2)];
+  // Average discount at each bulk item's top volume tier.
+  const bulkItems = products.filter((p) => p.tags.includes("bulk"));
+  const topTier = bulkItems.reduce((s, p) => s + (1 - p.b2b.tiers[p.b2b.tiers.length - 1].price / p.price), 0) / bulkItems.length;
 
   return (
     <>
-      {/* ── HERO ─────────────────────────────────────────────── */}
-      <section className="shell pt-6 sm:pt-10 lg:pt-12">
-        <div className="grid items-start gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <Eyebrow index="Ayiin Business" className="animate-fade">
-              Procurement
-              <span className="hidden sm:inline">
-                {" "}
-                for 12,000+ companies · Net terms · Multi-supplier quotes
-              </span>
-            </Eyebrow>
-            <h1 className="display mt-6 text-display-md sm:text-display-lg xl:text-display-xl">
-              <span className="block animate-rise">Procure in</span>{" "}
-              <span className="block animate-rise [animation-delay:100ms]">
-                minutes, not
-              </span>{" "}
-              <span className="block animate-rise [animation-delay:200ms]">
-                <InlinePill items={pill} /> weeks.
-              </span>
-            </h1>
-            <p className="mt-7 max-w-[560px] animate-rise text-body leading-relaxed text-ink-2 [animation-delay:280ms] sm:text-emphasis">
-              Paste a list, get live volume pricing from verified suppliers,
-              route it for approval and pay on terms — in one place, for your
-              whole team.
-            </p>
-            <div className="mt-8 max-w-[680px] animate-rise [animation-delay:340ms]">
-              <QuickOrder variant="hero" />
-            </div>
-          </div>
+      <DeskHero />
 
-          {/* Account card */}
-          <aside
-            aria-label="Company account"
-            className="animate-rise [animation-delay:260ms] lg:col-span-5"
-          >
-            <div className="panel-ink relative overflow-hidden rounded-surface p-6 sm:p-7">
-              <div
-                aria-hidden
-                className="grid-texture-dark pointer-events-none absolute inset-0 opacity-70 [mask-image:linear-gradient(to_bottom,black,transparent)]"
-              />
-              <div className="relative">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="grid h-11 w-11 place-items-center rounded-surface bg-porcelain font-mono text-support font-medium text-ink">
-                      NW
-                    </span>
-                    <div>
-                      <p className="text-body font-medium">{company.name}</p>
-                      <p className="text-meta text-mute-dark">
-                        {company.terms} · Tax exempt · 5 members
-                      </p>
-                    </div>
-                  </div>
-                  <Link href="/business" className="btn btn-secondary">
-                    Dashboard
-                  </Link>
-                </div>
-
-                <div className="mt-7">
-                  <div className="flex items-end justify-between">
-                    <p className="text-meta text-mute-dark">Available credit</p>
-                    <p className="num text-meta text-mute-dark">
-                      of <Money usd={company.creditLimit} />
-                    </p>
-                  </div>
-                  <p className="display mt-1 text-display-md leading-none">
-                    <Money usd={available} mono={false} />
-                  </p>
-                  <div className="mt-3 h-2 overflow-hidden rounded-full bg-graphite">
-                    <div
-                      className="bg-brand-gradient h-full rounded-full"
-                      style={{
-                        width: `${(available / company.creditLimit) * 100}%`,
-                      }}
-                    />
-                  </div>
-                  <p className="mt-2 text-meta text-mute-dark">
-                    Next invoice due Oct 4 · Autopay off
-                  </p>
-                </div>
-
-                <div className="mt-7">
-                  <div className="mb-2 flex items-center justify-between">
-                    <p className="eyebrow !text-mute-dark">Waiting on you</p>
-                    <Link
-                      href="/business?tab=approvals"
-                      className="text-meta text-brand hover:underline"
-                    >
-                      All approvals
-                    </Link>
-                  </div>
-                  <ApprovalQueue items={approvals.slice(0, 2)} tone="dark" />
-                </div>
-              </div>
-            </div>
-          </aside>
-        </div>
-
-        <dl className="mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-surface bg-line lg:mt-20 lg:grid-cols-4">
+      {/* ── NETWORK ─────────────────────────────────────────── */}
+      <section className="shell mt-14 lg:mt-20" aria-label="The Ayiin Business supplier network">
+        <dl className="grid grid-cols-2 overflow-hidden rounded-surface bg-white shadow-[var(--shadow-hair)] lg:grid-cols-4">
           {[
-            ["3h 12m", "median time to first supplier quote"],
-            ["23%", "average saved at volume vs. list price"],
-            ["1 click", "to reorder any list, or schedule it"],
-            ["Net 60", "terms available after 90 days of spend"],
-          ].map(([n, l]) => (
-            <div key={l} className="bg-porcelain p-5 sm:p-7">
+            [`${network.length}`, "verified business suppliers on your account"],
+            [`${onTime.toFixed(1)}%`, "average on-time delivery, last 12 months"],
+            [`${response}h`, "median supplier response to a quote"],
+            [`${Math.round(topTier * 100)}%`, `average saving at the top volume tier, across ${bulkItems.length} bulk items`],
+          ].map(([n, l], i) => (
+            <div key={l} className={`p-5 sm:p-7 ${i % 2 ? "border-l border-line" : ""} ${i > 1 ? "border-t border-line lg:border-t-0" : ""} ${i === 2 ? "lg:border-l" : ""}`}>
               <dt className="sr-only">{l}</dt>
               <dd>
-                <span className="display block text-display-sm sm:text-display-md">
-                  {n}
-                </span>
-                <span className="mt-2 block max-w-[220px] text-support text-mute">
-                  {l}
-                </span>
+                <span className="display block text-heading tabular-nums sm:text-display-sm">{n}</span>
+                <span className="mt-2 block max-w-[220px] text-support text-mute">{l}</span>
               </dd>
             </div>
           ))}
         </dl>
-      </section>
-
-      <section className="panel-ink mt-10">
-        <QuestionMarquee tone="dark" />
       </section>
 
       {/* ── 01 REORDER ───────────────────────────────────────── */}
@@ -161,7 +61,7 @@ export function HomeBusiness() {
               Or never think about it.
             </>
           }
-          description="Save any cart as a procurement list, then reorder it instantly or put it on a schedule. Prices update to today's contract rate automatically."
+          description="Save any cart as a list, then reorder it instantly or put it on a schedule. Prices refresh to today's contract rate every time."
           action={{ href: "/business?tab=lists", label: "All lists" }}
         />
         <div className="mt-12">
@@ -181,17 +81,17 @@ export function HomeBusiness() {
               every supplier, visible.
             </>
           }
-          description="Slide to your quantity. See the unit price at each tier and the landed cost from every verified supplier stocking the item — lead time and reliability included."
+          description="Slide to your quantity. See each tier, your contract rate, and the landed cost from every verified supplier stocking the item — lead time and reliability included."
         />
         <div className="mt-12">
           <VolumeExplorer items={volume} />
         </div>
       </section>
 
-      {/* ── 03 RFQ ───────────────────────────────────────────── */}
+      {/* ── 03 QUOTES ────────────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
-          <div>
+        <div className="grid items-start gap-12 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
+          <div className="lg:sticky lg:top-[120px]">
             <SectionHeader
               index="03"
               kicker="Quotes without email chains"
@@ -202,30 +102,19 @@ export function HomeBusiness() {
                   Competing offers.
                 </>
               }
-              description="Describe what you need once. Ayiin sends it to every qualified supplier, normalises their responses and lets you accept the best one as a purchase order."
+              description="Describe what you need once. Ayiin sends it to every qualified supplier, normalises the replies to landed cost and turns the winner into a purchase order."
             />
-            <ol className="mt-10 space-y-5">
+            <ol className="mt-10 space-y-6">
               {[
-                [
-                  "Describe",
-                  "Items, quantities, target price and delivery date — or attach a spec sheet.",
-                ],
-                [
-                  "Compare",
-                  "Responses arrive side by side with landed cost, lead time and supplier score.",
-                ],
-                [
-                  "Accept",
-                  "Convert the winning quote to a PO in one click; approvals run automatically.",
-                ],
+                ["Describe", "Item, quantity, target price and delivery date. Notes and specs travel with it."],
+                ["Compare", "Replies line up side by side — price, lead time, on-time record and whether they make your date."],
+                ["Award", "One click turns the winner into a PO charged to the right cost centre. Everyone else is told."],
               ].map(([t, d], i) => (
                 <li key={t} className="flex gap-4">
-                  <span className="num grid h-9 w-9 shrink-0 place-items-center rounded-full border border-ink text-support">
-                    {i + 1}
-                  </span>
+                  <span className="num grid h-9 w-9 shrink-0 place-items-center rounded-full border border-ink text-support">{i + 1}</span>
                   <div>
                     <p className="text-body font-medium">{t}</p>
-                    <p className="text-support text-mute">{d}</p>
+                    <p className="mt-0.5 max-w-md text-support leading-relaxed text-mute">{d}</p>
                   </div>
                 </li>
               ))}
@@ -234,136 +123,15 @@ export function HomeBusiness() {
               Start a quote request <Icon name="arrowRight" size={16} />
             </Link>
           </div>
-
-          <Reveal className="rounded-surface bg-white p-6 shadow-[var(--shadow-soft)] sm:p-8">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="eyebrow">RFQ-20418 · 3 responses</p>
-                <p className="mt-2 text-emphasis font-medium tracking-[-0.02em]">
-                  200 boxes · Nitrile gloves 4 mil, size M/L
-                </p>
-                <p className="text-support text-mute">
-                  Target $9.75/box · Deliver by Oct 6 · Reno, NV
-                </p>
-              </div>
-              {gloves && (
-                <ProductImage
-                  product={gloves}
-                  sizes="64px"
-                  className="hidden h-16 w-16 rounded-surface sm:block"
-                />
-              )}
-            </div>
-            <ul className="mt-6 space-y-2.5">
-              {rfqResponses.map((r, i) => {
-                const s = sellerById(r.seller);
-                const underTarget = r.price <= 9.75;
-                return (
-                  <li
-                    key={r.seller}
-                    className={`grid grid-cols-[1fr_auto] items-center gap-3 rounded-surface border p-4 ${i === 0 ? "border-ink" : "border-line"}`}
-                  >
-                    <div className="min-w-0">
-                      <p className="flex flex-wrap items-center gap-2 text-support font-medium">
-                        {s.name}
-                        {i === 0 && (
-                          <span className="rounded-full bg-brand px-2 py-0.5 text-meta">
-                            Recommended
-                          </span>
-                        )}
-                      </p>
-                      <p className="mt-0.5 truncate text-meta text-mute">
-                        Replied in {r.time} · {r.lead}d lead · {r.note}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="num text-body font-medium">
-                        <Money usd={r.price} cents />
-                      </p>
-                      <p
-                        className={`text-meta ${underTarget ? "text-success" : "text-mute"}`}
-                      >
-                        {underTarget ? "Under target" : "Above target"}
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-            <div className="mt-5 flex items-center justify-between rounded-surface bg-mist p-4 text-support">
-              <span className="flex items-center gap-2">
-                <SignalDot live /> Guardline accepted a counter at{" "}
-                <span className="num font-medium">$9.55</span>
-              </span>
-              <span className="num text-mute">saves $190</span>
-            </div>
+          <Reveal>
+            <RfqBoard />
           </Reveal>
         </div>
       </section>
 
-      {/* ── 04 CONTROLS ──────────────────────────────────────── */}
+      {/* ── 04 DEPARTMENTS ───────────────────────────────────── */}
       <section className="shell mt-24 lg:mt-32">
-        <SectionHeader
-          index="04"
-          kicker="Built for how companies buy"
-          title={
-            <>
-              Control without
-              <br />
-              the bureaucracy.
-            </>
-          }
-          description="Everyone buys what they need. Rules decide what needs a second look. Finance gets clean invoices."
-        />
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f, i) => (
-            <Reveal
-              key={f.title}
-              delay={i * 60}
-              className={f.wide ? "lg:col-span-2" : ""}
-            >
-              <div
-                className={`flex h-full flex-col rounded-surface p-6 sm:p-7 ${f.dark ? "panel-ink" : "bg-white shadow-[var(--shadow-hair)]"}`}
-              >
-                <span
-                  className={`grid h-11 w-11 place-items-center rounded-surface ${f.dark ? "bg-graphite text-brand" : "bg-mist"}`}
-                >
-                  <Icon name={f.icon} size={20} />
-                </span>
-                <p className="mt-5 text-emphasis font-medium tracking-[-0.02em]">
-                  {f.title}
-                </p>
-                <p
-                  className={`mt-1.5 text-support leading-relaxed ${f.dark ? "text-mute-dark" : "text-mute"}`}
-                >
-                  {f.body}
-                </p>
-                {f.chips && (
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {f.chips.map((c) => (
-                      <span
-                        key={c}
-                        className={`rounded-full px-3 py-1.5 text-meta ${f.dark ? "bg-graphite text-porcelain" : "bg-mist text-ink-2"}`}
-                      >
-                        {c}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* ── 05 CATEGORIES ────────────────────────────────────── */}
-      <section className="shell mt-24 lg:mt-32">
-        <SectionHeader
-          index="05"
-          kicker="Bulk-ready"
-          title="Stock the whole operation."
-          action={{ href: "/search?bulk=1", label: "All bulk categories" }}
-        />
+        <SectionHeader index="04" kicker="Bulk-ready departments" title="Stock the whole operation." action={{ href: "/search?bulk=1", label: "All bulk categories" }} />
         <div className="mt-12 grid grid-cols-2 gap-3 lg:grid-cols-5">
           {categories
             .filter((c) => c.business)
@@ -371,11 +139,7 @@ export function HomeBusiness() {
               const hero = tiles[c.slug];
               return (
                 <Reveal key={c.slug} delay={n * 60}>
-                  <Link
-                    href={`/c/${c.slug}`}
-                    className="group block overflow-hidden rounded-surface"
-                    style={{ background: c.tint }}
-                  >
+                  <Link href={`/c/${c.slug}`} className="group block overflow-hidden rounded-surface" style={{ background: c.tint }}>
                     {hero ? (
                       <ProductImage
                         product={hero}
@@ -385,9 +149,12 @@ export function HomeBusiness() {
                     ) : (
                       <div aria-hidden className="aspect-square w-full" />
                     )}
-                    <div className="flex items-center justify-between p-4">
-                      <span className="text-body font-medium">{c.name}</span>
-                      <Icon name="arrowUpRight" size={16} />
+                    <div className="flex items-center justify-between gap-2 p-4">
+                      <span className="min-w-0">
+                        <span className="block truncate text-body font-medium">{c.name}</span>
+                        <span className="block truncate text-meta text-ink-2">{c.subcategories.slice(0, 2).join(" · ")}</span>
+                      </span>
+                      <Icon name="arrowUpRight" size={16} className="shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                     </div>
                   </Link>
                 </Reveal>
@@ -396,14 +163,15 @@ export function HomeBusiness() {
         </div>
       </section>
 
-      {/* ── 06 BULK BESTSELLERS ──────────────────────────────── */}
+      {/* ── 05 BULK BESTSELLERS ──────────────────────────────── */}
       {bulk.length > 0 && (
         <section className="shell mt-24 lg:mt-32">
           <SectionHeader
-            index="06"
+            index="05"
             kicker="What companies restock most"
             title="Bulk bestsellers."
-            description="Shown with your contract and volume pricing. List price, MOQ and case pack are always visible."
+            description="Shown at your contract and volume price. List price, MOQ and case pack always visible."
+            action={{ href: "/search?bulk=1&sort=popular", label: "Shop bulk" }}
           />
           <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 lg:grid-cols-4">
             {bulk.map((p, i) => (
@@ -414,61 +182,26 @@ export function HomeBusiness() {
           </div>
         </section>
       )}
+
+      {/* ── 06 CONTROL ───────────────────────────────────────── */}
+      <section className="shell mt-24 lg:mt-32">
+        <SectionHeader
+          index="06"
+          kicker="Built for how companies buy"
+          title={
+            <>
+              Control without
+              <br />
+              the bureaucracy.
+            </>
+          }
+          description="Everyone buys what they need. Policy decides what needs a second look. Finance gets one clean statement."
+          action={{ href: "/business", label: "Open the console" }}
+        />
+        <div className="mt-12">
+          <ControlGrid />
+        </div>
+      </section>
     </>
   );
 }
-
-const FEATURES: {
-  icon: IconName;
-  title: string;
-  body: string;
-  chips?: string[];
-  wide?: boolean;
-  dark?: boolean;
-}[] = [
-  {
-    icon: "approve",
-    title: "Approval rules that fit your org",
-    body: "Route by amount, category, cost centre or requester. Auto-approve the routine; escalate the unusual. Approvers act from email or Slack.",
-    chips: [
-      "Over $2,500 → Manager",
-      "Electronics → IT",
-      "Events → Budget owner",
-      "Under $500 → Auto",
-    ],
-    wide: true,
-    dark: true,
-  },
-  {
-    icon: "users",
-    title: "Teams, roles & budgets",
-    body: "Admins, buyers and requesters with spend limits per person and per cost centre.",
-  },
-  {
-    icon: "pin",
-    title: "Every location, one order",
-    body: "Split a single order across HQ, warehouses and studios with dock notes and delivery windows.",
-  },
-  {
-    icon: "receipt",
-    title: "Invoices finance will love",
-    body: "Consolidated monthly invoicing, PO matching, VAT/GST detail and tax-exempt certificates on file.",
-  },
-  {
-    icon: "wallet",
-    title: "Pay on your terms",
-    body: "Net 30 or 60, purchase orders, ACH, virtual cards — with credit limits that grow with you.",
-  },
-  {
-    icon: "layers",
-    title: "Fits your stack",
-    body: "Punch-out for Coupa & SAP Ariba, NetSuite and QuickBooks sync, and a full ordering API.",
-    chips: ["Coupa", "SAP Ariba", "NetSuite", "QuickBooks", "API"],
-    wide: true,
-  },
-  {
-    icon: "trend",
-    title: "Spend you can see",
-    body: "Spend by team, category and supplier — with savings tracked against list price and exported monthly.",
-  },
-];
