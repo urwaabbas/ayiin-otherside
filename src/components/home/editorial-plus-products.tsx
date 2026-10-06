@@ -29,7 +29,7 @@ export function EditorialPlusProducts({
     <section aria-label={title} className="relative">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6">
         {/* Editorial Visual Story Card (Left: 4 Cols) */}
-        <div className="group relative flex min-h-[380px] flex-col justify-between overflow-hidden rounded-[24px] border border-line bg-ink text-white p-7 shadow-[var(--shadow-hair)] sm:p-9 lg:col-span-4 lg:min-h-full">
+        <div className="group relative flex min-h-[380px] flex-col justify-between overflow-hidden rounded-surface bg-ink text-white p-7 sm:p-9 lg:col-span-4 lg:min-h-full">
           {/* Background Image */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -84,12 +84,7 @@ export function EditorialPlusProducts({
         {/* Supporting Products Shelf (Right: 8 Cols) */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4 lg:col-span-8">
           {products.slice(0, 3).map((p) => (
-            <div
-              key={p.id}
-              className="flex flex-col rounded-[20px] border border-line bg-white p-3.5 shadow-[var(--shadow-hair)] transition-all duration-300 hover:shadow-[var(--shadow-soft)] sm:p-4"
-            >
-              <ProductCard product={p} />
-            </div>
+            <ProductCard key={p.id} product={p} />
           ))}
         </div>
       </div>

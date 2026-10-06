@@ -67,21 +67,9 @@ const TILES: TileConfig[] = [
     image: photoFullUrl(PRODUCT_PHOTOS["transit-daypack-22"]["ink"]["hero"]!, 800),
     position: "50% 50%",
     spanClass: "lg:col-span-3",
-    aspectClass: "aspect-[4/5] min-h-[260px]",
+    // Fills the full row beside Audio & Tech on desktop.
+    aspectClass: "aspect-[4/5] lg:aspect-auto lg:h-full min-h-[260px]",
     pillColor: "bg-emerald-500/20 text-emerald-200 border-emerald-500/30",
-  },
-  {
-    id: "supplies",
-    name: "Packaging & Supplies",
-    tagline: "Eco mailers & shipping cartons",
-    count: "340 items",
-    href: "/c/supplies",
-    image: photoFullUrl(PRODUCT_PHOTOS["kraft-mailer-boxes"]["kraft"]["hero"]!, 800),
-    position: "50% 35%",
-    spanClass: "lg:col-span-3",
-    aspectClass: "aspect-[16/9] sm:aspect-[2/1] lg:aspect-auto lg:flex-1 min-h-[115px]",
-    pillColor: "bg-amber-500/20 text-amber-200 border-amber-500/30",
-    compact: true,
   },
   {
     id: "kitchen",
@@ -116,7 +104,7 @@ function TileCard({ t }: { t: TileConfig }) {
     <Link
       href={t.href}
       className={clsx(
-        "group relative overflow-hidden rounded-[24px] border border-line bg-ink text-white shadow-[var(--shadow-hair)] transition-all duration-500 hover:shadow-[var(--shadow-lift)]",
+        "group relative overflow-hidden rounded-surface bg-ink text-white transition-all duration-500 hover:shadow-[var(--shadow-lift)]",
         t.spanClass,
         t.aspectClass,
       )}
@@ -207,9 +195,8 @@ export function DiscoveryTiles() {
   const workTile = TILES[1];
   const audioTile = TILES[2];
   const fashionTile = TILES[3];
-  const suppliesTile = TILES[4];
-  const kitchenTile = TILES[5];
-  const beautyTile = TILES[6];
+  const kitchenTile = TILES[4];
+  const beautyTile = TILES[5];
 
   return (
     <section aria-label="Shop the way you think" className="relative">
@@ -235,7 +222,7 @@ export function DiscoveryTiles() {
           href="/search"
           className="link-underline flex items-center gap-1.5 text-support font-medium text-brand-deep shrink-0 self-start sm:self-auto"
         >
-          <span>All 8 departments & categories</span>
+          <span>All departments</span>
           <Icon name="arrowRight" size={14} />
         </Link>
       </div>
@@ -251,11 +238,8 @@ export function DiscoveryTiles() {
         {/* 03 · Audio & Tech (Bottom Middle) */}
         <TileCard t={audioTile} />
 
-        {/* 04 & 05 · Column 10-12 (Style & Carry + Packaging & Supplies) */}
-        <div className="contents sm:contents lg:col-span-3 lg:flex lg:flex-col lg:gap-5 lg:h-full">
-          <TileCard t={fashionTile} />
-          <TileCard t={suppliesTile} />
-        </div>
+        {/* 04 · Style & Carry (Column 10-12, full row height) */}
+        <TileCard t={fashionTile} />
 
         {/* 06 · Kitchen & Brew (Bottom Left Wide) */}
         <TileCard t={kitchenTile} />

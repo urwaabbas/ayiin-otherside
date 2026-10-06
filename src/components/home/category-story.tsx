@@ -45,10 +45,10 @@ export function CategoryStory({
     <section
       aria-label={title}
       className={clsx(
-        "relative overflow-hidden rounded-[28px] border p-6 sm:p-8 lg:p-10 transition-shadow duration-300",
+        "relative overflow-hidden rounded-panel border p-6 sm:p-8 lg:p-10 transition-shadow duration-300",
         isDark
           ? "border-line bg-ink text-white shadow-[var(--shadow-lift)]"
-          : "border-line bg-white text-ink shadow-[var(--shadow-hair)]",
+          : "border-line bg-white text-ink",
       )}
     >
       {/* Editorial Category Visual + Story Row */}
@@ -56,7 +56,7 @@ export function CategoryStory({
         {/* Large Photographic Visual */}
         <div
           className={clsx(
-            "group relative min-h-[300px] overflow-hidden rounded-[20px] bg-porcelain sm:min-h-[380px] lg:col-span-7",
+            "group relative min-h-[300px] overflow-hidden rounded-surface bg-porcelain sm:min-h-[380px] lg:col-span-7",
             reverse && "lg:order-2",
           )}
         >
@@ -209,17 +209,7 @@ export function CategoryStory({
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {products.slice(0, 4).map((p) => (
-              <div
-                key={p.id}
-                className={clsx(
-                  "flex flex-col rounded-[20px] border p-3.5 shadow-[var(--shadow-hair)] transition-all duration-300 hover:shadow-[var(--shadow-soft)] sm:p-4",
-                  isDark
-                    ? "border-white/10 bg-white/[0.04] text-white"
-                    : "border-line bg-white text-ink",
-                )}
-              >
-                <ProductCard product={p} />
-              </div>
+              <ProductCard key={p.id} product={p} />
             ))}
           </div>
         </div>

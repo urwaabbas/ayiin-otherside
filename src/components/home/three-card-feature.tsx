@@ -66,11 +66,11 @@ export function ThreeCardFeature({
         {items.slice(0, 3).map(({ product, highlightSpec, badge }) => (
           <div
             key={product.id}
-            className="group flex flex-col justify-between rounded-[24px] border border-line bg-white p-5 shadow-[var(--shadow-hair)] transition-all duration-300 hover:shadow-[var(--shadow-lift)] sm:p-6"
+            className="group flex flex-col justify-between rounded-surface border border-line bg-white p-3 transition-all duration-300 hover:border-line-strong hover:shadow-[var(--shadow-soft)] sm:p-4"
           >
             <div>
               {/* Header Badge */}
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between px-1 pt-1 sm:px-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-porcelain px-3 py-1 text-meta font-medium text-ink">
                   <SignalDot tone="brand" live />
                   {badge}
@@ -89,19 +89,19 @@ export function ThreeCardFeature({
               {/* Large Portrait Image */}
               <Link
                 href={`/p/${product.slug}`}
-                className="relative mt-4 block aspect-[4/5] w-full overflow-hidden rounded-[18px] bg-porcelain"
+                className="relative mt-4 block aspect-[4/5] w-full overflow-hidden rounded-media bg-porcelain"
               >
                 <ProductImage
                   product={product}
                   view="hero"
                   sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 90vw"
                   className="h-full w-full"
-                  imgClassName="object-contain p-4 transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-105"
+                  imgClassName="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-105"
                 />
               </Link>
 
               {/* Details */}
-              <div className="mt-5">
+              <div className="mt-5 px-1 sm:px-2">
                 <p className="font-mono text-meta uppercase tracking-[0.14em] text-mute">
                   {product.brand}
                 </p>
@@ -123,7 +123,7 @@ export function ThreeCardFeature({
             </div>
 
             {/* Price & Action */}
-            <div className="mt-6 border-t border-line/80 pt-5">
+            <div className="mx-1 mb-1 mt-6 border-t border-line/80 pt-4 sm:mx-2 sm:mb-2">
               <div className="flex items-center justify-between">
                 <div>
                   <Price

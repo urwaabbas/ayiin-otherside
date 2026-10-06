@@ -18,7 +18,7 @@ export function ProductRail({
 }) {
   if (!products.length) return null;
   return (
-    <section aria-label={title} className="rounded-control bg-white p-4 shadow-[var(--shadow-hair)] sm:p-5">
+    <section aria-label={title} className="rounded-panel border border-line bg-white p-4 sm:p-6">
       <div className="flex items-baseline justify-between gap-4">
         <h2 className="text-emphasis font-semibold tracking-[-0.01em] sm:text-emphasis">{title}</h2>
         <Link href={href} className="shrink-0 text-support font-medium text-brand-deep hover:underline">

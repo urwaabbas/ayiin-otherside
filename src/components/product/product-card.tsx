@@ -83,7 +83,7 @@ export function ProductCard({
           href={`/p/${p.slug}`}
           aria-label={p.name}
           prefetch={priority ? true : undefined}
-          className="block overflow-hidden rounded-compact bg-white"
+          className="block overflow-hidden rounded-media bg-white"
         >
           <ProductImage
             product={p}
@@ -97,7 +97,7 @@ export function ProductCard({
         {badge && (
           <span
             className={clsx(
-              "pointer-events-none absolute left-3 top-3 rounded-br-compact rounded-tl-compact px-2 py-1 text-meta font-semibold",
+              "pointer-events-none absolute left-3 top-3 rounded-br-control rounded-tl-media px-2 py-1 text-meta font-semibold",
               badge === "Deal" ? "bg-danger text-white" : "bg-brand text-ink",
             )}
           >

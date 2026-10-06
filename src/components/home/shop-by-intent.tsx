@@ -111,7 +111,7 @@ export function ShopByIntent() {
   return (
     <section
       aria-label="Shop by intent"
-      className="rounded-surface border border-line bg-white p-5 shadow-[var(--shadow-hair)] sm:p-7 lg:p-8"
+      className="rounded-panel border border-line bg-white p-5 sm:p-7 lg:p-8"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>

@@ -34,7 +34,7 @@ export function CompleteTheSetup() {
   return (
     <section
       aria-label="Complete the setup"
-      className="rounded-[24px] border border-line bg-white p-6 shadow-[var(--shadow-hair)] sm:p-8 lg:p-10"
+      className="rounded-panel border border-line bg-white p-6 sm:p-8 lg:p-10"
     >
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -59,8 +59,8 @@ export function CompleteTheSetup() {
       {/* Grid: Anchor Feature on Left, 4 Complementary on Right */}
       <div className="mt-8 grid gap-6 lg:grid-cols-12 lg:gap-8">
         {/* Anchor Product Spotlight */}
-        <div className="flex flex-col overflow-hidden rounded-[24px] border border-line bg-porcelain/60 p-5 sm:p-7 lg:col-span-5">
-          <div className="flex items-center justify-between">
+        <div className="flex flex-col overflow-hidden rounded-surface border border-line bg-white p-3 sm:p-4 lg:col-span-5">
+          <div className="flex items-center justify-between px-1 pt-1 sm:px-2">
             <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-meta font-medium text-ink shadow-[var(--shadow-hair)]">
               <SignalDot tone="brand" live /> Anchor piece
             </span>
@@ -70,19 +70,19 @@ export function CompleteTheSetup() {
           {/* Large Product Image Container — Expands with flex-1 */}
           <Link
             href={`/p/${anchor.slug}`}
-            className="group my-4 block w-full flex-1 min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] xl:min-h-[460px] overflow-hidden rounded-[18px] bg-white p-4 shadow-[var(--shadow-hair)]"
+            className="group my-4 block w-full flex-1 min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] xl:min-h-[460px] overflow-hidden rounded-media bg-porcelain"
           >
             <ProductImage
               product={anchor}
               view="hero"
               sizes="(min-width: 1024px) 450px, 90vw"
               className="h-full w-full transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-105"
-              imgClassName="!object-contain"
+              imgClassName="!object-cover"
             />
           </Link>
 
           {/* Details, Specs, Price & Action — Tightly structured, zero dead space */}
-          <div className="flex flex-col">
+          <div className="flex flex-col px-1 pb-1 sm:px-2 sm:pb-2">
             <Link
               href={`/p/${anchor.slug}`}
               className="display text-heading leading-tight tracking-[-0.01em] text-ink hover:text-brand-deep sm:text-display-xs"
@@ -134,19 +134,19 @@ export function CompleteTheSetup() {
           {complementary.map((p) => (
             <div
               key={p.id}
-              className="group flex flex-col justify-between rounded-surface border border-line bg-white p-4 transition-all duration-300 hover:border-line-strong hover:shadow-[var(--shadow-soft)]"
+              className="group flex flex-col justify-between rounded-surface border border-line bg-white p-3 transition-all duration-300 hover:border-line-strong hover:shadow-[var(--shadow-soft)]"
             >
               <div className="flex flex-col">
                 <Link
                   href={`/p/${p.slug}`}
-                  className="block overflow-hidden rounded-[14px] bg-porcelain p-2.5"
+                  className="block overflow-hidden rounded-media bg-porcelain"
                 >
                   <ProductImage
                     product={p}
                     view="hero"
                     sizes="(min-width: 1024px) 220px, 45vw"
                     className="aspect-square w-full transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-105"
-                    imgClassName="!object-contain"
+                    imgClassName="!object-cover"
                   />
                 </Link>
 

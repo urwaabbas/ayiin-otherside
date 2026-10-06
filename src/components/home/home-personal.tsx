@@ -241,14 +241,14 @@ export function HomePersonal() {
 
         {/* ── 15 · LIFESTYLE CONTEXT: LOOKBOOK ("Shop the Scene") ── */}
         {lookbookItems.length >= 3 && (
-          <div className="rounded-[28px] border border-line bg-white p-5 shadow-[var(--shadow-hair)] sm:p-7 lg:p-8">
+          <div className="rounded-panel border border-line bg-white p-5 sm:p-7 lg:p-8">
             <Lookbook index="05" items={lookbookItems} />
           </div>
         )}
 
         {/* ── 16 · BUYER INTELLIGENCE: COMPARE SPECS ── */}
         {compareItems.length >= 3 && (
-          <div className="rounded-[28px] border border-line bg-porcelain/60 p-5 shadow-[var(--shadow-hair)] sm:p-8 lg:p-10">
+          <div className="rounded-panel border border-line bg-porcelain/60 p-5 sm:p-8 lg:p-10">
             <CompareTeaser items={compareItems} />
           </div>
         )}

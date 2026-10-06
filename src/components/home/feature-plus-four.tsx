@@ -68,9 +68,9 @@ export function FeaturePlusFour({
       {/* Feature + 4 Composition Grid */}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-12 lg:gap-6">
         {/* Large Featured Hero Card (Left Column) */}
-        <div className="group relative flex flex-col overflow-hidden rounded-[24px] border border-line bg-white p-5 shadow-[var(--shadow-hair)] transition-all duration-300 hover:shadow-[var(--shadow-soft)] sm:p-6 lg:col-span-5">
+        <div className="group relative flex flex-col overflow-hidden rounded-surface border border-line bg-white p-3 transition-all duration-300 hover:border-line-strong hover:shadow-[var(--shadow-soft)] sm:p-4 lg:col-span-5">
           {/* Visual Header Pill */}
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center justify-between gap-2 px-1 pt-1 sm:px-2">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3 py-1 text-meta font-medium text-brand-deep">
               <SignalDot tone="brand" live />
               Featured Highlight
@@ -89,7 +89,7 @@ export function FeaturePlusFour({
           {/* Large Product Lifestyle Image Container — Expands to fill vertical frame */}
           <Link
             href={`/p/${featured.slug}`}
-            className="relative mt-3.5 block w-full flex-1 min-h-[320px] sm:min-h-[380px] lg:min-h-[460px] xl:min-h-[500px] overflow-hidden rounded-[18px] bg-porcelain"
+            className="relative mt-3.5 block w-full flex-1 min-h-[320px] sm:min-h-[380px] lg:min-h-[460px] xl:min-h-[500px] overflow-hidden rounded-media bg-porcelain"
           >
             <ProductImage
               product={featured}
@@ -106,7 +106,7 @@ export function FeaturePlusFour({
           </Link>
 
           {/* Title, Rating, Specs & Pricing (Tightly structured, zero dead space) */}
-          <div className="mt-4 flex flex-col">
+          <div className="mt-4 flex flex-col px-1 pb-1 sm:px-2 sm:pb-2">
             <div className="flex items-center justify-between gap-2">
               <p className="font-mono text-meta uppercase tracking-[0.14em] text-mute">
                 {featured.brand}

@@ -20,7 +20,7 @@ export function CompactPromoBanner({
   return (
     <aside
       aria-label="Promotional campaign"
-      className="group relative overflow-hidden rounded-[20px] border border-brand/30 bg-gradient-to-r from-ink via-ink-2 to-ink text-white p-5 shadow-[var(--shadow-hair)] sm:p-6"
+      className="group relative overflow-hidden rounded-surface border border-brand/30 bg-gradient-to-r from-ink via-ink-2 to-ink text-white p-5 sm:p-6"
     >
       {/* Ambient Glow */}
       <div

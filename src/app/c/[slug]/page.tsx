@@ -41,7 +41,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
       </nav>
 
       {/* Department banner — marketplace style: title, subcategory tiles, buying guide */}
-      <header className="mt-4 overflow-hidden rounded-control bg-white shadow-[var(--shadow-hair)]">
+      <header className="mt-4 overflow-hidden rounded-panel border border-line bg-white">
         <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_380px]">
           <div className="min-w-0">
             <h1 className="text-heading font-semibold leading-tight tracking-[-0.02em] sm:text-heading">{c.name}</h1>
@@ -71,7 +71,7 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
               })}
             </ul>
           </div>
-          <aside aria-label="Buying guide" className="rounded-control bg-brand-soft p-5">
+          <aside aria-label="Buying guide" className="rounded-surface bg-brand-soft p-5">
             <p className="flex items-center gap-2 text-meta font-semibold uppercase tracking-[0.1em] text-brand-deep">
               <Icon name="sparkle" size={13} /> Buying guide
             </p>

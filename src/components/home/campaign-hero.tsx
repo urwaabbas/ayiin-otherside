@@ -136,7 +136,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
       <div className="absolute inset-x-0 bottom-5 sm:bottom-6 z-20 pointer-events-none">
         <div className="shell flex items-end justify-between gap-4 pointer-events-auto">
           {/* Segmented Slide Indicators with Labels */}
-          <div className="flex flex-1 max-w-lg items-center gap-2 sm:gap-3">
+          <div className="flex max-w-2xl flex-1 items-center gap-2 sm:gap-4">
             {slides.map((s, k) => {
               const isCurrent = k === activeIdx;
               return (
@@ -146,12 +146,12 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                   aria-label={`Go to slide ${k + 1}: ${s.title}`}
                   aria-current={isCurrent}
                   onClick={() => setActiveIdx(k)}
-                  className="group flex flex-1 flex-col gap-1.5 py-1 text-left transition-opacity cursor-pointer"
+                  className="group flex min-w-0 flex-1 flex-col gap-1.5 py-1 text-left transition-opacity cursor-pointer"
                 >
-                  <div className="flex items-center justify-between text-meta">
+                  <div className="flex min-w-0 items-center gap-2 text-meta">
                     <span
                       className={clsx(
-                        "font-mono font-medium transition-colors",
+                        "shrink-0 font-mono font-medium transition-colors",
                         isCurrent ? "text-brand" : "text-white/50 group-hover:text-white/80",
                       )}
                     >
@@ -159,7 +159,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                     </span>
                     <span
                       className={clsx(
-                        "hidden sm:inline text-[11px] truncate tracking-wide transition-colors",
+                        "hidden min-w-0 truncate text-[11px] tracking-wide transition-colors sm:block",
                         isCurrent ? "text-white/90 font-medium" : "text-white/40 group-hover:text-white/70",
                       )}
                     >

@@ -116,7 +116,7 @@ export function AyiinEdit() {
         <div
           role="tablist"
           aria-label="Ayiin Edit collections"
-          className="flex flex-wrap gap-1.5"
+          className="flex flex-wrap gap-1.5 sm:max-w-[55%] sm:justify-end"
         >
           {EDITS.map((e) => {
             const active = e.id === activeId;
@@ -147,10 +147,10 @@ export function AyiinEdit() {
       <div className="grid gap-5 lg:grid-cols-12">
         {/* Left: Curated Story Spotlight */}
         {featured && (
-          <div className="overflow-hidden rounded-surface border border-line bg-white shadow-[var(--shadow-hair)] lg:col-span-4 flex flex-col justify-between">
+          <div className="flex flex-col justify-between overflow-hidden rounded-surface border border-line bg-white p-3 lg:col-span-4">
             <Link
               href={`/p/${featured.slug}`}
-              className="group relative block aspect-[16/9] w-full overflow-hidden bg-mist"
+              className="group relative block aspect-[4/3] w-full overflow-hidden rounded-media bg-mist"
               aria-label={featured.name}
             >
               <ProductImage
@@ -166,7 +166,7 @@ export function AyiinEdit() {
               </span>
             </Link>
 
-            <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between">
+            <div className="flex flex-1 flex-col justify-between px-1 pb-1 pt-4 sm:px-2 sm:pb-2">
               <div>
                 <p className="eyebrow text-brand-deep">{story.kicker}</p>
                 <h3 className="display mt-1.5 text-heading leading-tight tracking-[-0.02em] sm:text-display-xs">
