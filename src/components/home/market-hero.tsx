@@ -96,6 +96,7 @@ export function MarketHero({ slides }: { slides: HeroSlide[] }) {
             type="button"
             aria-label="Previous"
             onClick={() => setI((x) => (x - 1 + n) % n)}
+            suppressHydrationWarning
             className="absolute left-0 top-0 hidden h-[60%] w-14 place-items-center text-white/80 hover:text-white focus-visible:outline-2 sm:grid"
           >
             <Icon name="chevronLeft" size={34} />
@@ -104,6 +105,7 @@ export function MarketHero({ slides }: { slides: HeroSlide[] }) {
             type="button"
             aria-label="Next"
             onClick={() => setI((x) => (x + 1) % n)}
+            suppressHydrationWarning
             className="absolute right-0 top-0 hidden h-[60%] w-14 place-items-center text-white/80 hover:text-white focus-visible:outline-2 sm:grid"
           >
             <Icon name="chevronRight" size={34} />
@@ -116,6 +118,7 @@ export function MarketHero({ slides }: { slides: HeroSlide[] }) {
                 aria-label={`Show ${s.title}`}
                 aria-current={k === i}
                 onClick={() => setI(k)}
+                suppressHydrationWarning
                 className="grid h-5 place-items-center"
               >
                 <span

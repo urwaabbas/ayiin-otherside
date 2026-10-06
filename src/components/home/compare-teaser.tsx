@@ -55,6 +55,7 @@ export function CompareTeaser({ items }: { items: Product[] }) {
               role="switch"
               aria-checked={diffOnly}
               onClick={() => setDiffOnly((d) => !d)}
+              suppressHydrationWarning
               className={clsx("relative h-6 w-10 rounded-full transition-colors duration-300", diffOnly ? "bg-ink" : "bg-line-strong")}
             >
               <span className={clsx("absolute top-1 h-4 w-4 rounded-full transition-all duration-300", diffOnly ? "left-5 bg-brand" : "left-1 bg-white")} />

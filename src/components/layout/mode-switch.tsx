@@ -87,6 +87,7 @@ export function ModeSwitch({
             tabIndex={active ? 0 : -1}
             title={o.hint}
             onClick={() => setMode(o.value)}
+            suppressHydrationWarning
             className={clsx(
               "group relative flex min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-center transition-colors duration-200 focus-visible:z-10",
               compact ? "h-10" : "h-11",

@@ -152,7 +152,7 @@ export function Header() {
         >
           <div className="mx-auto flex h-16 max-w-[1520px] items-center justify-between gap-3 px-3 sm:px-4 lg:h-[72px] lg:gap-6 lg:px-6">
             <div className="flex shrink-0 items-center gap-1">
-              <button type="button" aria-label="Open menu" onClick={() => setMenu(true)} className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft lg:hidden">
+              <button type="button" aria-label="Open menu" onClick={() => setMenu(true)} suppressHydrationWarning className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft lg:hidden">
                 <Icon name="menu" size={22} />
               </button>
               <Link href="/" aria-label="Ayiin home" className="flex items-center">
@@ -196,7 +196,7 @@ export function Header() {
                 placeholder={business ? "Search products, SKUs or describe a purchase" : "What are you looking for?"}
                 className="h-full min-w-0 flex-1 bg-transparent px-4 text-body text-ink outline-none placeholder:text-mute"
               />
-              <button type="submit" aria-label="Search" className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-ink transition-transform hover:scale-105">
+              <button type="submit" aria-label="Search" suppressHydrationWarning className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-ink transition-transform hover:scale-105">
                 <Icon name="search" size={19} strokeWidth={2.1} />
               </button>
             </form>
@@ -218,6 +218,7 @@ export function Header() {
                 openSearch();
                 requestAnimationFrame(() => mobileInputRef.current?.focus());
               }}
+              suppressHydrationWarning
               className="flex h-11 w-full items-center rounded-full bg-white p-1 pl-4 text-left text-body text-mute shadow-[var(--shadow-hair)]"
             >
               <span className="flex-1 truncate">{business ? "Search products or SKUs" : "What are you looking for?"}</span>
@@ -239,6 +240,7 @@ export function Header() {
                 closeSearch();
                 setMegaOpen((o) => !o);
               }}
+              suppressHydrationWarning
               className={clsx("dept-link flex items-center gap-1.5 font-semibold text-ink", megaOpen && "is-active")}
             >
               <Icon name="grid" size={16} /> All departments
@@ -412,6 +414,7 @@ function DepartmentScope({ value, onChange, onOpen }: { value: string; onChange:
           else openMenu();
         }}
         onKeyDown={onTriggerKeyDown}
+        suppressHydrationWarning
         className="flex h-full w-full items-center justify-between gap-2 rounded-full bg-mist pl-4 pr-3 text-left text-support font-medium text-ink-2 transition-colors hover:bg-soft focus-visible:bg-white"
       >
         <span className="min-w-0 flex-1 truncate">{selected.name}</span>
@@ -528,6 +531,7 @@ function CartButton() {
       type="button"
       onClick={openCart}
       aria-label={`Cart, ${shown} ${shown === 1 ? "item" : "items"}`}
+      suppressHydrationWarning
       className="group relative flex flex-col items-center gap-0.5 px-1.5 text-meta font-medium text-ink-2 hover:text-ink"
     >
       <span className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white transition-colors group-hover:bg-graphite">
@@ -553,7 +557,7 @@ function LocaleMenu({ dark }: { dark?: boolean }) {
   }, [open]);
   return (
     <div ref={ref} className="relative">
-      <button type="button" aria-expanded={open} aria-haspopup="listbox" onClick={() => setOpen((o) => !o)} className="flex items-center gap-1.5 hover:text-white">
+      <button type="button" aria-expanded={open} aria-haspopup="listbox" onClick={() => setOpen((o) => !o)} suppressHydrationWarning className="flex items-center gap-1.5 hover:text-white">
         <Icon name="globe" size={14} />
         EN · <span className="num">{currency}</span>
         <Icon name="chevronDown" size={12} />
@@ -621,7 +625,7 @@ function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
           <Link href="/" aria-label="Ayiin home" onClick={onClose} className="flex items-center">
             <AyiinLogo on="light" className="h-8" />
           </Link>
-          <button type="button" aria-label="Close menu" onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft">
+          <button type="button" aria-label="Close menu" onClick={onClose} suppressHydrationWarning className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft">
             <Icon name="close" size={22} />
           </button>
         </div>

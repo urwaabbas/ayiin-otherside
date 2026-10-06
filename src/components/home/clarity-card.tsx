@@ -125,6 +125,7 @@ export function ClarityCard({ items, alternatives }: { items: Product[]; alterna
             aria-label={`Show ${it.name}`}
             aria-current={n === i}
             onClick={() => setI(n)}
+            suppressHydrationWarning
             className="group relative flex h-6 flex-1 items-center"
           >
             <span className="relative h-[3px] w-full overflow-hidden rounded-full bg-ink/10">

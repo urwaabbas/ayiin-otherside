@@ -53,6 +53,7 @@ export function BusinessBridge({ product: gloves }: { product: Product }) {
                 setMode("business");
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
+              suppressHydrationWarning
               className="btn btn-secondary"
             >
               <span className="h-2 w-2 rounded-full bg-brand" /> Switch to

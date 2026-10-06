@@ -90,7 +90,7 @@ export function ProductCard({
             variant={variant.id}
             preload={priority}
             sizes={CARD_SIZES}
-            className="aspect-square w-full"
+            className="aspect-square w-full transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
             imgClassName="!object-contain"
           />
         </Link>
@@ -109,6 +109,7 @@ export function ProductCard({
           aria-pressed={hydrated && wished}
           aria-label={wished ? `Remove ${p.name} from saved` : `Save ${p.name}`}
           onClick={() => toggleWishlist(p.id)}
+          suppressHydrationWarning
           className="absolute right-5 top-5 grid h-8 w-8 place-items-center rounded-full bg-white/90 text-ink shadow-[var(--shadow-hair)] transition-colors hover:text-danger"
         >
           <Icon
@@ -122,6 +123,7 @@ export function ProductCard({
           type="button"
           aria-haspopup="dialog"
           onClick={() => setQuick(true)}
+          suppressHydrationWarning
           className="absolute inset-x-6 bottom-3 hidden h-10 items-center justify-center rounded-control bg-white/95 text-support font-medium text-ink opacity-0 shadow-[var(--shadow-soft)] transition-opacity duration-150 group-hover:opacity-100 focus-visible:opacity-100 lg:flex"
         >
           Quick look
@@ -132,6 +134,7 @@ export function ProductCard({
           aria-haspopup="dialog"
           onClick={() => setQuick(true)}
           title="Quick look"
+          suppressHydrationWarning
           className="absolute bottom-3 right-3 grid h-11 w-11 place-items-center rounded-control bg-white/95 text-ink shadow-[var(--shadow-soft)] lg:hidden"
         >
           <Icon name="eye" size={18} />
@@ -139,7 +142,13 @@ export function ProductCard({
       </div>
 
       <div className="flex flex-1 flex-col p-3">
-        <h3 className="line-clamp-2 min-h-[2.6em] text-support leading-[1.3] text-ink">
+        {/* 2 · Brand kicker */}
+        <p className="truncate text-meta font-medium uppercase tracking-[0.06em] text-mute">
+          {p.brand}
+        </p>
+
+        {/* 3 · Product name */}
+        <h3 className="mt-0.5 line-clamp-2 min-h-[2.6em] text-support font-medium leading-[1.3] text-ink">
           <Link
             href={`/p/${p.slug}`}
             className="hover:text-brand-deep hover:underline"
@@ -147,18 +156,18 @@ export function ProductCard({
             {p.name}
           </Link>
         </h3>
-        <p className="mt-0.5 truncate text-meta text-mute">by {p.brand}</p>
 
+        {/* 4 · Rating */}
         <Link
           href={`/p/${p.slug}#reviews`}
-          className="mt-1 flex items-center gap-1.5 text-meta"
+          className="mt-1.5 flex items-center gap-1.5 text-meta"
           aria-label={`${p.rating.toFixed(1)} out of 5 stars, ${p.reviewCount} ratings`}
         >
-          <span className="num font-medium text-ink">
+          <span className="num font-semibold text-ink">
             {p.rating.toFixed(1)}
           </span>
-          <Stars value={p.rating} size={13} />
-          <span className="text-brand-deep hover:underline">
+          <Stars value={p.rating} size={12} />
+          <span className="text-mute hover:text-brand-deep hover:underline">
             ({compact(p.reviewCount)})
           </span>
         </Link>
@@ -168,39 +177,8 @@ export function ProductCard({
           </p>
         )}
 
-        {p.variants.length > 1 && (
-          <div
-            className="-ml-0.5 mt-1.5 flex items-center gap-0.5"
-            role="radiogroup"
-            aria-label="Colour"
-          >
-            {p.variants.map((v) => (
-              <button
-                key={v.id}
-                type="button"
-                role="radio"
-                aria-checked={variant.id === v.id}
-                aria-label={v.name}
-                title={v.name}
-                onMouseEnter={() => setVariant(v)}
-                onClick={() => setVariant(v)}
-                className="grid h-6 w-6 place-items-center"
-              >
-                <span
-                  className={clsx(
-                    "h-4 w-4 rounded-full",
-                    variant.id === v.id
-                      ? "ring-2 ring-brand ring-offset-1"
-                      : "ring-1 ring-line-strong",
-                  )}
-                  style={{ background: v.color }}
-                />
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-2">
+        {/* 5 · Price */}
+        <div className="mt-2.5">
           {business ? (
             <>
               <div className="flex items-baseline gap-1.5">
@@ -218,7 +196,7 @@ export function ProductCard({
             <>
               <div className="flex flex-wrap items-baseline gap-x-2">
                 {off > 0 && (
-                  <span className="text-body font-medium text-danger">
+                  <span className="text-body font-semibold text-danger">
                     -{off}%
                   </span>
                 )}
@@ -234,7 +212,8 @@ export function ProductCard({
           )}
         </div>
 
-        <p className="mt-1.5 text-meta text-ink-2">
+        {/* 6 · Delivery */}
+        <p className="mt-1 text-meta text-ink-2">
           {business ? (
             <>Lead time {p.b2b.leadDays} days</>
           ) : (
@@ -246,8 +225,43 @@ export function ProductCard({
             </>
           )}
         </p>
+
+        {/* Secondary signals: Swatches, Stock urgency, Recommendation reason */}
+        {p.variants.length > 1 && (
+          <div
+            className="-ml-0.5 mt-2 flex items-center gap-1"
+            role="radiogroup"
+            aria-label="Colour"
+          >
+            {p.variants.map((v) => (
+              <button
+                key={v.id}
+                type="button"
+                role="radio"
+                aria-checked={variant.id === v.id}
+                aria-label={v.name}
+                title={v.name}
+                onMouseEnter={() => setVariant(v)}
+                onClick={() => setVariant(v)}
+                suppressHydrationWarning
+                className="grid h-5 w-5 place-items-center"
+              >
+                <span
+                  className={clsx(
+                    "h-3.5 w-3.5 rounded-full transition-transform",
+                    variant.id === v.id
+                      ? "ring-2 ring-brand ring-offset-1 scale-105"
+                      : "ring-1 ring-line-strong hover:scale-110",
+                  )}
+                  style={{ background: v.color }}
+                />
+              </button>
+            ))}
+          </div>
+        )}
+
         {stock.urgent && (
-          <p className="mt-0.5 text-meta font-medium text-danger">
+          <p className="mt-1 text-meta font-medium text-danger">
             {stock.label}
           </p>
         )}
@@ -258,6 +272,7 @@ export function ProductCard({
             type="button"
             onClick={add}
             disabled={p.stock <= 0}
+            suppressHydrationWarning
             className="btn btn-primary w-full"
           >
             {business ? `Add ${Math.max(p.b2b.moq, 1)} to cart` : "Add to cart"}

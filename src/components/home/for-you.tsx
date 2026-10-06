@@ -66,12 +66,12 @@ export function ForYou({ pool }: { pool: Product[] }) {
       <div className="mt-10 flex flex-wrap items-center gap-2">
         <span className="eyebrow mr-2">Your interests</span>
         {INTERESTS.map((i) => (
-          <button key={i.id} type="button" aria-pressed={selected.includes(i.id)} onClick={() => toggle(i.id)} className="chip">
+          <button key={i.id} type="button" aria-pressed={selected.includes(i.id)} onClick={() => toggle(i.id)} suppressHydrationWarning className="chip">
             <span className={clsx("chip-dot h-1.5 w-1.5 rounded-full", selected.includes(i.id) ? "bg-brand" : "bg-line-strong")} />
             {i.label}
           </button>
         ))}
-        <button type="button" onClick={() => setShuffle((s) => s + 1)} className="chip ml-auto !border-ink">
+        <button type="button" onClick={() => setShuffle((s) => s + 1)} suppressHydrationWarning className="chip ml-auto !border-ink">
           <Icon name="repeat" size={14} /> Show me something different
         </button>
       </div>

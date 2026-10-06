@@ -45,6 +45,7 @@ export function CompareTray() {
                 type="button"
                 onClick={() => toggle(p!.id)}
                 aria-label={`Remove ${p!.name} from compare`}
+                suppressHydrationWarning
                 className="absolute -right-1 -top-1 hidden h-5 w-5 place-items-center rounded-full bg-porcelain text-ink group-hover:grid group-focus-within:grid"
               >
                 <Icon name="close" size={11} strokeWidth={2.2} />
@@ -81,6 +82,7 @@ export function CompareTray() {
           type="button"
           onClick={clear}
           aria-label="Clear compare"
+          suppressHydrationWarning
           className="grid h-9 w-9 place-items-center rounded-full text-mute-dark hover:bg-graphite hover:text-porcelain"
         >
           <Icon name="close" size={16} />

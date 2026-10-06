@@ -42,7 +42,7 @@ function Item({
       {inner}
     </Link>
   ) : (
-    <button type="button" onClick={onClick} className={cls}>
+    <button type="button" onClick={onClick} className={cls} suppressHydrationWarning>
       {inner}
     </button>
   );

@@ -87,6 +87,7 @@ export function CartDrawer() {
             type="button"
             aria-label="Close bag"
             onClick={close}
+            suppressHydrationWarning
             className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft"
           >
             <Icon name="close" size={20} />

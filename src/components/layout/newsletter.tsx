@@ -33,9 +33,10 @@ export function NewsletterForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="you@company.com"
+        suppressHydrationWarning
         className="h-10 min-w-0 flex-1 bg-transparent px-3 text-support text-porcelain outline-none placeholder:text-mute-dark"
       />
-      <button type="submit" className="btn btn-primary">
+      <button type="submit" className="btn btn-primary" suppressHydrationWarning>
         Subscribe
       </button>
     </form>

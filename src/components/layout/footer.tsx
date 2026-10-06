@@ -115,9 +115,40 @@ export function Footer({ mode }: { mode: Mode }) {
             </div>
           </div>
 
-          <Link href="/" aria-label="Ayiin home" className="mx-auto mt-12 block w-full max-w-[300px]">
-            <AyiinLogo on="dark" className="!h-auto !w-full opacity-95" />
-          </Link>
+          {/* ── Big Logo Glassmorphic Showcase ── */}
+          <div className="relative mx-auto mt-14 max-w-[620px]">
+            <Link
+              href="/"
+              aria-label="Ayiin home"
+              className="group relative flex items-center justify-center overflow-hidden rounded-[24px] border border-white/15 bg-white/[0.04] p-8 shadow-[inset_0_1px_1px_0_rgba(255,255,255,0.25),0_24px_50px_-20px_rgba(0,0,0,0.7)] backdrop-blur-2xl transition-all duration-500 hover:border-white/25 hover:bg-white/[0.08] hover:shadow-[inset_0_1px_2px_0_rgba(255,255,255,0.35),0_30px_70px_-20px_rgba(255,166,36,0.22)] sm:p-10"
+            >
+              {/* Subtle glass specular highlight / light sweep */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -inset-full bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.15),transparent_60%)] opacity-60 transition-opacity duration-500 group-hover:opacity-100"
+              />
+
+              {/* Ambient brand amber aura behind the logo */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(255,166,36,0.25),transparent_70%)] opacity-80 blur-xl transition-all duration-500 group-hover:opacity-100 group-hover:scale-110"
+              />
+
+              {/* Ultra-fine frosted grid texture accent */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:24px_24px] opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]"
+              />
+
+              {/* The big Ayiin Logo */}
+              <div className="relative z-10 w-full max-w-[380px] transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]">
+                <AyiinLogo
+                  on="dark"
+                  className="!h-auto !w-full opacity-95 drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
+                />
+              </div>
+            </Link>
+          </div>
 
           <div className="mt-10 flex flex-col gap-3 border-t border-white/10 py-6 text-meta text-white/60 sm:flex-row sm:items-center sm:justify-between">
             <p>© 2026 Ayiin Inc. · Multi-vendor marketplace for people and companies.</p>
