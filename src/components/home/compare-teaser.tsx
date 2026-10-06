@@ -63,7 +63,7 @@ export function CompareTeaser({ items }: { items: Product[] }) {
           </label>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[560px] text-left text-support">
+          <table className="w-full min-w-[560px] table-fixed text-left text-support">
             <thead>
               <tr>
                 <th className="w-[140px] p-4 align-bottom font-normal text-mute">
@@ -72,8 +72,8 @@ export function CompareTeaser({ items }: { items: Product[] }) {
                 {items.map((p) => (
                   <th key={p.id} scope="col" className="p-3 align-bottom font-normal">
                     <Link href={`/p/${p.slug}`} className="group block">
-                      <ProductImage product={p} className="aspect-square w-full rounded-surface" />
-                      <span className="mt-2 block text-support font-medium leading-snug group-hover:underline">{p.name}</span>
+                      <ProductImage product={p} sizes="(min-width: 1024px) 220px, 180px" className="aspect-square w-full rounded-surface" />
+                      <span title={p.name} className="mt-2 block truncate text-support font-medium leading-snug group-hover:underline">{p.name}</span>
                     </Link>
                   </th>
                 ))}

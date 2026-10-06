@@ -82,7 +82,10 @@ export function HomePersonal() {
 
   const homeProducts = inCategory("home-living");
   const audioProducts = inCategory("audio-tech");
-  const kitchenProducts = inCategory("kitchen");
+  const kitchenProducts = [
+    ...inCategory("kitchen"),
+    productBySlug("trail-bottle-750"),
+  ].filter((p): p is Product => p != null);
 
   // Deals feed
   const deals = shopper

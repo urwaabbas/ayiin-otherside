@@ -38,7 +38,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
       onMouseLeave={() => setIsPaused(false)}
       onFocusCapture={() => setIsPaused(true)}
       onBlurCapture={() => setIsPaused(false)}
-      className="relative h-[420px] w-full overflow-hidden bg-ink sm:h-[480px] lg:h-[520px] xl:h-[560px] max-h-[calc(100dvh-150px)] min-h-[400px]"
+      className="relative w-full overflow-hidden bg-ink h-[calc(100svh-112px)] lg:h-[calc(100svh-152px)] min-h-[440px] max-h-[640px]"
     >
       {slides.map((slide, idx) => {
         const isActive = idx === activeIdx;
@@ -85,7 +85,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
             />
 
             {/* Content Presentation */}
-            <div className="shell relative flex h-full flex-col justify-center pb-14 pt-6 sm:pb-16 sm:pt-8">
+            <div className="shell relative flex h-full flex-col justify-center pt-6 pb-20 sm:pt-8 sm:pb-22">
               <div className="max-w-2xl">
                 {/* Campaign Tag Badge */}
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-meta font-medium tracking-wide text-white backdrop-blur-md">
@@ -98,20 +98,20 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                 </div>
 
                 {/* Headline in Funnel Display */}
-                <h1 className="display mt-3.5 sm:mt-4 text-balance text-display-sm leading-[0.95] tracking-[-0.035em] text-white sm:text-display-md lg:text-display-lg xl:text-display-xl">
+                <h1 className="display mt-3 sm:mt-3.5 text-balance text-heading leading-[1.0] tracking-[-0.035em] text-white sm:text-display-sm lg:text-display-md xl:text-display-lg">
                   {slide.title}
                 </h1>
 
                 {/* Supporting Editorial Copy */}
-                <p className="mt-3 sm:mt-4 max-w-xl text-balance text-body leading-relaxed text-white/85 sm:text-emphasis sm:leading-relaxed">
+                <p className="mt-2.5 sm:mt-3 max-w-xl text-balance text-support leading-relaxed text-white/85 sm:text-body line-clamp-2 sm:line-clamp-none">
                   {slide.description}
                 </p>
 
                 {/* Call-to-Action Group */}
-                <div className="mt-6 sm:mt-7 flex flex-wrap items-center gap-3.5">
+                <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
                   <Link
                     href={slide.cta.href}
-                    className="btn btn-primary h-11 px-5.5 text-support font-semibold shadow-[0_4px_16px_rgba(255,166,36,0.35)] transition-transform hover:scale-[1.02]"
+                    className="btn btn-primary h-11 px-6 text-support font-semibold shadow-[0_4px_16px_rgba(255,166,36,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98]"
                   >
                     <span>{slide.cta.label}</span>
                     <Icon name="arrowRight" size={17} />
@@ -120,7 +120,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                   {slide.secondaryCta && (
                     <Link
                       href={slide.secondaryCta.href}
-                      className="btn h-11 border border-white/35 bg-white/10 px-5 text-support font-medium text-white backdrop-blur-md transition-all hover:border-white hover:bg-white/20 hover:text-white"
+                      className="btn h-11 border border-white/30 bg-white/10 px-5 text-support font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/20 hover:text-white active:scale-[0.98]"
                     >
                       <span>{slide.secondaryCta.label}</span>
                     </Link>
@@ -132,11 +132,11 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
         );
       })}
 
-      {/* Progress & Pagination Bar */}
-      <div className="absolute bottom-4 sm:bottom-5 left-0 right-0 z-20">
-        <div className="shell flex items-center justify-between gap-4">
-          {/* Segmented Slide Indicators with Animated Fill */}
-          <div className="flex flex-1 max-w-md items-center gap-2">
+      {/* Intentional Bottom Progress & Navigation Rail */}
+      <div className="absolute inset-x-0 bottom-5 sm:bottom-6 z-20 pointer-events-none">
+        <div className="shell flex items-end justify-between gap-4 pointer-events-auto">
+          {/* Segmented Slide Indicators with Labels */}
+          <div className="flex flex-1 max-w-lg items-center gap-2 sm:gap-3">
             {slides.map((s, k) => {
               const isCurrent = k === activeIdx;
               return (
@@ -146,11 +146,28 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                   aria-label={`Go to slide ${k + 1}: ${s.title}`}
                   aria-current={isCurrent}
                   onClick={() => setActiveIdx(k)}
-                  suppressHydrationWarning
-                  className="group relative flex h-7 flex-1 items-center"
+                  className="group flex flex-1 flex-col gap-1.5 py-1 text-left transition-opacity cursor-pointer"
                 >
-                  <span className="relative h-[3px] w-full overflow-hidden rounded-full bg-white/25 transition-all group-hover:bg-white/40">
+                  <div className="flex items-center justify-between text-meta">
                     <span
+                      className={clsx(
+                        "font-mono font-medium transition-colors",
+                        isCurrent ? "text-brand" : "text-white/50 group-hover:text-white/80",
+                      )}
+                    >
+                      0{k + 1}
+                    </span>
+                    <span
+                      className={clsx(
+                        "hidden sm:inline text-[11px] truncate tracking-wide transition-colors",
+                        isCurrent ? "text-white/90 font-medium" : "text-white/40 group-hover:text-white/70",
+                      )}
+                    >
+                      {s.tag}
+                    </span>
+                  </div>
+                  <div className="relative h-1 w-full overflow-hidden rounded-full bg-white/20 transition-colors group-hover:bg-white/30">
+                    <div
                       key={`${k}-${activeIdx}-${isPaused}`}
                       className={clsx(
                         "absolute inset-y-0 left-0 rounded-full bg-brand transition-all",
@@ -160,31 +177,32 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                         isCurrent && isPaused && "w-full",
                       )}
                     />
-                  </span>
+                  </div>
                 </button>
               );
             })}
           </div>
 
-          {/* Navigation Arrows */}
-          <div className="flex items-center gap-2">
+          {/* Navigation Capsule */}
+          <div className="flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 p-1 backdrop-blur-md">
             <button
               type="button"
               aria-label="Previous campaign"
               onClick={() => setActiveIdx((prev) => (prev - 1 + count) % count)}
-              suppressHydrationWarning
-              className="grid h-10 w-10 place-items-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all hover:border-white hover:bg-white/25"
+              className="grid h-8 w-8 place-items-center rounded-full text-white/80 transition-all hover:bg-white/20 hover:text-white"
             >
-              <Icon name="chevronLeft" size={20} />
+              <Icon name="chevronLeft" size={17} />
             </button>
+            <span className="px-2 font-mono text-meta text-white/70 select-none">
+              0{activeIdx + 1} / 0{count}
+            </span>
             <button
               type="button"
               aria-label="Next campaign"
               onClick={() => setActiveIdx((prev) => (prev + 1) % count)}
-              suppressHydrationWarning
-              className="grid h-10 w-10 place-items-center rounded-full border border-white/20 bg-white/10 text-white backdrop-blur-md transition-all hover:border-white hover:bg-white/25"
+              className="grid h-8 w-8 place-items-center rounded-full text-white/80 transition-all hover:bg-white/20 hover:text-white"
             >
-              <Icon name="chevronRight" size={20} />
+              <Icon name="chevronRight" size={17} />
             </button>
           </div>
         </div>
