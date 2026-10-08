@@ -10,13 +10,12 @@ import { Icon } from "@/components/ui/icon";
 import { Price } from "@/components/ui/money";
 import { usePrefs } from "@/components/providers";
 import { useHydrated, useShop } from "@/lib/store";
-import { bestTier, deliveryLabel, priceInsight, savingsPct, stockSignal } from "@/lib/commerce";
+import { bestTier, savingsPct } from "@/lib/commerce";
 
 /** Layout adaptations of the one canonical AYIIN product card — never different designs. */
 export type ProductCardLayout = "default" | "compact" | "featured";
 
 /** Every card image is a 4:5 portrait stage. Photography is cut to it at the CDN. */
-const RATIO = 1.25;
 const SIZES: Record<ProductCardLayout, string> = {
   default: "(min-width: 1536px) 360px, (min-width: 1280px) 320px, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw",
   compact: "(min-width: 640px) 240px, 48vw",
@@ -61,15 +60,11 @@ export type ProductCardProps = {
 export function ProductCard({
   product: p,
   layout = "default",
-  label,
-  note,
-  reason,
-  rank,
   sizes,
   priority,
   className,
 }: ProductCardProps) {
-  const { mode, fmt } = usePrefs();
+  const { mode } = usePrefs();
   const business = mode === "business";
   const hydrated = useHydrated();
   const wishedRaw = useShop((s) => s.wishlist.includes(p.id));
@@ -77,17 +72,20 @@ export function ProductCard({
   const toggleWishlist = useShop((s) => s.toggleWishlist);
   const addToCart = useShop((s) => s.addToCart);
 
-  /* ── Image variants ───────────────────────────────────────────
-     Each thumbnail is a real photograph: one per colourway when the product
-     comes in several, otherwise the product's own views (front, angle, detail,
-     in context). Hover previews a thumbnail on the stage; click selects it. */
-  const options = imageOptions(p);
-  const [selected, setSelected] = useState(options[0].key);
+  /* ── Colours and angles ───────────────────────────────────────
+     Colours: one circle per colourway that has its own photograph. Angles: the selected colourway's
+     other real photographs (front, angle, detail, in context). Both appear on hover only; hovering
+     one previews it on the stage, clicking keeps it. */
+  const first = p.variants[0];
+  const [selected, setSelected] = useState(`${first.id}|hero`);
   const [preview, setPreview] = useState<string | null>(null);
   const activeKey = preview ?? selected;
-  const activeOption = options.find((o) => o.key === activeKey) ?? options[0];
-  const activeVariant = p.variants.find((v) => v.id === activeOption.variant) ?? p.variants[0];
-  const want = activeOption.key;
+  const [activeVariantId] = activeKey.split("|");
+  const selectedVariantId = selected.split("|")[0];
+  const activeVariant = p.variants.find((v) => v.id === activeVariantId) ?? first;
+  const want = activeKey;
+  const colours = coloursOf(p);
+  const angles = anglesOf(p, selectedVariantId);
 
   const [cachedLayers, setCachedLayers] = useState<string[]>([want]);
   const [ready, setReady] = useState<string[]>([want]);
@@ -111,22 +109,22 @@ export function ProductCard({
 
   /* ── Commerce micro-action state ────────────────────────────── */
   const [added, setAdded] = useState(false);
+
+  const stage = useRef<HTMLDivElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  const insight = priceInsight(p);
-  const stock = stockSignal(p);
   const tier = bestTier(p);
   const off = savingsPct(p);
   const soldOut = p.stock <= 0;
   const moq = business ? Math.max(p.b2b.moq, 1) : 1;
-  const featured = layout === "featured";
   const compactLayout = layout === "compact";
   const showDiscount = off > 0 && !soldOut && !business;
   const href = `/p/${p.slug}`;
 
-  const tag = soldOut ? "Out of stock" : label ?? (rank != null ? `No. ${rank}` : p.tags.includes("new") ? "New" : null);
-  const shownThumbs = options.slice(0, compactLayout ? 3 : MAX_THUMBS);
+  // Only a status that changes what you can do is worth a label; no ranks, no "New", no campaign tags.
+  const tag = soldOut ? "Out of stock" : null;
+  const shownAngles = angles.slice(0, compactLayout ? 3 : MAX_THUMBS);
 
   const add = (e?: React.MouseEvent) => {
     if (e) {
@@ -143,22 +141,6 @@ export function ProductCard({
     timer.current = setTimeout(() => setAdded(false), ADDED_MS);
   };
 
-  const onThumbKey = (e: React.KeyboardEvent, i: number) => {
-    const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
-    if (!step) return;
-    e.preventDefault();
-    const next = (i + step + shownThumbs.length) % shownThumbs.length;
-    setSelected(shownThumbs[next].key);
-    setPreview(null);
-    (e.currentTarget.parentElement?.children[next] as HTMLElement | undefined)?.focus();
-  };
-
-  const discovery = business
-    ? `MOQ ${p.b2b.moq} · ${p.b2b.leadDays}-day lead time`
-    : soldOut
-      ? "Back soon"
-      : `Arrives ${deliveryLabel(p)}${insight.verifiedDeal ? ` · ${insight.label}` : p.returns.free ? " · Free returns" : ""}`;
-
   return (
     <article
       aria-labelledby={`pc-${p.id}`}
@@ -172,8 +154,9 @@ export function ProductCard({
     >
       {/* ── 1. Spatial Photography Stage ────────────────────────── */}
       <div
+        ref={stage}
         className={clsx(
-          "pc-stage relative isolate aspect-[4/5] w-full overflow-hidden",
+          "pc-stage relative isolate w-full overflow-hidden [aspect-ratio:var(--pc-aspect,4/5)]",
           !ready.includes(shown) && "shimmer",
         )}
         style={{
@@ -205,7 +188,7 @@ export function ProductCard({
                   product={p}
                   variant={vid}
                   view={vw}
-                  ratio={RATIO}
+                  focal
                   bare
                   sizes={sizes ?? SIZES[layout]}
                   preload={priority && k === layers[0]}
@@ -272,43 +255,42 @@ export function ProductCard({
           />
         </button>
 
-        {/* Image variants: a vertical strip of real photo thumbnails under the wishlist control */}
-        {options.length > 1 && (
+        {/* Angles: a vertical strip of the colourway's other photographs, on hover only */}
+        {angles.length > 1 && (
           <div
             role="radiogroup"
-            aria-label={`${p.name} images`}
-            className="absolute right-2.5 top-12 z-20 flex flex-col items-center gap-1.5 [@media(pointer:coarse)]:top-[3.25rem]"
+            aria-label={`${p.name} angles`}
+            className="absolute right-2.5 top-12 z-20 flex flex-col items-center gap-1.5 opacity-0 transition-opacity duration-300 focus-within:opacity-100 group-hover/card:opacity-100 [@media(hover:none)]:opacity-100 [@media(pointer:coarse)]:top-[3.25rem]"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
             }}
           >
-            {shownThumbs.map((o, i) => {
-              const on = o.key === activeKey;
+            {shownAngles.map((o) => {
+              const key = `${selectedVariantId}|${o.view}`;
+              const on = key === activeKey;
               return (
                 <button
-                  key={o.key}
+                  key={key}
                   type="button"
                   role="radio"
-                  aria-checked={o.key === selected}
+                  aria-checked={key === selected}
                   aria-label={o.label}
                   title={o.label}
-                  tabIndex={o.key === selected ? 0 : -1}
                   onClick={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    setSelected(o.key);
+                    setSelected(key);
                     setPreview(null);
                   }}
                   onPointerEnter={(e) => {
-                    if (e.pointerType === "mouse") setPreview(o.key);
+                    if (e.pointerType === "mouse") setPreview(key);
                   }}
-                  onKeyDown={(e) => onThumbKey(e, i)}
                   className={clsx(
-                    "relative block h-8 w-8 overflow-hidden rounded-control bg-white transition-[box-shadow,opacity] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-deep",
+                    "relative block h-9 w-9 overflow-hidden rounded-control bg-white transition-[box-shadow,opacity] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-deep",
                     on
                       ? "opacity-100 shadow-[0_0_0_1.5px_var(--color-ink),0_0_0_3px_rgb(255_255_255/0.9)]"
-                      : "opacity-80 shadow-[0_0_0_1px_rgb(255_255_255/0.85),0_1px_3px_rgb(var(--rgb-ink)/0.25)] hover:opacity-100",
+                      : "opacity-85 shadow-[0_0_0_1px_rgb(255_255_255/0.85),0_1px_3px_rgb(var(--rgb-ink)/0.25)] hover:opacity-100",
                   )}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -316,11 +298,57 @@ export function ProductCard({
                 </button>
               );
             })}
-            {options.length > shownThumbs.length && (
+            {angles.length > shownAngles.length && (
               <span className="glass grid h-6 min-w-6 place-items-center rounded-full px-1.5 font-mono text-[10px] font-medium text-ink">
-                +{options.length - shownThumbs.length}
+                +{angles.length - shownAngles.length}
               </span>
             )}
+          </div>
+        )}
+
+        {/* Colours: round swatches, on hover only */}
+        {colours.length > 1 && (
+          <div
+            role="radiogroup"
+            aria-label={`${p.name} colour`}
+            className="glass absolute bottom-2.5 left-2.5 z-20 flex items-center gap-1.5 rounded-full px-2 py-1.5 opacity-0 transition-opacity duration-300 focus-within:opacity-100 group-hover/card:opacity-100 [@media(hover:none)]:opacity-100"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            {colours.slice(0, 5).map(({ variant: v }) => {
+              const key = `${v.id}|hero`;
+              const on = v.id === selectedVariantId;
+              return (
+                <button
+                  key={v.id}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  aria-label={v.name}
+                  title={v.name}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelected(key);
+                    setPreview(null);
+                  }}
+                  onPointerEnter={(e) => {
+                    if (e.pointerType === "mouse") setPreview(key);
+                  }}
+                  className="grid h-5 w-5 place-items-center rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-deep"
+                >
+                  <span
+                    className={clsx(
+                      "h-3.5 w-3.5 rounded-full shadow-[inset_0_0_0_1px_rgb(var(--rgb-ink)/0.18)] outline outline-1 outline-offset-2 transition-[outline-color,transform] duration-300",
+                      on ? "outline-ink" : "outline-transparent hover:scale-110",
+                    )}
+                    style={{ background: v.color }}
+                  />
+                </button>
+              );
+            })}
           </div>
         )}
 
@@ -359,113 +387,57 @@ export function ProductCard({
         </span>
       </div>
 
-      {/* ── 2. Factual Hierarchy (Minimal, Clean, Below Stage) ── */}
-      <div className={clsx("flex flex-1 flex-col border-t border-line px-3.5 pb-3.5", featured ? "pt-3.5" : "pt-3")}>
-        {/* Brand (Minimal header, reviews completely removed) */}
-        <p className="truncate font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-mute">
+      {/* ── 2. The facts: brand, name, price — one line each, on every card, everywhere ── */}
+      <div className="flex flex-1 flex-col border-t border-line px-3.5 pb-3.5 pt-3">
+        <p className="truncate font-mono text-[11px] font-medium uppercase leading-4 tracking-[0.12em] text-mute">
           {p.brand}
         </p>
 
-        {/* Product Title */}
-        <h3
-          id={`pc-${p.id}`}
-          className={clsx(
-            "mt-1 text-pretty text-ink",
-            featured
-              ? "display min-h-[2.1em] text-emphasis !leading-[1.08] !tracking-[-0.02em] @min-[320px]:text-section"
-              : "min-h-[2.4em] text-support font-medium leading-[1.25] tracking-[-0.01em] @min-[260px]:text-[0.9375rem]",
-          )}
-        >
+        <h3 id={`pc-${p.id}`} className="mt-1 text-[0.9375rem] font-medium leading-[1.3] tracking-[-0.01em] text-ink">
           <Link
             href={href}
+            title={p.name}
             prefetch={priority ? true : undefined}
-            className="line-clamp-2 decoration-line-hover underline-offset-[3px] hover:underline"
+            className="block truncate decoration-line-hover underline-offset-[3px] hover:underline"
           >
             {p.name}
           </Link>
         </h3>
 
-        {/* Featured Note (Specs or Summary) */}
-        {featured && note && (
-          <p className="mt-1 line-clamp-2 text-support leading-relaxed text-ink-2">
-            {note}
-          </p>
-        )}
-
-        {/* Pricing */}
-        <div
-          className={clsx(
-            "flex flex-wrap items-baseline gap-x-2 gap-y-0.5",
-            featured ? "mt-2.5" : "mt-1.5",
-          )}
-        >
+        <div className="mt-2 flex items-baseline gap-x-2.5">
           {business ? (
-            <>
-              <Price usd={tier.price} size={featured ? "md" : "sm"} />
-              <span className="text-meta text-mute">
-                /{p.b2b.unit} at {tier.min}+ · list{" "}
-                <span className="num line-through">{fmt(p.price)}</span>
-              </span>
-            </>
+            <Price usd={tier.price} size="sm" strike={p.price} />
           ) : (
-            <>
-              <Price usd={p.price} size={featured ? "md" : "sm"} strike={p.compareAt} />
-            </>
+            <Price usd={p.price} size="sm" strike={p.compareAt} />
           )}
         </div>
-
-        {/* Stock Urgency Signal */}
-        {stock.urgent && !soldOut && (
-          <p className="mt-1 flex items-center gap-1.5 text-meta font-medium text-warning">
-            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-warning" />
-            {stock.label}
-          </p>
-        )}
-        {soldOut && wished && (
-          <p className="mt-1 text-meta text-ink-2">We&apos;ll notify you when restocked</p>
-        )}
-
-        {/* Delivery / Shipping Context */}
-        {!compactLayout && (
-          <p className="mt-1 min-w-0 truncate text-meta text-mute">
-            {discovery}
-          </p>
-        )}
-
-        {reason && <p className="mt-1 line-clamp-1 text-meta text-mute">{reason}</p>}
       </div>
     </article>
   );
 }
 
-type ImageOption = {
-  key: string;
-  variant: string;
-  view: ImageView;
-  label: string;
-  photo: NonNullable<ReturnType<typeof productPhoto>>;
-};
+/** Colourways that have their own photograph, one per distinct photo. */
+function coloursOf(p: Product) {
+  const seen = new Set<string>();
+  const out: { variant: Product["variants"][number]; photo: NonNullable<ReturnType<typeof productPhoto>> }[] = [];
+  for (const v of p.variants) {
+    const photo = productPhoto(p, v.id, "hero");
+    if (!photo || seen.has(photo.id)) continue;
+    seen.add(photo.id);
+    out.push({ variant: v, photo });
+  }
+  return out;
+}
 
-/**
- * The real photographs a card can switch between: one per colourway that has its own
- * photography, otherwise the product's views. Never two thumbnails of the same photo.
- */
-function imageOptions(p: Product): ImageOption[] {
-  const collect = (pairs: [string, ImageView, string][]) => {
-    const seen = new Set<string>();
-    const out: ImageOption[] = [];
-    for (const [variant, view, label] of pairs) {
-      const photo = productPhoto(p, variant, view);
-      if (!photo || seen.has(photo.id)) continue;
-      seen.add(photo.id);
-      out.push({ key: `${variant}|${view}`, variant, view, label, photo });
-    }
-    return out;
-  };
-  const first = p.variants[0];
-  const byColour = collect(p.variants.map((v) => [v.id, "hero", v.name]));
-  if (byColour.length > 1) return byColour;
-  const byView = collect(productViews(p, first.id).map((v) => [first.id, v.id, v.label]));
-  if (byView.length > 0) return byView;
-  return [{ key: `${first.id}|hero`, variant: first.id, view: "hero", label: first.name, photo: productPhoto(p, first.id)! }];
+/** The real photographs of one colourway, one per distinct photo (front, angle, detail, in context). */
+function anglesOf(p: Product, variantId: string) {
+  const seen = new Set<string>();
+  const out: { view: ImageView; label: string; photo: NonNullable<ReturnType<typeof productPhoto>> }[] = [];
+  for (const v of productViews(p, variantId)) {
+    const photo = productPhoto(p, variantId, v.id);
+    if (!photo || seen.has(photo.id)) continue;
+    seen.add(photo.id);
+    out.push({ view: v.id, label: v.label, photo });
+  }
+  return out;
 }

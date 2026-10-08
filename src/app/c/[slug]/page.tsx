@@ -5,8 +5,9 @@ import { Suspense } from "react";
 import { categoryBySlug } from "@/lib/catalog/categories";
 import { productsByCategory } from "@/lib/catalog/products";
 import { Listing } from "@/components/listing/listing";
-import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
+import { categoryHero } from "@/lib/pdp";
+import { Credit, Pic } from "@/components/pdp/sections";
 import { getPrefs } from "@/lib/server-prefs";
 
 export async function generateMetadata({ params }: PageProps<"/c/[slug]">): Promise<Metadata> {
@@ -24,72 +25,74 @@ export default async function CategoryPage({ params, searchParams }: PageProps<"
   const items = productsByCategory(slug);
   const activeSub = typeof sp.sub === "string" ? sp.sub : undefined;
 
-  return (
-    <div className="mx-auto max-w-[1520px] px-3 pt-4 sm:px-4">
-      <nav aria-label="Breadcrumb" className="text-support text-mute">
-        <ol className="flex items-center gap-1.5">
-          <li>
-            <Link href="/" className="hover:text-ink">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden>/</li>
-          <li aria-current="page" className="text-ink">
-            {c.name}
-          </li>
-        </ol>
-      </nav>
+  const photo = categoryHero(c.slug);
 
-      {/* Department banner — marketplace style: title, subcategory tiles, buying guide */}
-      <header className="mt-4 overflow-hidden rounded-panel border border-line bg-white">
-        <div className="grid gap-6 p-5 sm:p-6 lg:grid-cols-[1fr_380px]">
-          <div className="min-w-0">
-            <h1 className="text-heading font-semibold leading-tight tracking-[-0.02em] sm:text-heading">{c.name}</h1>
-            <p className="mt-2 max-w-2xl text-body text-ink-2">{c.blurb}</p>
-            <ul className="mt-5 grid grid-cols-3 gap-3 sm:grid-cols-6">
+  return (
+    <div>
+      {/* Department hero — full width: the department's name and its way in on the left, a photograph to the edge on the right */}
+      <section aria-labelledby="dept-h" className="overflow-hidden" style={{ backgroundColor: c.tint }}>
+        <div className="mx-auto grid max-w-[1920px] lg:min-h-[520px] lg:grid-cols-[5fr_7fr]">
+          <div className="flex flex-col justify-center px-[var(--gutter)] py-10 sm:py-14 lg:py-16 lg:pl-[max(var(--gutter),calc((100vw-1520px)/2+var(--gutter)))] lg:pr-14">
+            <nav aria-label="Breadcrumb" className="text-support text-ink-2">
+              <ol className="flex items-center gap-1.5">
+                <li>
+                  <Link href="/" className="hover:text-ink">Home</Link>
+                </li>
+                <li aria-hidden>/</li>
+                <li aria-current="page" className="text-ink">{c.name}</li>
+              </ol>
+            </nav>
+            <h1 id="dept-h" className="display mt-6 text-balance text-[2.75rem] !leading-[0.96] sm:text-display-md lg:text-[4.5rem]">{c.name}</h1>
+            <p className="mt-5 max-w-md text-pretty text-emphasis leading-snug text-ink-2">{c.blurb}</p>
+            <ul className="mt-8 flex flex-wrap gap-2" aria-label={`${c.name} subcategories`}>
               <li>
-                <Link href={`/c/${c.slug}`} aria-current={!activeSub ? "page" : undefined} className="group flex flex-col items-center text-center">
-                  <span className={`grid aspect-square w-full place-items-center rounded-full bg-mist text-support font-semibold ring-1 ${!activeSub ? "ring-2 ring-brand" : "ring-line"}`}>All</span>
-                  <span className="mt-1.5 text-meta font-medium">All {c.short.toLowerCase()}</span>
+                <Link
+                  href={`/c/${c.slug}`}
+                  aria-current={!activeSub ? "page" : undefined}
+                  className={`inline-flex h-10 items-center rounded-full px-4 text-support font-medium transition-colors ${!activeSub ? "bg-ink text-white" : "bg-white/70 text-ink hover:bg-white"}`}
+                >
+                  All {items.length}
                 </Link>
               </li>
               {c.subcategories.map((sub) => {
-                const p = items.find((x) => x.subcategory === sub);
                 const on = activeSub === sub;
                 return (
                   <li key={sub}>
-                    <Link href={`/c/${c.slug}?sub=${encodeURIComponent(sub)}`} aria-current={on ? "page" : undefined} className="group flex flex-col items-center text-center">
-                      {p ? (
-                        <ProductImage product={p} sizes="96px" className={`aspect-square w-full overflow-hidden rounded-full ring-1 ${on ? "ring-2 ring-brand" : "ring-line group-hover:ring-brand"}`} />
-                      ) : (
-                        <span className="aspect-square w-full rounded-full bg-mist ring-1 ring-line" />
-                      )}
-                      <span className="mt-1.5 text-meta font-medium group-hover:text-brand-deep">{sub}</span>
+                    <Link
+                      href={`/c/${c.slug}?sub=${encodeURIComponent(sub)}`}
+                      aria-current={on ? "page" : undefined}
+                      className={`inline-flex h-10 items-center rounded-full px-4 text-support font-medium transition-colors ${on ? "bg-ink text-white" : "bg-white/70 text-ink hover:bg-white"}`}
+                    >
+                      {sub}
                     </Link>
                   </li>
                 );
               })}
             </ul>
           </div>
-          <aside aria-label="Buying guide" className="rounded-surface bg-brand-soft p-5">
-            <p className="flex items-center gap-2 text-meta font-semibold uppercase tracking-[0.1em] text-brand-deep">
-              <Icon name="sparkle" size={13} /> Buying guide
-            </p>
-            <p className="mt-2 text-body font-semibold leading-snug">{c.guide.title}</p>
-            <ul className="mt-3 space-y-2 text-support text-ink-2">
-              {c.guide.points.map((pt) => (
-                <li key={pt} className="flex gap-2">
-                  <Icon name="check" size={15} strokeWidth={2.2} className="mt-0.5 shrink-0 text-brand-deep" /> {pt}
-                </li>
-              ))}
-            </ul>
-          </aside>
+          <div className="relative min-h-[300px] sm:min-h-[380px]">
+            {photo && <Pic photo={photo} priority sizes="(min-width: 1024px) 58vw, 100vw" widths={[800, 1280, 1920]} alt="" />}
+            {photo && <Credit photo={photo} className="absolute bottom-3 right-4 rounded-full bg-white/80 px-3 py-1 backdrop-blur" />}
+          </div>
         </div>
-      </header>
+      </section>
 
-      <Suspense fallback={<div className="mt-10 h-[600px] rounded-surface bg-mist" />}>
-        <Listing key={mode} base={items} subcategories={c.subcategories} />
-      </Suspense>
+      <div className="mx-auto max-w-[1520px] px-3 pt-8 sm:px-4">
+        <aside aria-label="Buying guide" className="rounded-surface bg-white p-5 sm:p-6">
+          <p className="text-body font-semibold leading-snug">{c.guide.title}</p>
+          <ul className="mt-3 grid gap-3 text-support text-ink-2 md:grid-cols-3">
+            {c.guide.points.map((pt) => (
+              <li key={pt} className="flex gap-2">
+                <Icon name="check" size={15} strokeWidth={2.2} className="mt-0.5 shrink-0 text-brand-deep" /> {pt}
+              </li>
+            ))}
+          </ul>
+        </aside>
+
+        <Suspense fallback={<div className="mt-10 h-[600px] rounded-surface bg-mist" />}>
+          <Listing key={mode} base={items} subcategories={c.subcategories} />
+        </Suspense>
+      </div>
     </div>
   );
 }

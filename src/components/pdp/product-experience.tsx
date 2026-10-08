@@ -89,7 +89,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
       <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
         {/* ── Gallery ─────────────────────────────────── */}
         <div className="min-w-0 lg:col-span-7">
-          <div className="lg:sticky lg:top-[88px]">
+          <div className="lg:sticky lg:top-[80px]">
             <ProductGallery
               product={p}
               variant={variant}
@@ -441,7 +441,7 @@ export function ProductExperience({ product: p, initialQty }: { product: Product
       {/* Mobile / scrolled sticky purchase bar */}
       <div
         className={clsx(
-          "fixed inset-x-0 bottom-[62px] z-40 border-t border-line bg-porcelain/90 px-4 py-3 backdrop-blur-xl transition-transform duration-500 ease-[var(--ease-out-expo)] lg:bottom-0",
+          "fixed inset-x-0 bottom-[62px] z-40 border-t border-line bg-porcelain/90 px-4 py-3 backdrop-blur-xl transition-transform duration-500 ease-[var(--ease-out-expo)] lg:hidden",
           showBar ? "translate-y-0" : "pointer-events-none translate-y-[140%]",
         )}
         inert={!showBar}

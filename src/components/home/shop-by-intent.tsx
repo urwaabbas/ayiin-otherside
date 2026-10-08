@@ -5,8 +5,8 @@ import { clsx } from "clsx";
 import { useMemo, useState } from "react";
 import type { Product } from "@/lib/types";
 import { products } from "@/lib/catalog/products";
+import { CardRail } from "@/components/home/card-rail";
 import { ProductCard } from "@/components/product/product-card";
-import { Eyebrow } from "@/components/ui/signal";
 import { Icon, type IconName } from "@/components/ui/icon";
 
 type IntentDef = {
@@ -105,7 +105,15 @@ export function ShopByIntent() {
   const matchedProducts = useMemo(() => {
     const list = products.filter(activeIntent.match);
     if (activeIntent.sort) list.sort(activeIntent.sort);
-    return list.slice(0, 4);
+    // Up to eight cards, four across with the rest a swipe away, like every other shelf on the page: top up with the best-rated pieces if the intent has fewer.
+    if (list.length < 8) {
+      const have = new Set(list.map((p) => p.id));
+      for (const p of [...products].sort((a, b) => b.rating - a.rating)) {
+        if (list.length >= 8) break;
+        if (!have.has(p.id)) list.push(p);
+      }
+    }
+    return list.slice(0, 8);
   }, [activeIntent]);
 
   return (
@@ -115,13 +123,9 @@ export function ShopByIntent() {
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <Eyebrow index="02">Intent Discovery</Eyebrow>
-          <h2 className="display mt-3 text-heading tracking-[-0.02em] sm:text-display-sm">
+          <h2 className="display text-heading tracking-[-0.02em] sm:text-display-sm">
             Shop by intent.
           </h2>
-          <p className="mt-2 text-body text-mute">
-            Start from what it&apos;s for — the right pieces from every department, in one place.
-          </p>
         </div>
         <Link
           href={activeIntent.query}
@@ -169,37 +173,15 @@ export function ShopByIntent() {
         })}
       </div>
 
-      {/* Active intent mood line */}
-      <div
-        id={`intent-panel-${activeIntent.id}`}
-        role="tabpanel"
-        aria-labelledby={`intent-tab-${activeIntent.id}`}
-        className="mt-4 flex shrink-0 flex-col gap-2 rounded-control bg-porcelain/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
-      >
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-meta uppercase tracking-wider text-brand-deep font-semibold">
-            {activeIntent.kicker}
-          </span>
-          <span className="text-mute">·</span>
-          <p className="text-support text-ink-2">{activeIntent.description}</p>
-        </div>
-        <Link
-          href={activeIntent.query}
-          className="shrink-0 text-meta font-medium text-ink hover:text-brand-deep hover:underline"
-        >
-          Explore collection →
-        </Link>
-      </div>
-
       {/* Matched product cards */}
-      <div className="fold-body mt-6 lg:flex lg:items-end lg:justify-center">
-        <div className="fold-grid [--cols:4]">
+      <div className="fold-body mt-6 lg:mt-4 lg:flex lg:items-center">
+        <CardRail label="Products for this intent" resetKey={activeId}>
           {matchedProducts.map((p) => (
             <div key={p.id} className="animate-fade">
               <ProductCard product={p} />
             </div>
           ))}
-        </div>
+        </CardRail>
       </div>
     </section>
   );

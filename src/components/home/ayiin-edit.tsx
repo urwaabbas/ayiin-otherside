@@ -7,7 +7,6 @@ import type { Product } from "@/lib/types";
 import { productBySlug } from "@/lib/catalog/products";
 import { productPhoto, photoUrl } from "@/lib/images";
 import { ProductCard } from "@/components/product/product-card";
-import { Eyebrow } from "@/components/ui/signal";
 import { Icon } from "@/components/ui/icon";
 
 type EditStory = {
@@ -35,6 +34,7 @@ const EDITS: EditStory[] = [
       "ergo-task-chair-pro",
       "arc-table-lamp",
       "kova-keys-low-profile",
+      "kova-vista-27-4k",
     ],
     ctaLabel: "Shop Workspace Edit",
     href: "/search?q=office",
@@ -51,6 +51,7 @@ const EDITS: EditStory[] = [
       "everyday-stoneware-mugs",
       "ember-soy-candle",
       "halo-speaker-mini",
+      "guji-single-origin-1kg",
     ],
     ctaLabel: "Shop Hosting Edit",
     href: "/search?q=coffee+and+home",
@@ -67,6 +68,7 @@ const EDITS: EditStory[] = [
       "transit-daypack-22",
       "trail-bottle-750",
       "solstice-sunglasses",
+      "aurel-buds-pro",
     ],
     ctaLabel: "Shop Travel Edit",
     href: "/search?q=travel",
@@ -83,6 +85,7 @@ const EDITS: EditStory[] = [
       "stoneware-bud-vases",
       "night-recovery-oil",
       "meridian-automatic-38",
+      "clarity-niacinamide-serum",
     ],
     ctaLabel: "Shop Upgrades",
     href: "/search?sort=popular",
@@ -105,13 +108,9 @@ export function AyiinEdit() {
       {/* Editorial Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <Eyebrow index="03">Curation</Eyebrow>
-          <h2 className="display mt-3 text-heading tracking-[-0.02em] sm:text-display-sm">
+          <h2 className="display text-heading tracking-[-0.02em] sm:text-display-sm">
             The Ayiin Edit.
           </h2>
-          <p className="mt-2 text-body text-mute">
-            Considered product collections gathered around real moments of living and work.
-          </p>
         </div>
 
         {/* Tab Switcher */}
@@ -148,7 +147,7 @@ export function AyiinEdit() {
         id="edit-panel"
         role="tabpanel"
         aria-labelledby={`edit-tab-${story.id}`}
-        className="fold-body mt-8 lg:flex lg:items-start"
+        className="fold-body mt-8 lg:mt-6 lg:flex lg:items-start"
       >
         <div className="fold-grid fold-grid-lead">
           {featured && (
@@ -164,24 +163,11 @@ export function AyiinEdit() {
               )}
               <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
 
-              <div className="relative flex h-full flex-col justify-between p-6 lg:p-7">
-                <span className="self-start rounded-full border border-white/25 bg-black/25 px-3 py-1 font-mono text-meta uppercase tracking-[0.14em] text-white backdrop-blur-md">
-                  {story.kicker}
-                </span>
-
+              <div className="relative flex h-full flex-col justify-end p-6 lg:p-7">
                 <div>
                   <h3 className="display text-heading leading-[0.98] tracking-[-0.02em] text-white">
                     {story.title}
                   </h3>
-                  <p className="mt-2 line-clamp-3 text-support leading-relaxed text-white/80">
-                    {story.blurb}
-                  </p>
-                  <Link
-                    href={`/p/${featured.slug}`}
-                    className="mt-3 block truncate text-meta text-white/65 underline-offset-[3px] hover:text-white hover:underline"
-                  >
-                    Anchor piece · {featured.name}
-                  </Link>
                   <Link
                     href={story.href}
                     className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-support font-semibold text-ink transition-colors duration-300 hover:bg-brand"

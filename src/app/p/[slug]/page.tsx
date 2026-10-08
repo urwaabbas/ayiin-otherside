@@ -6,13 +6,13 @@ import { categoryBySlug } from "@/lib/catalog/categories";
 import { ProductExperience } from "@/components/pdp/product-experience";
 import { Reviews } from "@/components/pdp/reviews";
 import { Bundle } from "@/components/pdp/bundle";
-import { ProductImage } from "@/components/product/product-image";
-import { PriceHistory } from "@/components/product/price-history";
-import { Money, Price } from "@/components/ui/money";
-import { Icon } from "@/components/ui/icon";
-import { SignalDot } from "@/components/ui/signal";
-import { Eyebrow } from "@/components/ui/signal";
-import { deliveryLabel, priceInsight } from "@/lib/commerce";
+import { ProductBar } from "@/components/pdp/product-bar";
+import { GalleryGrid } from "@/components/pdp/gallery-grid";
+import { CloserLook, CompareBlock, Credit, Highlights, PdpHero, TechSpecs } from "@/components/pdp/sections";
+import { CardRail } from "@/components/home/card-rail";
+import { ProductCard } from "@/components/product/product-card";
+import { productMedia } from "@/lib/pdp";
+import { deliveryLabel } from "@/lib/commerce";
 import type { Product } from "@/lib/types";
 import { RecentlyViewed } from "@/components/product/recently-viewed";
 import { productImageSrc } from "@/lib/images";
@@ -57,10 +57,10 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
   if (!p) notFound();
   const cat = categoryBySlug(p.category)!;
   const alts = alternatives(p);
-  const insight = priceInsight(p);
   const qty = typeof sp.qty === "string" ? Number(sp.qty) || undefined : undefined;
-  const related = products.filter((x) => x.id !== p.id && (x.category === p.category || x.useCases.some((u) => p.useCases.includes(u)))).sort((a, b) => b.soldLastWeek - a.soldLastWeek);
-  const bundle = [p, ...related.filter((x) => x.price < p.price * 1.2).slice(0, 2)];
+  const sameCat = products.filter((x) => x.id !== p.id && x.category === p.category).sort((a, b) => b.soldLastWeek - a.soldLastWeek);
+  const related = sameCat;
+  const bundle = [p, ...sameCat.filter((x) => x.price < p.price * 1.2).slice(0, 2)];
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -74,151 +74,77 @@ export default async function ProductPage({ params, searchParams }: PageProps<"/
     offers: { "@type": "Offer", priceCurrency: "USD", price: p.price, availability: p.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock" },
   };
 
+  const media = productMedia(p);
+  const sections = [
+    { id: "overview", label: "Overview" },
+    { id: "highlights", label: "Highlights" },
+    { id: "gallery", label: "Gallery" },
+    { id: "specs", label: "Tech specs" },
+    { id: "reviews", label: "Reviews" },
+    ...(alts.length ? [{ id: "compare", label: "Compare" }] : []),
+  ];
+
   return (
-    <div className="shell pt-6">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
-      <nav aria-label="Breadcrumb" className="mb-6 text-support text-mute">
-        <ol className="flex flex-wrap items-center gap-1.5">
-          <li><Link href="/" className="hover:text-ink">Home</Link></li>
-          <li aria-hidden>/</li>
-          <li><Link href={`/c/${cat.slug}`} className="hover:text-ink">{cat.name}</Link></li>
-          <li aria-hidden>/</li>
-          <li><Link href={`/c/${cat.slug}?sub=${encodeURIComponent(p.subcategory)}`} className="hover:text-ink">{p.subcategory}</Link></li>
-        </ol>
-      </nav>
+    <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\u003c") }} />
+      <ProductBar name={p.name} category={{ slug: cat.slug, name: cat.name }} price={p.price} soldOut={p.stock <= 0} sections={sections} />
 
-      <ProductExperience product={p} initialQty={qty} />
+      <PdpHero product={p} category={cat} />
+      <Highlights product={p} />
+      <CloserLook product={p} />
 
-      {/* Ayiin Brief */}
-      <section aria-labelledby="brief" className="mt-24">
-        <Eyebrow index="01">Ayiin Brief</Eyebrow>
-        <div className="mt-5 grid gap-8 lg:grid-cols-[1fr_2fr]">
-          <h2 id="brief" className="display text-display-sm sm:text-display-md">
-            The short version, from <span className="tabular-nums">{p.reviewCount.toLocaleString("en-US")}</span> owners.
-          </h2>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="panel-ink rounded-surface p-6">
-              <p className="eyebrow !text-mute-dark">Best for</p>
-              <p className="mt-3 text-emphasis font-medium leading-snug tracking-[-0.02em]">{p.brief.bestFor}</p>
-            </div>
-            <div className="rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]">
-              <p className="eyebrow">What owners love</p>
-              <ul className="mt-3 space-y-2.5 text-support">
-                {p.brief.pros.map((x) => (
-                  <li key={x} className="flex gap-2.5">
-                    <span className="mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-brand shadow-[inset_0_0_0_1px_var(--color-ink)]">
-                      <Icon name="check" size={10} strokeWidth={3} />
-                    </span>
-                    {x}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]">
-              <p className="eyebrow">Worth knowing</p>
-              <ul className="mt-3 space-y-2.5 text-support">
-                {p.brief.cons.map((x) => (
-                  <li key={x} className="flex gap-2.5">
-                    <span className="mt-1 grid h-4 w-4 shrink-0 place-items-center rounded-full bg-soft">
-                      <Icon name="minus" size={10} strokeWidth={3} />
-                    </span>
-                    {x}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+      <section id="gallery" className="shell scroll-mt-20 pt-20 sm:pt-28">
+        <h2 className="display text-display-sm sm:text-display-md">Every angle.</h2>
+        <div className="mt-10">
+          <GalleryGrid photos={media} name={p.name} />
         </div>
+        {media[0] && <Credit photo={media[0]} className="mt-3" />}
       </section>
 
-      {/* Better option */}
-      {alts.length > 0 && (
-        <section aria-labelledby="better" className="mt-24">
-          <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-            <div>
-              <Eyebrow index="02">Is there a better option?</Eyebrow>
-              <h2 id="better" className="display mt-4 text-display-sm sm:text-display-md">Maybe. Here&apos;s the honest answer.</h2>
-            </div>
-            <Link href={`/compare?ids=${[p.id, ...alts.map((a) => a.product.id)].join(",")}`} className="btn btn-secondary shrink-0">
-              <Icon name="compare" size={16} /> Compare all {alts.length + 1}
-            </Link>
-          </div>
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            {alts.map(({ product: a, label, why }) => (
-              <Link key={a.id} href={`/p/${a.slug}`} className="group flex gap-4 rounded-surface bg-white p-4 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]">
-                <ProductImage product={a} sizes="112px" className="h-28 w-28 shrink-0 rounded-surface" />
-                <div className="min-w-0 py-1">
-                  <span className="inline-flex rounded-full bg-mist px-2.5 py-1 text-meta font-medium">{label}</span>
-                  <p className="mt-2 line-clamp-2 text-support font-medium leading-snug group-hover:underline">{a.name}</p>
-                  <p className="mt-1 text-meta text-mute">{why}</p>
-                  <p className="mt-2"><Price usd={a.price} size="sm" /></p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* Details */}
-      <section aria-labelledby="details" className="mt-24 grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <div>
-          <Eyebrow index="03">Details</Eyebrow>
-          <h2 id="details" className="display mt-4 text-display-sm sm:text-display-md">What you&apos;re getting.</h2>
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-            {p.highlights.map((h) => (
-              <li key={h} className="rounded-surface bg-white p-4 text-support font-medium shadow-[var(--shadow-hair)]">
-                <SignalDot tone="mute" className="mr-2" /> {h}
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8 rounded-surface bg-white p-6 shadow-[var(--shadow-hair)]">
-            <div className="flex items-center justify-between">
-              <p className="text-body font-medium">Price history · 12 weeks</p>
-              <span className={insight.verifiedDeal ? "rounded-full bg-brand px-2.5 py-1 text-meta font-medium" : "rounded-full bg-mist px-2.5 py-1 text-meta"}>
-                {insight.label}
-              </span>
-            </div>
-            <PriceHistory history={p.history} height={110} className="mt-5" />
-            <div className="mt-3 flex justify-between text-meta text-mute">
-              <span>Low <Money usd={Math.min(...p.history)} /></span>
-              <span>Typical <Money usd={Math.round(insight.typical)} /></span>
-              <span>High <Money usd={Math.max(...p.history)} /></span>
-            </div>
-          </div>
-        </div>
-        <div>
-          <dl className="divide-y divide-line overflow-hidden rounded-surface bg-white shadow-[var(--shadow-hair)] lg:mt-[120px]">
-            {Object.entries(p.specs).map(([k, v]) => (
-              <div key={k} className="grid grid-cols-[150px_1fr] gap-4 px-6 py-4 text-support">
-                <dt className="text-mute">{k}</dt>
-                <dd>{v}</dd>
-              </div>
-            ))}
-            <div className="grid grid-cols-[150px_1fr] gap-4 px-6 py-4 text-support">
-              <dt className="text-mute">SKU</dt>
-              <dd className="num">{p.b2b.sku}</dd>
-            </div>
-          </dl>
-        </div>
+      <section id="buy" className="shell scroll-mt-20 pt-20 sm:pt-28">
+        <nav aria-label="Breadcrumb" className="mb-6 text-support text-mute">
+          <ol className="flex flex-wrap items-center gap-1.5">
+            <li><Link href="/" className="hover:text-ink">Home</Link></li>
+            <li aria-hidden>/</li>
+            <li><Link href={`/c/${cat.slug}`} className="hover:text-ink">{cat.name}</Link></li>
+            <li aria-hidden>/</li>
+            <li><Link href={`/c/${cat.slug}?sub=${encodeURIComponent(p.subcategory)}`} className="hover:text-ink">{p.subcategory}</Link></li>
+          </ol>
+        </nav>
+        <h2 className="display mb-10 text-display-sm sm:text-display-md">Buy {p.name}.</h2>
+        <ProductExperience product={p} initialQty={qty} />
       </section>
 
-      {/* Bundle */}
       {bundle.length > 1 && (
-        <section aria-labelledby="together" className="mt-24">
-          <Eyebrow index="04">Bought together</Eyebrow>
-          <h2 id="together" className="display mb-8 mt-4 text-display-sm sm:text-display-md">Complete it in one delivery.</h2>
+        <section aria-labelledby="together" className="shell pt-20 sm:pt-28">
+          <h2 id="together" className="display mb-8 text-display-sm sm:text-display-md">Complete it in one delivery.</h2>
           <Bundle items={bundle} />
         </section>
       )}
 
-      {/* Reviews */}
-      <section id="reviews" aria-labelledby="reviews-h" className="mt-24 scroll-mt-24">
-        <Eyebrow index="05">Reviews</Eyebrow>
-        <h2 id="reviews-h" className="display mb-10 mt-4 text-display-sm sm:text-display-md">Only from people who bought it.</h2>
+      <TechSpecs product={p} />
+
+      <section id="reviews" aria-labelledby="reviews-h" className="shell scroll-mt-20 pt-20 sm:pt-28">
+        <h2 id="reviews-h" className="display mb-10 text-display-sm sm:text-display-md">Ratings and reviews.</h2>
         <Reviews product={p} />
       </section>
 
-      <RecentlyViewed exclude={p.id} index="06" className="mt-24" />
+      <CompareBlock product={p} alts={alts} />
+
+      {related.length > 0 && (
+        <section aria-labelledby="related-h" className="shell pt-20 sm:pt-28">
+          <h2 id="related-h" className="display mb-10 text-display-sm sm:text-display-md">More in {cat.name}.</h2>
+          <CardRail flow label={`More in ${cat.name}`}>
+            {related.slice(0, 8).map((x) => (
+              <ProductCard key={x.id} product={x} />
+            ))}
+          </CardRail>
+        </section>
+      )}
+
+      <div className="shell">
+        <RecentlyViewed exclude={p.id} className="mt-20" />
+      </div>
     </div>
   );
 }

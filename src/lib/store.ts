@@ -265,12 +265,15 @@ type UIState = {
   cartOpen: boolean;
   searchOpen: boolean;
   menuOpen: boolean;
+  /** A page with its own pinned local nav (product pages) is showing: the main navbar steps aside while scrolled. */
+  localNav: boolean;
   toast: { id: number; title: string; body?: string; action?: { label: string; href: string } | false } | null;
   openCart: () => void;
   closeCart: () => void;
   openSearch: () => void;
   closeSearch: () => void;
   setMenu: (open: boolean) => void;
+  setLocalNav: (on: boolean) => void;
   /** `action: false` shows no button; omitted, the toast offers "View cart". */
   notify: (title: string, body?: string, action?: { label: string; href: string } | false) => void;
   dismissToast: () => void;
@@ -280,12 +283,14 @@ export const useUI = create<UIState>()((set) => ({
   cartOpen: false,
   searchOpen: false,
   menuOpen: false,
+  localNav: false,
   toast: null,
   openCart: () => set({ cartOpen: true, searchOpen: false, menuOpen: false }),
   closeCart: () => set({ cartOpen: false }),
   openSearch: () => set({ searchOpen: true, cartOpen: false, menuOpen: false }),
   closeSearch: () => set({ searchOpen: false }),
   setMenu: (open) => set({ menuOpen: open }),
+  setLocalNav: (on) => set({ localNav: on }),
   notify: (title, body, action) => set({ toast: { id: Date.now(), title, body, action } }),
   dismissToast: () => set({ toast: null }),
 }));

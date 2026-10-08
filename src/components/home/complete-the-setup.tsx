@@ -3,8 +3,8 @@
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { productBySlug } from "@/lib/catalog/products";
+import { CardRail } from "@/components/home/card-rail";
 import { ProductCard } from "@/components/product/product-card";
-import { Eyebrow } from "@/components/ui/signal";
 import { Icon } from "@/components/ui/icon";
 import { usePrefs } from "@/components/providers";
 import { useShop, useUI } from "@/lib/store";
@@ -42,11 +42,9 @@ export function CompleteTheSetup() {
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <Eyebrow index="SETUP">Merchandising</Eyebrow>
-          <h2 className="display mt-3 text-heading tracking-[-0.02em] sm:text-display-sm">
+          <h2 className="display text-heading tracking-[-0.02em] sm:text-display-sm">
             {WORKSPACE_SETUP.title}
           </h2>
-          <p className="mt-2 max-w-2xl text-body text-mute">{WORKSPACE_SETUP.subtitle}</p>
         </div>
         <Link
           href="/c/office"
@@ -57,15 +55,15 @@ export function CompleteTheSetup() {
         </Link>
       </div>
 
-      <div className="fold-body mt-8 lg:flex lg:items-center lg:justify-center">
-        <div className="fold-grid lg:[--cols:5]">
-          {pieces.map((p, i) => (
-            <ProductCard key={p.id} product={p} label={i === 0 ? "Anchor piece" : undefined} />
+      <div className="fold-body mt-8 lg:mt-5 lg:flex lg:items-center">
+        <CardRail label="Workstation pieces">
+          {pieces.map((p) => (
+            <ProductCard key={p.id} product={p} />
           ))}
-        </div>
+        </CardRail>
       </div>
 
-      <div className="mt-6 flex shrink-0 flex-col gap-3 border-t border-line pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-5 flex shrink-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-support text-ink-2">
           The complete setup · {available.length} pieces ·{" "}
           <span className="num font-medium text-ink">{fmt(total)}</span>

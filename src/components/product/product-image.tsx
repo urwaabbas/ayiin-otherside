@@ -4,7 +4,7 @@ import Image, { type ImageLoader } from "next/image";
 import { clsx } from "clsx";
 import { useCallback, useEffect, useState } from "react";
 import type { Product } from "@/lib/types";
-import { photoUrl, productImageSrc, productPhoto, type ImageView } from "@/lib/images";
+import { photoFullUrl, photoUrl, productImageSrc, productPhoto, type ImageView } from "@/lib/images";
 import { AyiinMark } from "@/components/brand/ayiin-logo";
 
 type Props = {
@@ -22,6 +22,8 @@ type Props = {
   feather?: boolean;
   /** Frame height ÷ width. Photography is cropped to it at the CDN (1.25 = 4:5 portrait); default square. */
   ratio?: number;
+  /** Show the whole original and frame it with CSS around the photo's focal point, instead of asking the CDN for a crop. One stable image for any box shape. */
+  focal?: boolean;
   /** No backdrop colour or shimmer — for layers stacked over a frame that already has them */
   bare?: boolean;
   /** Called once the image has decoded */
@@ -49,6 +51,7 @@ export function ProductImage({
   zoom,
   feather,
   ratio = 1,
+  focal,
   bare,
   onLoaded,
   onFailed,
@@ -59,7 +62,7 @@ export function ProductImage({
   const photo = productPhoto(p, variant, view) ?? productPhoto(p, variant, "hero");
   const src = photo ? photo.src : productImageSrc(p, variant, view);
   const loader: ImageLoader | undefined = photo
-    ? ({ width, quality }) => photoUrl(photo, width, quality ?? 82, ratio)
+    ? ({ width, quality }) => (focal ? photoFullUrl(photo, Math.min(1800, Math.round(width * 1.6)), quality ?? 82) : photoUrl(photo, width, quality ?? 82, ratio))
     : undefined;
 
   const [settled, setSettled] = useState<{ src: string; ok: boolean } | null>(null);
@@ -105,7 +108,11 @@ export function ProductImage({
         draggable={false}
         onLoad={() => setSettled({ src, ok: true })}
         onError={() => setSettled({ src, ok: false })}
-        style={zoom ? { transform: `scale(${zoom})`, ...imgStyle } : imgStyle}
+        style={{
+          ...(focal && photo ? { objectPosition: `${(photo.fp?.[0] ?? 0.5) * 100}% ${(photo.fp?.[1] ?? 0.5) * 100}%` } : null),
+          ...(zoom ? { transform: `scale(${zoom})` } : null),
+          ...imgStyle,
+        }}
         className={clsx(
           "object-cover transition-opacity duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
           loaded ? "opacity-100" : "opacity-0",

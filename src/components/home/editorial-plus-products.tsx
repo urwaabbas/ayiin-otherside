@@ -4,19 +4,14 @@ import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
 import { Icon } from "@/components/ui/icon";
-import { SignalDot } from "@/components/ui/signal";
 
 export function EditorialPlusProducts({
-  kicker = "EDITORIAL INTERRUPTION",
   title = "The Everyday Upgrade",
-  subtitle = "Small changes. Better days.",
-  description = "A considered selection of tactile upgrades designed to elevate morning coffee, desk ergonomics, and evening wind-down rituals.",
   ctaLabel = "Explore the edit",
   ctaHref = "/search?sort=popular",
   image,
   products,
 }: {
-  kicker?: string;
   title?: string;
   subtitle?: string;
   description?: string;
@@ -49,28 +44,11 @@ export function EditorialPlusProducts({
             className="absolute inset-0 bg-radial-gradient from-transparent to-black/50"
           />
 
-          {/* Top Kicker */}
-          <div className="relative z-10">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-meta font-medium text-white backdrop-blur-md">
-              <SignalDot tone="brand" live />
-              <span className="font-mono uppercase tracking-[0.14em] text-brand">
-                {kicker}
-              </span>
-            </span>
-          </div>
-
           {/* Bottom Editorial Content */}
-          <div className="relative z-10 mt-12">
+          <div className="relative z-10 mt-auto pt-12">
             <h3 className="display text-heading leading-[0.98] tracking-[-0.02em] text-white sm:text-display-xs">
               {title}
             </h3>
-            <p className="mt-1 font-serif italic text-white/90 text-emphasis">
-              {subtitle}
-            </p>
-            <p className="mt-3 text-support text-white/80 leading-relaxed">
-              {description}
-            </p>
-
             <Link
               href={ctaHref}
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-support font-semibold text-ink shadow-md transition-all duration-300 hover:bg-brand hover:scale-[1.02]"

@@ -2,6 +2,7 @@
 
 import type { Product } from "@/lib/types";
 import { productById } from "@/lib/catalog/products";
+import { CardRail } from "@/components/home/card-rail";
 import { ProductCard } from "@/components/product/product-card";
 import { Eyebrow } from "@/components/ui/signal";
 import { useHydrated, useShop } from "@/lib/store";
@@ -28,13 +29,13 @@ export function RecentlyViewed({ exclude, index, className }: { exclude?: string
         </div>
         <p className="hidden text-support text-mute sm:block">Only on this device · never shared</p>
       </div>
-      <ul className="scroll-x -mx-[var(--gutter)] mt-8 flex gap-4 px-[var(--gutter)] pb-2" role="list">
-        {items.map((p) => (
-          <li key={p.id} className="w-[200px] shrink-0 has-[.sr]:w-[244px] sm:has-[.sr]:w-[272px] animate-fade sm:w-[220px]">
-            <ProductCard product={p} layout="compact" />
-          </li>
-        ))}
-      </ul>
+      <div className="mt-8">
+        <CardRail flow label="Recently viewed">
+          {items.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </CardRail>
+      </div>
     </section>
   );
 }

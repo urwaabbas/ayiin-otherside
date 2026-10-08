@@ -12,7 +12,7 @@ export function SectionHeader({
   className,
 }: {
   index?: string;
-  kicker: string;
+  kicker?: string;
   title: React.ReactNode;
   description?: React.ReactNode;
   action?: { href: string; label: string };
@@ -27,12 +27,16 @@ export function SectionHeader({
       )}
     >
       <div className="max-w-3xl">
-        <Eyebrow index={index} tone={tone}>
-          {kicker}
-        </Eyebrow>
+        {kicker && (
+          <Eyebrow index={index} tone={tone}>
+            {kicker}
+          </Eyebrow>
+        )}
         <h2
           className={clsx(
-            "display mt-4 text-balance text-display-sm sm:text-display-md lg:text-display-md",
+            "display",
+            kicker && "mt-4",
+            " text-balance text-display-sm sm:text-display-md lg:text-display-md",
             tone === "dark" && "text-porcelain",
           )}
         >

@@ -40,8 +40,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const prefs = await getPrefs();
   return (
     <html lang="en" data-mode={prefs.mode} className={`${geist.variable} ${geistMono.variable} ${funnel.variable}`} suppressHydrationWarning>
-      <head>
+      <head suppressHydrationWarning>
         <script
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var orig=Element.prototype.setAttribute;Element.prototype.setAttribute=function(n,v){if(n==='fdprocessedid')return;return orig.apply(this,arguments);};}catch(e){}try{var clean=function(el){if(el&&el.nodeType===1&&el.hasAttribute('fdprocessedid'))el.removeAttribute('fdprocessedid');};var obs=new MutationObserver(function(mList){for(var i=0;i<mList.length;i++){var m=mList[i];if(m.type==='attributes'&&m.attributeName==='fdprocessedid'){clean(m.target);}else if(m.type==='childList'){for(var j=0;j<m.addedNodes.length;j++){var n=m.addedNodes[j];if(n.nodeType===1){clean(n);if(n.querySelectorAll){var els=n.querySelectorAll('[fdprocessedid]');for(var k=0;k<els.length;k++)els[k].removeAttribute('fdprocessedid');}}}}}});obs.observe(document.documentElement,{attributes:true,subtree:true,childList:true,attributeFilter:['fdprocessedid']});}catch(e){}})();`,
           }}

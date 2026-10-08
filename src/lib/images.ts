@@ -89,7 +89,8 @@ export function photoUrl(
     u.searchParams.set("fp-y", String(photo.fp[1]));
     u.searchParams.set(
       "fp-z",
-      String(Math.max(1, +(photo.fp[2] / ratio).toFixed(3))),
+      // Zooms were set for square crops: a tall frame already crops tighter, a wide one needs no extra zoom.
+      String(ratio > 1 ? Math.max(1, +(photo.fp[2] / ratio).toFixed(3)) : Math.min(photo.fp[2], 1)),
     );
   } else {
     u.searchParams.set("crop", "entropy");
@@ -130,4 +131,13 @@ export function productCutSrc(p: ImageProduct, variantId?: string) {
 }
 export function stageMedia(p: ImageProduct, variantId?: string): StageMedia {
   return { kind: "cutout", src: productImageSrc(p, variantId, "hero", 1200) };
+}
+
+/** The photograph with its background removed by the Unsplash CDN (transparent PNG) — for product showcases. */
+export function photoCutoutUrl(photo: ProductPhoto, width: number) {
+  const u = new URL(photo.src);
+  u.searchParams.set("w", String(width));
+  u.searchParams.set("fm", "png");
+  u.searchParams.set("bg-remove", "true");
+  return u.href;
 }

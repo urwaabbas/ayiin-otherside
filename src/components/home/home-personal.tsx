@@ -124,7 +124,6 @@ export function HomePersonal() {
         {/* ── 03 · COMMERCE COMPOSITION: TRENDING (3 × 2, ranked by last week's sales) ── */}
         <FeaturePlusFour
           title="Trending now across Ayiin"
-          subtitle="The pieces buyers are ordering most this week — in stock and ready to dispatch."
           eyebrow="HIGH DEMAND"
           note="Ranked by units sold in the last 7 days"
           products={trending}
@@ -134,8 +133,6 @@ export function HomePersonal() {
         <CategoryStory
           kicker="HOME & LIVING"
           title="Make space for better."
-          subtitle="Considered furniture and tactile objects for the rooms you return to."
-          description="From solid oak lounge chairs with removable boucle slipcovers to hand-thrown stoneware bud vases and warm ambient travertine table lamps. Every piece is selected for quiet endurance."
           heroImage={photoFullUrl(PRODUCT_PHOTOS["loom-lounge-chair"]["oat"]["hero"]!, 1400)}
           theme="warm"
           subcategories={[
@@ -157,16 +154,12 @@ export function HomePersonal() {
         {/* ── 06 · COMMERCE COMPOSITION: 3-CARD FEATURE (Flagship Design Icons) ── */}
         <ThreeCardFeature
           title="Design icons & flagships"
-          subtitle="High-performing architectural tools and seating engineered with verifiable warranties and zero compromise."
           items={flagships}
         />
 
         {/* ── 07 · EDITORIAL INTERRUPTION: THE EVERYDAY UPGRADE ── */}
         <EditorialPlusProducts
-          kicker="DAILY EDIT"
           title="The Everyday Upgrade"
-          subtitle="Small changes. Better days."
-          description="Tactile improvements that turn routine morning coffee, desk posture, and evening wind-downs into intentional moments."
           ctaLabel="Explore the edit"
           ctaHref="/search?sort=popular"
           image={photoFullUrl(PRODUCT_PHOTOS["pour-gooseneck-kettle"]["matte-black"]["scene"]!, 1200)}
@@ -177,8 +170,6 @@ export function HomePersonal() {
         <CategoryStory
           kicker="AUDIO & TECH"
           title="Hear the difference."
-          subtitle="Precision acoustic engineering, multipoint wireless, and silence on demand."
-          description="Class-leading -38 dB adaptive active noise cancellation, custom 40mm tuned titanium drivers, and milled aluminium portables designed to travel without compromise."
           heroImage={photoFullUrl(PRODUCT_PHOTOS["aurel-anc-over-ear"]["graphite"]["hero"]!, 1400)}
           theme="dark"
           reverse
@@ -203,9 +194,7 @@ export function HomePersonal() {
 
         {/* ── 11 · COMPACT PROMOTIONAL BANNER: VERIFIED PRICE LOWS ── */}
         <CompactPromoBanner
-          kicker="PRICE TRANSPARENCY"
           headline="Verified 12-week price lows across Ayiin."
-          subtext="No fake original prices. Every promotion is audited against actual 12-week sales history with guaranteed stock."
           ctaLabel="Shop All Verified Deals"
           ctaHref="/search?deal=1"
         />
@@ -221,8 +210,6 @@ export function HomePersonal() {
         <CategoryStory
           kicker="KITCHEN & BREW"
           title="Start with something good."
-          subtitle="Electric kettles with ±1° precision, washed Ethiopian beans, and satin stoneware."
-          description="Upgrade your morning extraction. Balanced thermal mass, dripless gooseneck spouts, and freshly roasted single-origin coffees packaged in valve bags within 48 hours of roast."
           heroImage={photoFullUrl(PRODUCT_PHOTOS["pour-gooseneck-kettle"]["matte-black"]["scene"]!, 1400)}
           theme="warm"
           subcategories={[
@@ -244,13 +231,13 @@ export function HomePersonal() {
         {/* ── 15 · LIFESTYLE CONTEXT: LOOKBOOK ("Shop the Scene") ── */}
         {lookbookItems.length >= 3 && (
           <div className="fold rounded-panel border border-line bg-white p-5 sm:p-7 lg:p-8">
-            <Lookbook index="05" items={lookbookItems} />
+            <Lookbook items={lookbookItems} />
           </div>
         )}
 
         {/* ── 16 · BUYER INTELLIGENCE: COMPARE SPECS ── */}
         {compareItems.length >= 3 && (
-          <div className="fold justify-center rounded-panel border border-line bg-porcelain/60 p-5 sm:p-8 lg:p-10">
+          <div className="fold justify-center rounded-panel border border-line bg-porcelain/60 p-5 sm:p-8 lg:p-7">
             <CompareTeaser items={compareItems} />
           </div>
         )}

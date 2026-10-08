@@ -792,6 +792,221 @@
     color: #f5f3ef;
   }
 
+  /* ─── Hero showcase ──────────────────────────────────────────────
+     White page, a great disc of the logo's sunlit amber on the right, real product
+     photography (background removed) on white pedestals. Stage geometry is in container
+     units so the composition scales as one object. */
+  .hs {
+    --mx: 0;
+    --my: 0;
+  }
+  .hs-field {
+    position: absolute;
+    left: 61%;
+    top: 50%;
+    width: max(1500px, 110vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate3d(calc(var(--mx) * -10px), -50%, 0);
+    background:
+      radial-gradient(circle at 18% 46%, rgb(255 255 255 / 0.22), transparent 26%),
+      linear-gradient(160deg, var(--color-brand-yellow) -10%, var(--color-brand) 34%, var(--color-brand-orange) 78%);
+    transition: transform 1200ms var(--ease-out-expo);
+  }
+  .hs-stage {
+    container-type: size;
+  }
+  @media (min-width: 1024px) {
+    .hs-stage {
+      margin-right: calc(var(--gutter) * -1);
+    }
+  }
+  .hs-pedestal,
+  .hs-product,
+  .hs-badge {
+    position: absolute;
+    transform: translate3d(calc(var(--mx) * var(--d) * -28px), calc(var(--my) * var(--d) * -12px), 0);
+    transition:
+      transform 1100ms var(--ease-out-expo),
+      opacity 900ms var(--ease-out-expo),
+      translate 1100ms var(--ease-out-expo);
+  }
+  .hs[data-active="false"] :is(.hs-pedestal, .hs-product, .hs-badge) {
+    opacity: 0;
+    translate: 0 26px;
+  }
+  .hs[data-active="false"] .hs-copy > * {
+    opacity: 0;
+    translate: 0 14px;
+  }
+  .hs-copy > * {
+    transition:
+      opacity 900ms var(--ease-out-expo),
+      translate 1100ms var(--ease-out-expo);
+  }
+
+  /* Pedestals: white cylinders; the anchor wears an amber band, the accent an amber top */
+  .hs-pedestal {
+    --ry: calc(var(--pw) * 0.13);
+    left: var(--px);
+    width: var(--pw);
+    bottom: calc(var(--pb) - var(--ry));
+    height: calc(var(--ph) + var(--ry));
+    border-radius: 0 0 50% 50% / 0 0 var(--ry) var(--ry);
+    background:
+      linear-gradient(90deg, rgb(var(--rgb-ink) / 0.1), transparent 30%, transparent 62%, rgb(var(--rgb-ink) / 0.08)),
+      linear-gradient(180deg, #ffffff 0%, #f4f2ee 100%);
+    box-shadow: 0 30px 40px -24px rgb(120 60 0 / 0.45);
+  }
+  .hs-pedestal::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: calc(var(--ry) * -1);
+    height: calc(var(--ry) * 2);
+    border-radius: 50%;
+    background: radial-gradient(120% 140% at 40% 30%, #ffffff, #efece6);
+    box-shadow: inset 0 -1px 0 rgb(var(--rgb-ink) / 0.06);
+  }
+  .hs-pedestal--anchor {
+    --d: 0.5;
+    --px: 0cqw;
+    --pw: 66cqw;
+    --pb: 14cqh;
+    --ph: 12cqh;
+    background:
+      linear-gradient(90deg, rgb(var(--rgb-ink) / 0.12), transparent 30%, transparent 62%, rgb(var(--rgb-ink) / 0.1)),
+      linear-gradient(180deg, #ffffff 0%, #f4f2ee 52%, var(--color-brand) 52%, var(--color-brand-orange) 100%);
+  }
+  .hs-pedestal--accent {
+    --d: 0.8;
+    --px: 52cqw;
+    --pw: 38cqw;
+    --pb: 7cqh;
+    --ph: 13cqh;
+    z-index: 3;
+  }
+  .hs-pedestal--accent::before {
+    background: radial-gradient(120% 140% at 40% 30%, var(--color-brand-hover), var(--color-brand-orange));
+  }
+
+  .hs-product {
+    display: block;
+    transform-origin: 50% 100%;
+  }
+  .hs-box {
+    transition: transform 700ms var(--ease-out-expo);
+    filter: drop-shadow(0 18px 18px rgb(var(--rgb-ink) / 0.18));
+  }
+  .hs-product--anchor {
+    --d: 0.5;
+    left: 4cqw;
+    width: 58cqw;
+    bottom: calc(26cqh - 1.5cqw);
+    z-index: 2;
+  }
+  .hs-product--accent {
+    --d: 0.8;
+    left: 57.5cqw;
+    width: 27cqw;
+    bottom: calc(20cqh - 1cqw);
+    z-index: 4;
+  }
+  .hs-product--tall {
+    --d: 0.25;
+    left: 74cqw;
+    width: 17cqw;
+    bottom: 22cqh;
+    z-index: 1;
+  }
+  .hs-product--tall .hs-box {
+    rotate: 8deg;
+  }
+  .hs-badge {
+    --d: 0.65;
+    z-index: 5;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    width: clamp(96px, 19cqw, 124px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #ffffff;
+    color: var(--color-brand-deep);
+    box-shadow: var(--shadow-lift);
+  }
+  .hs-badge--top {
+    left: 43cqw;
+    top: 5cqh;
+  }
+  .hs-badge--bottom {
+    left: 74cqw;
+    bottom: 3cqh;
+  }
+
+  .hs-tag {
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: max-content;
+    max-width: 19rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: var(--radius-control);
+    background: rgb(255 255 255 / 0.96);
+    box-shadow: var(--shadow-float);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate3d(-50%, 8px, 0);
+    transition:
+      opacity 360ms var(--ease-out-expo),
+      transform 520ms var(--ease-out-expo);
+  }
+  .hs-cta-arrow {
+    transition: transform 400ms var(--ease-out-expo);
+  }
+  .hs-cta:hover .hs-cta-arrow {
+    transform: translateX(4px);
+  }
+  .hs-product:focus-visible,
+  .hs-product:hover {
+    outline: none;
+    z-index: 10;
+  }
+  .hs-product:focus-visible .hs-box {
+    outline: 2px solid var(--focus);
+    outline-offset: 6px;
+    border-radius: var(--radius-control);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .hs-product:hover .hs-box {
+      transform: translate3d(0, -10px, 0) scale(1.03);
+    }
+    .hs-product:hover .hs-tag {
+      opacity: 1;
+      transform: translate3d(-50%, 0, 0);
+    }
+  }
+  .hs-product:focus-visible .hs-tag {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0);
+  }
+
+  @media (max-width: 1023px) {
+    .hs-field {
+      left: -20%;
+      top: auto;
+      bottom: -40%;
+      width: 150%;
+      transform: none;
+    }
+    .hs-badge {
+      display: none;
+    }
+    .hs-stage {
+      margin-inline: calc(var(--gutter) * -0.5);
+    }
+  }
+
   /* Saved: the heart settles into place — no bounce, no burst */
   @keyframes pc-heart {
     0% {
@@ -963,7 +1178,10 @@
     --gap-x: 1rem;
     --gap-y: 1.5rem;
     /* Height of the product card's text block under its 4:5 stage */
-    --card-text: 8.75rem;
+    --card-text: 6.25rem;
+    /* Card stage shape: --pc-aspect (width / height) and its inverse --inv (height / width) */
+    --pc-aspect: 4 / 5;
+    --inv: 1.25;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--gap-y) var(--gap-x);
@@ -978,43 +1196,106 @@
       display: flex;
       flex-direction: column;
       height: clamp(34rem, calc(100svh - var(--nav-h) - var(--fold-gap)), 61rem);
+      /* If a section's content is taller than the fold (short window), it grows instead of
+         spilling over the next section. */
+      min-height: min-content;
     }
     .fold-body {
       flex: 1 1 0%;
       min-height: 0;
       container-type: size;
     }
+    /* Cards take the whole row; the photograph's height is what is left of the body once
+       the text blocks and gaps are paid for, so a grid always fills the fold's width and height. */
     .fold-grid {
-      /* The card width at which `rows` cards stack inside the body height */
-      --card-w: calc(
-        (100cqh - var(--rows) * var(--card-text) - (var(--rows) - 1) * var(--gap-y)) /
-          (var(--rows) * 1.25)
-      );
-      width: min(
-        100%,
-        calc(var(--cols) * var(--card-w) + (var(--cols) - 1) * var(--gap-x))
-      );
+      width: 100%;
       flex: none;
+      --pc-aspect: auto;
+      --stage-h: max(
+        11rem,
+        calc(
+          (100cqh - var(--rows) * var(--card-text) - (var(--rows) - 1) * var(--gap-y)) / var(--rows)
+        )
+      );
+    }
+    .fold-grid .pc-stage {
+      height: var(--stage-h);
     }
   }
-  /* Variant: a leading 4:5 editorial card followed by three product cards.
-     The lead column is wider by 0.8 × the card's text block, which makes a
-     4:5 image exactly as tall as a product card (stage + text). */
+  /* ─── Card rail: four across (three on tablets, two and a bit on phones) ─────
+     Width comes from the rail's own width (cqw), the photo height from the fold, like .fold-grid. */
+  .card-rail {
+    container-type: inline-size;
+    --rows: 1;
+    --card-text: 6rem;
+    --gap-y: 0rem;
+  }
+  .card-rail-item {
+    width: calc((100cqw - 1rem) / 2.15);
+  }
+  @media (min-width: 640px) {
+    .card-rail-item {
+      width: calc((100cqw - 2 * 1rem) / 3);
+    }
+  }
   @media (min-width: 1024px) {
-    .fold-grid-lead {
-      --cols: 4;
-      --lead-extra: calc(0.8 * var(--card-text));
-      grid-template-columns:
-        calc((100% - 3 * var(--gap-x) - var(--lead-extra)) / 4 + var(--lead-extra))
-        repeat(3, minmax(0, 1fr));
+    .card-rail-item {
+      width: calc((100cqw - 3 * 1.25rem) / 4);
+    }
+  }
+  .card-rail.card-rail--flow {
+    --pc-aspect: 1 / 1;
+  }
+  /* More products than fit: the next card peeks in so the shelf visibly continues */
+  @media (min-width: 640px) {
+    .card-rail[data-more] .card-rail-item {
+      width: calc((100cqw - 3 * 1rem) / 3.3);
+    }
+  }
+  @media (min-width: 1024px) {
+    .card-rail[data-more] .card-rail-item {
+      width: calc((100cqw - 4 * 1.25rem) / 4.3);
     }
   }
   @media (min-width: 1024px) and (min-height: 600px) {
-    .fold-grid-lead {
-      width: min(100%, calc(4 * var(--card-w) + 3 * var(--gap-x) + var(--lead-extra)));
+    .card-rail {
+      --pc-aspect: auto;
+      --stage-h: max(
+        11rem,
+        calc((100cqh - var(--rows) * var(--card-text) - 0.25rem) / var(--rows))
+      );
+    }
+    .card-rail .pc-stage {
+      height: var(--stage-h);
+    }
+    /* A shelf outside a fold: square photographs, no screen-height sizing */
+    .card-rail.card-rail--flow {
+      --pc-aspect: 1 / 1;
+    }
+    .card-rail.card-rail--flow .pc-stage {
+      height: auto;
     }
   }
 
+  /* The Ayiin Edit: five columns on a tall fold would stretch each photograph into a sliver, so a
+     card's photograph never gets taller than a 4:5 portrait (shorter on short screens). */
+  @media (min-width: 1024px) and (min-height: 600px) {
+    .fold-grid.fold-grid-lead {
+      --pc-aspect: 4 / 5;
+    }
+    .fold-grid.fold-grid-lead .pc-stage {
+      height: auto;
+      max-height: var(--stage-h);
+    }
+  }
+
+  /* Variant: a leading editorial card (a little wider) followed by four product cards. */
+  @media (min-width: 1024px) {
+    .fold-grid-lead {
+      --cols: 5;
+      grid-template-columns: minmax(0, 1.35fr) repeat(4, minmax(0, 1fr));
+    }
+  }
   /* Reveal on scroll */
   .reveal {
     opacity: 0;

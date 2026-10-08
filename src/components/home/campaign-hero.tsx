@@ -4,8 +4,8 @@ import Link from "next/link";
 import { clsx } from "clsx";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/ui/icon";
-import { SignalDot } from "@/components/ui/signal";
 import type { HeroCampaignSlide } from "@/lib/campaigns";
+import { HeroWorld } from "@/components/home/hero-world";
 
 export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
   const [activeIdx, setActiveIdx] = useState(0);
@@ -28,6 +28,8 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
   }, [activeIdx, isPaused, count]);
 
   if (!slides.length) return null;
+  // Product-world slides are light rooms; the rail switches to ink over them.
+  const light = Boolean(slides[activeIdx]?.showcase);
 
   return (
     <section
@@ -38,7 +40,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
       onMouseLeave={() => setIsPaused(false)}
       onFocusCapture={() => setIsPaused(true)}
       onBlurCapture={() => setIsPaused(false)}
-      className="relative w-full overflow-hidden bg-ink h-[calc(100svh-112px)] lg:h-[calc(100svh-152px)] min-h-[440px] max-h-[640px]"
+      className={clsx("relative w-full overflow-hidden transition-colors duration-1000 h-[calc(100svh-112px)] lg:h-[calc(100svh-152px)] min-h-[560px] lg:min-h-[520px] max-h-[720px]", light ? "bg-white" : "bg-ink")}
     >
       {slides.map((slide, idx) => {
         const isActive = idx === activeIdx;
@@ -55,6 +57,10 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
               isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none",
             )}
           >
+            {slide.showcase ? (
+              <HeroWorld slide={slide} active={isActive} first={idx === 0} />
+            ) : (
+            <>
             {/* Background Photography with subtle slow motion */}
             {slide.image && (
               // eslint-disable-next-line @next/next/no-img-element
@@ -87,25 +93,10 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
             {/* Content Presentation */}
             <div className="shell relative flex h-full flex-col justify-center pt-6 pb-20 sm:pt-8 sm:pb-22">
               <div className="max-w-2xl">
-                {/* Campaign Tag Badge */}
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3.5 py-1 text-meta font-medium tracking-wide text-white backdrop-blur-md">
-                  <SignalDot tone="brand" live />
-                  <span className="font-mono uppercase tracking-[0.14em] text-brand">
-                    {slide.kicker}
-                  </span>
-                  <span className="text-white/40">·</span>
-                  <span className="text-white/90">{slide.tag}</span>
-                </div>
-
                 {/* Headline in Funnel Display */}
-                <h1 className="display mt-3 sm:mt-3.5 text-balance text-heading leading-[1.0] tracking-[-0.035em] text-white sm:text-display-sm lg:text-display-md xl:text-display-lg">
+                <h1 className="display text-balance text-heading leading-[1.0] tracking-[-0.035em] text-white sm:text-display-sm lg:text-display-md xl:text-display-lg">
                   {slide.title}
                 </h1>
-
-                {/* Supporting Editorial Copy */}
-                <p className="mt-2.5 sm:mt-3 max-w-xl text-balance text-support leading-relaxed text-white/85 sm:text-body line-clamp-2 sm:line-clamp-none">
-                  {slide.description}
-                </p>
 
                 {/* Call-to-Action Group */}
                 <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
@@ -128,15 +119,17 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                 </div>
               </div>
             </div>
+            </>
+            )}
           </div>
         );
       })}
 
       {/* Intentional Bottom Progress & Navigation Rail */}
       <div className="absolute inset-x-0 bottom-5 sm:bottom-6 z-20 pointer-events-none">
-        <div className="shell flex items-end justify-between gap-4 pointer-events-auto">
+        <div className={clsx("shell flex items-end gap-4 pointer-events-auto", light ? "justify-start" : "justify-between")}>
           {/* Segmented Slide Indicators with Labels */}
-          <div className="flex max-w-2xl flex-1 items-center gap-2 sm:gap-4">
+          <div className={clsx("flex max-w-2xl flex-1 items-center gap-2 transition-opacity duration-500 sm:gap-4", light && "hidden")}>
             {slides.map((s, k) => {
               const isCurrent = k === activeIdx;
               return (
@@ -152,7 +145,7 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                     <span
                       className={clsx(
                         "shrink-0 font-mono font-medium transition-colors",
-                        isCurrent ? "text-brand" : "text-white/50 group-hover:text-white/80",
+                        isCurrent ? (light ? "text-brand-deep" : "text-brand") : light ? "text-ink/45 group-hover:text-ink/75" : "text-white/50 group-hover:text-white/80",
                       )}
                     >
                       0{k + 1}
@@ -160,13 +153,13 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
                     <span
                       className={clsx(
                         "hidden min-w-0 truncate text-[11px] tracking-wide transition-colors sm:block",
-                        isCurrent ? "text-white/90 font-medium" : "text-white/40 group-hover:text-white/70",
+                        isCurrent ? (light ? "text-ink font-medium" : "text-white/90 font-medium") : light ? "text-ink/40 group-hover:text-ink/70" : "text-white/40 group-hover:text-white/70",
                       )}
                     >
                       {s.tag}
                     </span>
                   </div>
-                  <div className="relative h-1 w-full overflow-hidden rounded-full bg-white/20 transition-colors group-hover:bg-white/30">
+                  <div className={clsx("relative h-[3px] w-full overflow-hidden rounded-full transition-colors", light ? "bg-ink/12 group-hover:bg-ink/20" : "bg-white/20 group-hover:bg-white/30")}>
                     <div
                       key={`${k}-${activeIdx}-${isPaused}`}
                       className={clsx(
@@ -184,23 +177,23 @@ export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
           </div>
 
           {/* Navigation Capsule */}
-          <div className="flex items-center gap-1.5 rounded-full border border-white/20 bg-black/30 p-1 backdrop-blur-md">
+          <div className={clsx("flex items-center gap-1.5 rounded-full border p-1 backdrop-blur-md transition-colors duration-700", light ? "border-ink/10 bg-white/60 text-ink" : "border-white/20 bg-black/30 text-white")}>
             <button
               type="button"
               aria-label="Previous campaign"
               onClick={() => setActiveIdx((prev) => (prev - 1 + count) % count)}
-              className="grid h-8 w-8 place-items-center rounded-full text-white/80 transition-all hover:bg-white/20 hover:text-white"
+              className={clsx("grid h-8 w-8 place-items-center rounded-full transition-all", light ? "text-ink/70 hover:bg-ink/5 hover:text-ink" : "text-white/80 hover:bg-white/20 hover:text-white")}
             >
               <Icon name="chevronLeft" size={17} />
             </button>
-            <span className="px-2 font-mono text-meta text-white/70 select-none">
+            <span className={clsx("px-2 font-mono text-meta select-none", light ? "text-ink/60" : "text-white/70")}>
               0{activeIdx + 1} / 0{count}
             </span>
             <button
               type="button"
               aria-label="Next campaign"
               onClick={() => setActiveIdx((prev) => (prev + 1) % count)}
-              className="grid h-8 w-8 place-items-center rounded-full text-white/80 transition-all hover:bg-white/20 hover:text-white"
+              className={clsx("grid h-8 w-8 place-items-center rounded-full transition-all", light ? "text-ink/70 hover:bg-ink/5 hover:text-ink" : "text-white/80 hover:bg-white/20 hover:text-white")}
             >
               <Icon name="chevronRight" size={17} />
             </button>

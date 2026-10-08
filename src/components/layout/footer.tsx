@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { AyiinLogo, LOGO_SRC } from "@/components/brand/ayiin-logo";
+import { AyiinLogo } from "@/components/brand/ayiin-logo";
 import { Icon, type IconName } from "@/components/ui/icon";
 import type { Mode } from "@/lib/types";
 
@@ -50,8 +50,8 @@ interface FooterSection {
   links: { label: string; href: string }[];
 }
 
-export function Footer({ mode }: { mode: Mode }) {
-  const business = mode === "business";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- mode is kept for the layout call site
+export function Footer(_props: { mode: Mode }) {
 
   const sections: FooterSection[] = [
     {
@@ -98,7 +98,7 @@ export function Footer({ mode }: { mode: Mode }) {
   ];
 
   return (
-    <footer className="mt-20 border-t border-[#2a2622] bg-[#141210] text-white selection:bg-brand selection:text-ink lg:mt-28">
+    <footer className="mt-20 border-t border-[#2a2622] bg-[#141210] text-white selection:bg-brand selection:text-ink lg:mt-20">
       {/* ── 1. Editorial Promises Strip (Layaan Minimalist Atelier Style) ── */}
       <section aria-label="Ayiin Standards" className="border-b border-[#2a2622]">
         <div className="mx-auto max-w-[1520px] px-4 sm:px-6 lg:px-8">
@@ -106,7 +106,7 @@ export function Footer({ mode }: { mode: Mode }) {
             {PROMISES.map((p, idx) => (
               <li
                 key={p.number}
-                className={`py-8 sm:py-10 ${
+                className={`py-6 sm:py-7 lg:py-5 ${
                   idx % 2 === 0 ? "sm:pr-8" : "sm:pl-8"
                 } lg:px-8 lg:first:pl-0 lg:last:pr-0`}
               >
@@ -121,9 +121,6 @@ export function Footer({ mode }: { mode: Mode }) {
                 <h3 className="mt-4 text-[15px] font-medium tracking-tight text-white">
                   {p.title}
                 </h3>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-white/55">
-                  {p.body}
-                </p>
               </li>
             ))}
           </ul>
@@ -131,8 +128,8 @@ export function Footer({ mode }: { mode: Mode }) {
       </section>
 
       {/* ── 2. Main Editorial Navigation & Brand Column ── */}
-      <div className="mx-auto max-w-[1520px] px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div className="mx-auto max-w-[1520px] px-4 py-16 sm:px-6 lg:px-8 lg:py-8">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-12">
           {/* Brand & Newsletter Invitation (Col 1-5) */}
           <div className="flex flex-col justify-between lg:col-span-5">
             <div>
@@ -140,19 +137,11 @@ export function Footer({ mode }: { mode: Mode }) {
                 <AyiinLogo on="dark" className="h-10" />
               </Link>
 
-              <p className="mt-5 max-w-sm font-sans text-[13.5px] leading-relaxed text-white/65">
-                {business
-                  ? "Procurement infrastructure for high-growth teams — volume pricing, net terms, and centralized approval controls."
-                  : "A curated commerce marketplace for modern workspaces and refined interiors — verified vendors, upfront pricing, exact delivery dates."}
-              </p>
 
               {/* Newsletter / The Ayiin Dispatch Form */}
-              <div className="mt-9">
+              <div className="mt-9 lg:mt-6">
                 <p className="font-mono text-[11px] font-semibold tracking-[0.2em] text-brand/90 uppercase">
                   Stay Informed
-                </p>
-                <p className="mt-1 text-[13px] text-white/50">
-                  Receive private inventory drops, trade allowances, and design briefs.
                 </p>
 
                 <FooterNewsletterForm />
@@ -160,7 +149,7 @@ export function Footer({ mode }: { mode: Mode }) {
             </div>
 
             {/* Live Operational Status Signal */}
-            <div className="mt-10 flex items-center gap-3">
+            <div className="mt-10 flex items-center gap-3 lg:mt-6">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
@@ -178,7 +167,7 @@ export function Footer({ mode }: { mode: Mode }) {
                 <p className="font-mono text-[11px] font-semibold tracking-[0.18em] text-white/45 uppercase">
                   {sec.title}
                 </p>
-                <ul className="mt-4 space-y-3">
+                <ul className="mt-4 space-y-3 lg:space-y-2.5">
                   {sec.links.map((link) => (
                     <li key={link.label}>
                       <Link
@@ -308,26 +297,16 @@ function FooterNewsletterForm() {
 }
 
 /**
- * Closing signature: the logo artwork itself, used as a mask so it can take one flat
- * colour — a quiet tint on the dark footer that turns AYIIN amber on hover.
+ * Closing signature: the logo artwork at full size, colourless at rest and in its own colours
+ * (the same artwork as the footer's brand column) on hover or focus.
  */
 function BrandSignature() {
   return (
-    <div className="mx-auto max-w-[1520px] px-4 pb-12 pt-4 sm:px-6 lg:px-8 lg:pb-16">
+    <div className="mx-auto max-w-[1520px] px-4 pb-12 pt-4 sm:px-6 lg:px-8 lg:pb-10">
       <Link href="/" aria-label="Ayiin home" className="group mx-auto block w-full max-w-[34rem]">
-        <span
-          aria-hidden
-          className="block aspect-[108.43/47.36] w-full bg-white/[0.1] transition-colors duration-500 ease-[var(--ease-out-expo)] group-hover:bg-brand"
-          style={{
-            maskImage: `url(${LOGO_SRC.dark})`,
-            WebkitMaskImage: `url(${LOGO_SRC.dark})`,
-            maskSize: "contain",
-            WebkitMaskSize: "contain",
-            maskRepeat: "no-repeat",
-            WebkitMaskRepeat: "no-repeat",
-            maskPosition: "center",
-            WebkitMaskPosition: "center",
-          }}
+        <AyiinLogo
+          on="dark"
+          className="h-auto w-full opacity-[0.16] grayscale transition-[opacity,filter,transform] duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.02] group-hover:opacity-100 group-hover:grayscale-0 group-focus-visible:opacity-100 group-focus-visible:grayscale-0"
         />
       </Link>
     </div>

@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePrefs } from "@/components/providers";
 import { Icon } from "@/components/ui/icon";
-import { Eyebrow } from "@/components/ui/signal";
 import type { Product } from "@/lib/types";
 
 export function BusinessBridge({ product: gloves }: { product: Product }) {
@@ -14,37 +13,11 @@ export function BusinessBridge({ product: gloves }: { product: Product }) {
       <div className="grid gap-10 p-7 sm:p-10 lg:grid-cols-[1.1fr_1fr] lg:p-14">
         <div className="flex flex-col justify-between">
           <div>
-            <Eyebrow index="08">Buying for a company?</Eyebrow>
-            <h2 className="display mt-4 text-display-sm sm:text-display-md">
+            <h2 className="display text-display-sm sm:text-display-md">
               Same marketplace.
               <br />
               Built for teams.
             </h2>
-            <p className="mt-5 max-w-lg text-body leading-relaxed text-ink-2">
-              Switch to Business and Ayiin becomes a procurement tool: volume
-              pricing on every listing, quotes from multiple suppliers in one
-              request, approval rules, purchase orders and net-30 terms.
-            </p>
-            <ul className="mt-6 grid gap-2 text-support sm:grid-cols-2">
-              {[
-                "Tiered & contract pricing",
-                "Multi-supplier quotes",
-                "Approvals & budgets",
-                "PO, invoice & net terms",
-                "One-click reorders",
-                "Tax-exempt checkout",
-              ].map((t) => (
-                <li key={t} className="flex items-center gap-2">
-                  <Icon
-                    name="check"
-                    size={16}
-                    className="text-brand-deep"
-                    strokeWidth={2}
-                  />{" "}
-                  {t}
-                </li>
-              ))}
-            </ul>
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <button

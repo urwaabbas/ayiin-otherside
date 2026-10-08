@@ -33,12 +33,9 @@ export function CompareTeaser({ items }: { items: Product[] }) {
     <div className="grid gap-10 lg:grid-cols-[1fr_1.6fr] lg:items-center lg:gap-16">
       <div>
         <SectionHeader
-          index="06"
-          kicker="Compare without tabs"
           title={<>Only the differences.</>}
-          description="Add anything to compare from any page. Ayiin lines up the specs, hides what's identical and marks the strongest option on each line."
         />
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-wrap gap-3 lg:mt-6">
           <Link href="/compare" className="btn btn-secondary">
             Open compare <Icon name="arrowRight" size={16} />
           </Link>
@@ -72,7 +69,7 @@ export function CompareTeaser({ items }: { items: Product[] }) {
                 {items.map((p) => (
                   <th key={p.id} scope="col" className="p-3 align-bottom font-normal">
                     <Link href={`/p/${p.slug}`} className="group block">
-                      <ProductImage product={p} sizes="(min-width: 1024px) 220px, 180px" className="aspect-[4/3] w-full rounded-surface" />
+                      <ProductImage product={p} sizes="(min-width: 1024px) 220px, 180px" className="aspect-[4/3] w-full rounded-surface lg:aspect-[16/10]" />
                       <span title={p.name} className="mt-2 block truncate text-support font-medium leading-snug group-hover:underline">{p.name}</span>
                     </Link>
                   </th>
@@ -82,11 +79,11 @@ export function CompareTeaser({ items }: { items: Product[] }) {
             <tbody>
               {shown.map((r) => (
                 <tr key={r.label} className="border-t border-line">
-                  <th scope="row" className="px-4 py-3 font-normal text-mute">
+                  <th scope="row" className="px-4 py-3 font-normal text-mute lg:py-2">
                     {r.label}
                   </th>
                   {r.values.map((v, i) => (
-                    <td key={i} className="px-3 py-3">
+                    <td key={i} className="px-3 py-3 lg:py-2">
                       <span
                         className={clsx(
                           "inline-flex items-center gap-1.5 rounded-full",

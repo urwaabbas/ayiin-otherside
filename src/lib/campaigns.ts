@@ -41,6 +41,20 @@ export type HeroCampaignSlide = {
   image: string;
   position: string;
   tag: string;
+  /** A product showcase (real product photos, background removed) instead of a background photograph */
+  showcase?: HeroShowcaseItem[];
+};
+
+/**
+ * One product in a hero showcase. `crop` is the product's bounding box inside the background-removed
+ * photo (x0, y0, x1, y1 as fractions) and `aspect` the photo's width ÷ height, so the layout can seat
+ * the product itself — not its transparent canvas — on a pedestal.
+ */
+export type HeroShowcaseItem = {
+  slug: string;
+  slot: "anchor" | "accent" | "tall";
+  crop: [number, number, number, number];
+  aspect: number;
 };
 
 /** Helper to extract high-resolution image URL from a product view */
@@ -63,22 +77,22 @@ function getProductPhotoUrl(
 export function getHeroCampaigns(): HeroCampaignSlide[] {
   return [
     {
-      id: "discover-whats-next",
-      kicker: "Editorial Season",
-      title: "Discover what's next.",
-      description:
-        "A considered marketplace selection of tactile furniture, precision electronics, and daily essentials built to endure.",
-      cta: {
-        label: "Shop the Collection",
-        href: "/search?sort=popular",
-      },
-      secondaryCta: {
-        label: "Explore Departments",
-        href: "/c/home-living",
-      },
-      image: getProductPhotoUrl("loom-lounge-chair", "scene", "arc-table-lamp"),
-      position: "50% 55%",
-      tag: "Home & Living",
+      id: "everyday-edit",
+      kicker: "Curated picks. Honest prices.",
+      title: "Things worth discovering.",
+      description: "Curated products from verified sellers. Everyday things that make life better.",
+      cta: { label: "Shop now", href: "/search" },
+      secondaryCta: { label: "Explore categories", href: "/c/home-living" },
+      image: "",
+      position: "center",
+      tag: "Everyday",
+      // Audio, home, kitchen, carry, accessories and beauty — six departments, one room.
+      // Audio, home audio and carry — measured once from the cut-outs (see HeroShowcaseItem).
+      showcase: [
+        { slug: "aurel-anc-over-ear", slot: "anchor", crop: [0.297, 0.187, 0.695, 0.806], aspect: 400 / 268 },
+        { slug: "halo-speaker-mini", slot: "accent", crop: [0.322, 0.296, 0.625, 0.758], aspect: 1.5 },
+        { slug: "trail-bottle-750", slot: "tall", crop: [0.389, 0.235, 0.6, 0.894], aspect: 0.75 },
+      ],
     },
     {
       id: "hear-more-carry-less",

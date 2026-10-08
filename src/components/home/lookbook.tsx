@@ -12,18 +12,15 @@ import { Icon } from "@/components/ui/icon";
  * Lays out 3–5 scenes: one large scene, with the rest sharing the other half.
  * Inside a `.fold` the two rows share the fold height, so the whole lookbook sits on one laptop screen.
  */
-export function Lookbook({ index = "03", items }: { index?: string; items: Product[] }) {
+export function Lookbook({ items }: { items: Product[] }) {
   const rest = items.length - 1;
   return (
     <>
       <SectionHeader
-        index={index}
-        kicker="Seen in context"
         title="Shop the scene."
-        description="Every product is photographed on the same stage in the same window light, so the colour you see is the colour that arrives."
         action={{ href: "/search", label: "Browse everything" }}
       />
-      <div className="fold-body mt-8 grid auto-rows-[220px] grid-cols-2 gap-3 sm:auto-rows-[300px] lg:grid-cols-4 lg:grid-rows-[repeat(2,minmax(220px,1fr))] lg:gap-4">
+      <div className="fold-body mt-8 grid auto-rows-[220px] grid-cols-2 gap-3 sm:auto-rows-[300px] lg:grid-cols-4 lg:grid-rows-[repeat(2,minmax(150px,1fr))] lg:gap-4">
         {items.map((p, n) => {
           const big = n === 0;
           return (

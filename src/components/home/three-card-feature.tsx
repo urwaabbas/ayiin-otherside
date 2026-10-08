@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
 import { Icon } from "@/components/ui/icon";
-import { Eyebrow } from "@/components/ui/signal";
 
 type FeatureItem = {
   product: Product;
@@ -18,8 +17,6 @@ type FeatureItem = {
  */
 export function ThreeCardFeature({
   title = "Design Icons & Flagships",
-  subtitle = "High-performing architectural tools and enduring furniture engineered to last decades.",
-  eyebrow = "PREMIUM SHOWCASE",
   items,
   browseHref = "/search?sort=price-desc",
 }: {
@@ -31,23 +28,25 @@ export function ThreeCardFeature({
 }) {
   return (
     <section aria-label={title} className="fold lg:py-6">
-      <div className="mx-auto mb-8 flex max-w-2xl flex-col items-center text-center lg:mb-7">
-        <Eyebrow index={eyebrow}>Signature Pieces</Eyebrow>
-        <h2 className="display mt-3 text-balance text-display-sm text-ink lg:text-display-md">{title}</h2>
-        {subtitle && <p className="mt-3 max-w-xl text-body leading-relaxed text-ink-2">{subtitle}</p>}
-        <Link
-          href={browseHref}
-          className="link-underline mt-4 inline-flex items-center gap-1.5 text-support font-medium text-brand-deep"
-        >
-          <span>View all flagships</span>
-          <Icon name="arrowRight" size={14} />
-        </Link>
+      <div className="mb-6 flex flex-col gap-3 lg:mb-5 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h2 className="display text-balance text-display-sm text-ink lg:text-display-md">{title}</h2>
+        </div>
+        <div className="lg:max-w-md lg:text-right">
+          <Link
+            href={browseHref}
+            className="link-underline mt-2 inline-flex items-center gap-1.5 text-support font-medium text-brand-deep"
+          >
+            <span>View all flagships</span>
+            <Icon name="arrowRight" size={14} />
+          </Link>
+        </div>
       </div>
 
       <div className="fold-body lg:flex lg:justify-center">
-        <div className="fold-grid [--card-text:11.75rem] [--gap-x:1.5rem] max-sm:!grid-cols-1">
-          {items.slice(0, 3).map(({ product, highlightSpec, badge }) => (
-            <ProductCard key={product.id} product={product} layout="featured" label={badge} note={highlightSpec} />
+        <div className="fold-grid [--gap-x:1.5rem] max-sm:!grid-cols-1">
+          {items.slice(0, 3).map(({ product }) => (
+            <ProductCard key={product.id} product={product} layout="featured" />
           ))}
         </div>
       </div>

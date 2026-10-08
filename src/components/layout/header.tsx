@@ -28,15 +28,24 @@ import { categories } from "@/lib/catalog/categories";
  * - Deep scroll (>280px scrolling down): Minimizes distraction to essentials: AYIIN + Search + Bag.
  * - Scrolling up: Smoothly restores full navigation (Discover, Departments, Deals, Saved, Account).
  */
+type ScrollBands = { atTop: boolean; past80: boolean; past120: boolean; past280: boolean; down: boolean; expanded: boolean };
+const INITIAL_BANDS: ScrollBands = { atTop: true, past80: false, past120: false, past280: false, down: false, expanded: false };
+/** Upward scroll distance (px) after which the full navbar returns — about three wheel notches. */
+const FULL_NAV_TRAVEL = 300;
+/** Pause (ms) after scrolling up before the minimal bar opens into the full one. */
+const IDLE_EXPAND_MS = 900;
+
 export function Header() {
   const pathname = usePathname();
   const { mode, setMode } = usePrefs();
   const business = mode === "business";
 
   // Scroll state
-  const [scrollY, setScrollY] = useState(0);
-  const [scrollingDown, setScrollingDown] = useState(false);
+  // Only coarse bands are kept in state, so the header re-renders when a band changes — not on every scroll frame.
+  const [scroll, setScroll] = useState<ScrollBands>(INITIAL_BANDS);
   const lastScrollY = useRef(0);
+  const upTravel = useRef(0);
+  const idleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Overlay state: "discover" | "departments" | null
   const [activeMenu, setActiveMenu] = useState<"discover" | "departments" | null>(null);
@@ -45,6 +54,7 @@ export function Header() {
   const openSearch = useUI((s) => s.openSearch);
   const closeSearch = useUI((s) => s.closeSearch);
   const menuOpen = useUI((s) => s.menuOpen);
+  const localNav = useUI((s) => s.localNav);
   const setMenu = useUI((s) => s.setMenu);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -55,24 +65,41 @@ export function Header() {
   const mobileSearch = useSearchController(mobileInputRef);
   const rotatingPlaceholder = useRotatingPlaceholder(!searchOpen);
 
-  // Scroll dynamics
+  // Scroll dynamics: down → hidden · a little up → minimal bar · a lot up → full bar
   useEffect(() => {
     let raf = 0;
     const onScroll = () => {
-      cancelAnimationFrame(raf);
+      if (raf) return;
       raf = requestAnimationFrame(() => {
-        const currentY = window.scrollY;
-        const diff = currentY - lastScrollY.current;
-        setScrollY(currentY);
-
-        if (currentY <= 60) {
-          setScrollingDown(false);
-        } else if (diff > 5) {
-          setScrollingDown(true);
-        } else if (diff < -5) {
-          setScrollingDown(false);
-        }
-        lastScrollY.current = currentY;
+        raf = 0;
+        const y = window.scrollY;
+        const diff = y - lastScrollY.current;
+        lastScrollY.current = y;
+        setScroll((prev) => {
+          let { down, expanded } = prev;
+          if (y <= 60) {
+            down = false;
+            expanded = false;
+            upTravel.current = 0;
+          } else if (diff > 5) {
+            down = true;
+            expanded = false;
+            upTravel.current = 0;
+          } else if (diff < 0) {
+            if (diff < -5) down = false;
+            if (!down) {
+              upTravel.current += -diff;
+              if (upTravel.current >= FULL_NAV_TRAVEL) expanded = true;
+            }
+          }
+          const next: ScrollBands = { atTop: y < 24, past80: y > 80, past120: y > 120, past280: y > 280, down, expanded };
+          return (Object.keys(next) as (keyof ScrollBands)[]).every((k) => next[k] === prev[k]) ? prev : next;
+        });
+        // Stop scrolling while the bar is back in its minimal form and, after a beat, it opens up fully.
+        clearTimeout(idleTimer.current);
+        idleTimer.current = setTimeout(() => {
+          setScroll((p) => (p.past280 && !p.down && !p.expanded ? { ...p, expanded: true } : p));
+        }, IDLE_EXPAND_MS);
       });
     };
 
@@ -81,6 +108,7 @@ export function Header() {
     return () => {
       window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
+      clearTimeout(idleTimer.current);
     };
   }, []);
 
@@ -130,10 +158,19 @@ export function Header() {
     return () => document.removeEventListener("mousedown", onDown);
   }, [activeMenu, searchOpen, closeSearch]);
 
-  const isTop = scrollY < 24;
-  const isCompressed = scrollY >= 24;
-  // Deep scroll state: > 280px and scrolling down reduces navbar to AYIIN + Search + Bag
-  const isDeep = scrollY > 280 && scrollingDown && !activeMenu && !searchOpen;
+  const isTop = scroll.atTop;
+  const isCompressed = !scroll.atTop;
+  // Deep scroll state: past 280px the navbar is reduced to AYIIN + Search + Bag, and stays that way
+  // after a small scroll up. Scrolling up FULL_NAV_TRAVEL px restores every item.
+  const isDeep = scroll.past280 && !scroll.expanded && !activeMenu && !searchOpen;
+
+  // Scrolling down past the compressed state slides the whole header out of view;
+  // the first small scroll up brings it back. Open menus/search/drawer keep it in place.
+  const isHidden =
+    // A page with its own pinned local nav (product pages) owns the top edge once you leave the top: the
+    // main navbar stays away, scrolling up or down, and comes back only at the very top.
+    (localNav && scroll.past80 && !activeMenu && !searchOpen && !menuOpen) ||
+    (scroll.past120 && scroll.down && !activeMenu && !searchOpen && !menuOpen);
 
   const overlayActive =
     activeMenu !== null ||
@@ -168,7 +205,12 @@ export function Header() {
         data-top={isTop}
         data-compressed={isCompressed}
         data-deep={isDeep}
-        className="fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-[var(--ease-out-expo)]"
+        data-hidden={isHidden}
+        onFocusCapture={() => setScroll((p) => (p.down ? { ...p, down: false } : p))}
+        className={clsx(
+          "fixed inset-x-0 top-0 z-50 transition-[transform,opacity] duration-300 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
+          isHidden && "pointer-events-none -translate-y-full",
+        )}
       >
         {/* ── 01 · DYNAMIC CONTEXT STRIP (Top Micro-strip) ── */}
         <div
