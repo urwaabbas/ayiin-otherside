@@ -2,290 +2,470 @@
 
 import Link from "next/link";
 import { clsx } from "clsx";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Product } from "@/lib/types";
+import { photoUrl, productPhoto, productViews, type ImageView } from "@/lib/images";
 import { ProductImage } from "@/components/product/product-image";
-import { QuickView } from "@/components/product/quick-view";
-import { Stars } from "@/components/product/rating";
 import { Icon } from "@/components/ui/icon";
 import { Price } from "@/components/ui/money";
 import { usePrefs } from "@/components/providers";
-import { useHydrated, useShop, useUI } from "@/lib/store";
-import {
-  bestTier,
-  deliveryLabel,
-  priceInsight,
-  savingsPct,
-  stockSignal,
-} from "@/lib/commerce";
-import { compact } from "@/lib/format";
+import { useHydrated, useShop } from "@/lib/store";
+import { bestTier, deliveryLabel, priceInsight, savingsPct, stockSignal } from "@/lib/commerce";
 
-const CARD_SIZES =
-  "(min-width: 1280px) 240px, (min-width: 1024px) 22vw, (min-width: 640px) 32vw, 48vw";
+/** Layout adaptations of the one canonical AYIIN product card — never different designs. */
+export type ProductCardLayout = "default" | "compact" | "featured";
+
+/** Every card image is a 4:5 portrait stage. Photography is cut to it at the CDN. */
+const RATIO = 1.25;
+const SIZES: Record<ProductCardLayout, string> = {
+  default: "(min-width: 1536px) 360px, (min-width: 1280px) 320px, (min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw",
+  compact: "(min-width: 640px) 240px, 48vw",
+  featured: "(min-width: 1024px) 42vw, (min-width: 768px) 50vw, 100vw",
+};
+const MAX_THUMBS = 4;
+const ADDED_MS = 2200;
+
+export type ProductCardProps = {
+  product: Product;
+  layout?: ProductCardLayout;
+  /** Context label on the photograph: "AYIIN EDIT", "Featured", "Anchor piece"… */
+  label?: string;
+  /** One supporting fact under the name (featured layout), e.g. key spec or summary */
+  note?: string;
+  /** Why this product is shown here ("Because you viewed…") */
+  reason?: string;
+  /** Position in a ranked shelf */
+  rank?: number;
+  sizes?: string;
+  priority?: boolean;
+  className?: string;
+};
 
 /**
- * The Ayiin product card — one marketplace card used in every grid and rail.
- * Same size in any row: a square white photo box (the product photo is shown whole,
- * never cropped or stretched), a two-line title, rating, price, delivery and Add to cart.
- * The button sits on the card's baseline, so cards line up however long the title is.
+ * AYIIN Master Product Card System (2040 Spatial Language — Refined)
+ *
+ * Single master product component powering every surface across AYIIN:
+ * Home (flagships, trending, edits, setups, rails), Shop/Category grids,
+ * Search results, Wishlist, Recommendations, Recently Viewed.
+ *
+ * Visual & Interaction Principles:
+ * - One bordered card: the 4:5 photograph is its top panel (rounded top corners from the card,
+ *   square bottom edge meeting a hairline above the details).
+ * - Minimal floating spatial controls (top-right wishlist disc, bottom-right compact bag disc).
+ * - Image variants: real photo thumbnails (per colourway, else per view) switch the stage on hover/click.
+ * - A glass discount badge sits top-left whenever there is a real saving.
+ * - Zero dark horizontal background patches or strips across the card.
+ * - No reviews or star clutter on the card (reserved strictly for PDP).
+ * - No large pill buttons or "Add to Cart" text — refined 2040 micro-actions only.
  */
 export function ProductCard({
   product: p,
+  layout = "default",
+  label,
+  note,
   reason,
   rank,
-  className,
+  sizes,
   priority,
-}: {
-  product: Product;
-  reason?: string;
-  rank?: number;
-  className?: string;
-  priority?: boolean;
-}) {
+  className,
+}: ProductCardProps) {
   const { mode, fmt } = usePrefs();
   const business = mode === "business";
   const hydrated = useHydrated();
-  const [variant, setVariant] = useState(p.variants[0]);
-  const [quick, setQuick] = useState(false);
-  const wished = useShop((s) => s.wishlist.includes(p.id));
+  const wishedRaw = useShop((s) => s.wishlist.includes(p.id));
+  const wished = hydrated && wishedRaw;
   const toggleWishlist = useShop((s) => s.toggleWishlist);
   const addToCart = useShop((s) => s.addToCart);
-  const notify = useUI((s) => s.notify);
+
+  /* ── Image variants ───────────────────────────────────────────
+     Each thumbnail is a real photograph: one per colourway when the product
+     comes in several, otherwise the product's own views (front, angle, detail,
+     in context). Hover previews a thumbnail on the stage; click selects it. */
+  const options = imageOptions(p);
+  const [selected, setSelected] = useState(options[0].key);
+  const [preview, setPreview] = useState<string | null>(null);
+  const activeKey = preview ?? selected;
+  const activeOption = options.find((o) => o.key === activeKey) ?? options[0];
+  const activeVariant = p.variants.find((v) => v.id === activeOption.variant) ?? p.variants[0];
+  const want = activeOption.key;
+
+  const [cachedLayers, setCachedLayers] = useState<string[]>([want]);
+  const [ready, setReady] = useState<string[]>([want]);
+  const [failed, setFailed] = useState<string[]>([]);
+  const [held, setHeld] = useState(want);
+
+  const layers = cachedLayers.includes(want) ? cachedLayers : [...cachedLayers, want];
+
+  const markReady = useCallback((k: string) => {
+    setReady((r) => (r.includes(k) ? r : [...r, k]));
+    setCachedLayers((prev) => (prev.includes(k) ? prev : [...prev, k]));
+    setHeld(k);
+  }, []);
+
+  const markFailed = useCallback((k: string) => {
+    setFailed((r) => (r.includes(k) ? r : [...r, k]));
+    setReady((r) => (r.includes(k) ? r : [...r, k]));
+  }, []);
+
+  const shown = ready.includes(want) ? want : held;
+
+  /* ── Commerce micro-action state ────────────────────────────── */
+  const [added, setAdded] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => () => clearTimeout(timer.current), []);
+
   const insight = priceInsight(p);
   const stock = stockSignal(p);
   const tier = bestTier(p);
   const off = savingsPct(p);
+  const soldOut = p.stock <= 0;
+  const moq = business ? Math.max(p.b2b.moq, 1) : 1;
+  const featured = layout === "featured";
+  const compactLayout = layout === "compact";
+  const showDiscount = off > 0 && !soldOut && !business;
+  const href = `/p/${p.slug}`;
 
-  const badge =
-    rank != null
-      ? `#${rank} Best Seller`
-      : insight.verifiedDeal
-        ? "Deal"
-        : p.tags.includes("bestseller")
-          ? "Best Seller"
-          : p.tags.includes("new")
-            ? "New"
-            : null;
+  const tag = soldOut ? "Out of stock" : label ?? (rank != null ? `No. ${rank}` : p.tags.includes("new") ? "New" : null);
+  const shownThumbs = options.slice(0, compactLayout ? 3 : MAX_THUMBS);
 
-  const add = () => {
-    const qty = business ? Math.max(p.b2b.moq, 1) : 1;
-    addToCart(p.id, variant.id, qty, business);
-    notify("Added to cart", `${p.name} · Arrives ${deliveryLabel(p)}`, {
-      label: "View cart",
-      href: "/cart",
-    });
+  const add = (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (soldOut) {
+      toggleWishlist(p.id);
+      return;
+    }
+    addToCart(p.id, activeVariant.id, moq, business);
+    setAdded(true);
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setAdded(false), ADDED_MS);
   };
 
+  const onThumbKey = (e: React.KeyboardEvent, i: number) => {
+    const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
+    if (!step) return;
+    e.preventDefault();
+    const next = (i + step + shownThumbs.length) % shownThumbs.length;
+    setSelected(shownThumbs[next].key);
+    setPreview(null);
+    (e.currentTarget.parentElement?.children[next] as HTMLElement | undefined)?.focus();
+  };
+
+  const discovery = business
+    ? `MOQ ${p.b2b.moq} · ${p.b2b.leadDays}-day lead time`
+    : soldOut
+      ? "Back soon"
+      : `Arrives ${deliveryLabel(p)}${insight.verifiedDeal ? ` · ${insight.label}` : p.returns.free ? " · Free returns" : ""}`;
+
   return (
-    <article className={clsx("mk-card group relative", className)}>
-      <div className="relative p-3 pb-0">
-        <Link
-          href={`/p/${p.slug}`}
-          aria-label={p.name}
-          prefetch={priority ? true : undefined}
-          className="block overflow-hidden rounded-media bg-white"
-        >
-          <ProductImage
-            product={p}
-            variant={variant.id}
-            preload={priority}
-            sizes={CARD_SIZES}
-            className="aspect-square w-full transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
-            imgClassName="!object-contain"
-          />
-        </Link>
-        {badge && (
-          <span
-            className={clsx(
-              "pointer-events-none absolute left-3 top-3 rounded-br-control rounded-tl-media px-2 py-1 text-meta font-semibold",
-              badge === "Deal" ? "bg-danger text-white" : "bg-brand text-ink",
-            )}
-          >
-            {badge}
-          </span>
+    <article
+      aria-labelledby={`pc-${p.id}`}
+      className={clsx(
+        "pc group/card @container relative flex h-full flex-col overflow-hidden rounded-surface border border-line bg-white transition-colors duration-300 select-none hover:border-line-hover",
+        className,
+      )}
+      onPointerLeave={(e) => {
+        if (e.pointerType === "mouse") setPreview(null);
+      }}
+    >
+      {/* ── 1. Spatial Photography Stage ────────────────────────── */}
+      <div
+        className={clsx(
+          "pc-stage relative isolate aspect-[4/5] w-full overflow-hidden",
+          !ready.includes(shown) && "shimmer",
         )}
+        style={{
+          backgroundColor: productPhoto(p, activeVariant.id, "hero")?.color ?? p.tint,
+        }}
+      >
+        <Link
+          href={href}
+          tabIndex={-1}
+          prefetch={priority ? true : undefined}
+          className="absolute inset-0 block focus:outline-none"
+          aria-label={p.name}
+        >
+          {layers.map((k) => {
+            const [vid, vw] = k.split("|") as [string, ImageView];
+            const on = k === shown;
+            return (
+              <span
+                key={k}
+                data-on={on}
+                aria-hidden={!on}
+                className={clsx(
+                  "pc-layer absolute inset-0 block transition-opacity duration-300",
+                  on ? "opacity-100" : "opacity-0",
+                  soldOut && "grayscale-[35%] opacity-80",
+                )}
+              >
+                <ProductImage
+                  product={p}
+                  variant={vid}
+                  view={vw}
+                  ratio={RATIO}
+                  bare
+                  sizes={sizes ?? SIZES[layout]}
+                  preload={priority && k === layers[0]}
+                  alt={on ? `${p.name}, ${activeVariant.name}` : ""}
+                  onLoaded={() => markReady(k)}
+                  onFailed={() => markFailed(k)}
+                  className="h-full w-full"
+                />
+              </span>
+            );
+          })}
+          {failed.includes(shown) && (
+            <span className="absolute inset-0 grid place-items-center text-support text-mute">
+              Image unavailable
+            </span>
+          )}
+        </Link>
+
+        {/* Top left: the discount (glass, only for a real saving) above the context tag */}
+        {(showDiscount || tag) && (
+          <div className="pointer-events-none absolute left-2.5 top-2.5 z-10 flex max-w-[calc(100%-4.5rem)] flex-col items-start gap-1.5">
+            {showDiscount && (
+              <span className="glass num inline-flex h-7 items-center rounded-full px-2.5 text-[12px] font-semibold leading-none text-ink">
+                −{off}%
+              </span>
+            )}
+            {tag && (
+              <span
+                className={clsx(
+                  "glass inline-flex h-6 max-w-full items-center truncate rounded-full px-2.5 font-mono text-[10px] font-medium uppercase leading-none tracking-[0.14em]",
+                  soldOut ? "text-ink-2" : "text-ink",
+                )}
+              >
+                {tag}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Liquid Glass: Wishlist Control (Top Right) */}
         <button
           type="button"
-          aria-pressed={hydrated && wished}
+          aria-pressed={wished}
           aria-label={wished ? `Remove ${p.name} from saved` : `Save ${p.name}`}
-          onClick={() => toggleWishlist(p.id)}
+          title={wished ? "Saved" : "Save"}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleWishlist(p.id);
+          }}
           suppressHydrationWarning
-          className="absolute right-5 top-5 grid h-8 w-8 place-items-center rounded-full bg-white/90 text-ink shadow-[var(--shadow-hair)] transition-colors hover:text-danger"
+          data-on={wished}
+          className={clsx(
+            "pc-heart glass glass-btn absolute right-2.5 top-2.5 z-20 grid h-8 w-8 place-items-center rounded-full text-ink transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm",
+            wished ? "opacity-100 text-ink" : "opacity-85 group-hover/card:opacity-100",
+            "[@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:w-9",
+          )}
         >
           <Icon
             name="heart"
-            size={16}
-            fill={hydrated && wished ? "currentColor" : "none"}
-            className={hydrated && wished ? "text-danger" : undefined}
+            size={15}
+            strokeWidth={1.8}
+            fill={wished ? "currentColor" : "none"}
           />
         </button>
+
+        {/* Image variants: a vertical strip of real photo thumbnails under the wishlist control */}
+        {options.length > 1 && (
+          <div
+            role="radiogroup"
+            aria-label={`${p.name} images`}
+            className="absolute right-2.5 top-12 z-20 flex flex-col items-center gap-1.5 [@media(pointer:coarse)]:top-[3.25rem]"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            {shownThumbs.map((o, i) => {
+              const on = o.key === activeKey;
+              return (
+                <button
+                  key={o.key}
+                  type="button"
+                  role="radio"
+                  aria-checked={o.key === selected}
+                  aria-label={o.label}
+                  title={o.label}
+                  tabIndex={o.key === selected ? 0 : -1}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setSelected(o.key);
+                    setPreview(null);
+                  }}
+                  onPointerEnter={(e) => {
+                    if (e.pointerType === "mouse") setPreview(o.key);
+                  }}
+                  onKeyDown={(e) => onThumbKey(e, i)}
+                  className={clsx(
+                    "relative block h-8 w-8 overflow-hidden rounded-control bg-white transition-[box-shadow,opacity] duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-deep",
+                    on
+                      ? "opacity-100 shadow-[0_0_0_1.5px_var(--color-ink),0_0_0_3px_rgb(255_255_255/0.9)]"
+                      : "opacity-80 shadow-[0_0_0_1px_rgb(255_255_255/0.85),0_1px_3px_rgb(var(--rgb-ink)/0.25)] hover:opacity-100",
+                  )}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photoUrl(o.photo, 96, 70, 1)} alt="" loading="lazy" className="h-full w-full object-cover" />
+                </button>
+              );
+            })}
+            {options.length > shownThumbs.length && (
+              <span className="glass grid h-6 min-w-6 place-items-center rounded-full px-1.5 font-mono text-[10px] font-medium text-ink">
+                +{options.length - shownThumbs.length}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Refined Cart/Bag Icon Action (Bottom Right) */}
         <button
           type="button"
-          aria-haspopup="dialog"
-          onClick={() => setQuick(true)}
+          onClick={add}
+          aria-label={
+            soldOut
+              ? wished
+                ? "Watching for restock"
+                : "Notify me when back"
+              : `Add ${p.name} to bag`
+          }
+          aria-pressed={soldOut ? wished : undefined}
           suppressHydrationWarning
-          className="absolute inset-x-6 bottom-3 hidden h-10 items-center justify-center rounded-control bg-white/95 text-support font-medium text-ink opacity-0 shadow-[var(--shadow-soft)] transition-opacity duration-150 group-hover:opacity-100 focus-visible:opacity-100 lg:flex"
+          className={clsx(
+            "glass glass-btn absolute right-2.5 bottom-2.5 z-20 grid h-8 w-8 place-items-center rounded-full text-ink transition-all duration-200",
+            "hover:scale-105 active:scale-95 shadow-sm",
+            "opacity-0 group-hover/card:opacity-100",
+            "[@media(hover:none)]:opacity-100 [@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:w-9",
+            added && "![background:var(--color-ink)] !text-white shadow-md",
+          )}
         >
-          Quick look
+          <Icon
+            name={added ? "check" : soldOut ? "bell" : "bag"}
+            size={14}
+            strokeWidth={added ? 2.2 : 1.8}
+            className={clsx(added && "text-white")}
+            fill={soldOut && wished ? "currentColor" : "none"}
+          />
         </button>
-        <button
-          type="button"
-          aria-label={`Quick look at ${p.name}`}
-          aria-haspopup="dialog"
-          onClick={() => setQuick(true)}
-          title="Quick look"
-          suppressHydrationWarning
-          className="absolute bottom-3 right-3 grid h-11 w-11 place-items-center rounded-control bg-white/95 text-ink shadow-[var(--shadow-soft)] lg:hidden"
-        >
-          <Icon name="eye" size={18} />
-        </button>
+
+        <span className="sr-only" aria-live="polite">
+          {added ? `Added ${p.name} to cart` : ""}
+        </span>
       </div>
 
-      <div className="flex flex-1 flex-col p-3">
-        {/* 2 · Brand kicker */}
-        <p className="truncate text-meta font-medium uppercase tracking-[0.06em] text-mute">
+      {/* ── 2. Factual Hierarchy (Minimal, Clean, Below Stage) ── */}
+      <div className={clsx("flex flex-1 flex-col border-t border-line px-3.5 pb-3.5", featured ? "pt-3.5" : "pt-3")}>
+        {/* Brand (Minimal header, reviews completely removed) */}
+        <p className="truncate font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-mute">
           {p.brand}
         </p>
 
-        {/* 3 · Product name */}
-        <h3 className="mt-0.5 line-clamp-2 min-h-[2.6em] text-support font-medium leading-[1.3] text-ink">
+        {/* Product Title */}
+        <h3
+          id={`pc-${p.id}`}
+          className={clsx(
+            "mt-1 text-pretty text-ink",
+            featured
+              ? "display min-h-[2.1em] text-emphasis !leading-[1.08] !tracking-[-0.02em] @min-[320px]:text-section"
+              : "min-h-[2.4em] text-support font-medium leading-[1.25] tracking-[-0.01em] @min-[260px]:text-[0.9375rem]",
+          )}
+        >
           <Link
-            href={`/p/${p.slug}`}
-            className="hover:text-brand-deep hover:underline"
+            href={href}
+            prefetch={priority ? true : undefined}
+            className="line-clamp-2 decoration-line-hover underline-offset-[3px] hover:underline"
           >
             {p.name}
           </Link>
         </h3>
 
-        {/* 4 · Rating */}
-        <Link
-          href={`/p/${p.slug}#reviews`}
-          className="mt-1.5 flex items-center gap-1.5 text-meta"
-          aria-label={`${p.rating.toFixed(1)} out of 5 stars, ${p.reviewCount} ratings`}
-        >
-          <span className="num font-semibold text-ink">
-            {p.rating.toFixed(1)}
-          </span>
-          <Stars value={p.rating} size={12} />
-          <span className="text-mute hover:text-brand-deep hover:underline">
-            ({compact(p.reviewCount)})
-          </span>
-        </Link>
-        {p.soldLastWeek >= 500 && (
-          <p className="mt-0.5 text-meta text-mute">
-            {compact(p.soldLastWeek)}+ bought last week
+        {/* Featured Note (Specs or Summary) */}
+        {featured && note && (
+          <p className="mt-1 line-clamp-2 text-support leading-relaxed text-ink-2">
+            {note}
           </p>
         )}
 
-        {/* 5 · Price */}
-        <div className="mt-2.5">
+        {/* Pricing */}
+        <div
+          className={clsx(
+            "flex flex-wrap items-baseline gap-x-2 gap-y-0.5",
+            featured ? "mt-2.5" : "mt-1.5",
+          )}
+        >
           {business ? (
             <>
-              <div className="flex items-baseline gap-1.5">
-                <Price usd={tier.price} size="md" />
-                <span className="text-meta text-mute">
-                  /{p.b2b.unit} at {tier.min}+
-                </span>
-              </div>
-              <p className="text-meta text-mute">
-                List <span className="num line-through">{fmt(p.price)}</span> ·
-                MOQ {p.b2b.moq}
-              </p>
+              <Price usd={tier.price} size={featured ? "md" : "sm"} />
+              <span className="text-meta text-mute">
+                /{p.b2b.unit} at {tier.min}+ · list{" "}
+                <span className="num line-through">{fmt(p.price)}</span>
+              </span>
             </>
           ) : (
             <>
-              <div className="flex flex-wrap items-baseline gap-x-2">
-                {off > 0 && (
-                  <span className="text-body font-semibold text-danger">
-                    -{off}%
-                  </span>
-                )}
-                <Price usd={p.price} size="md" />
-              </div>
-              {p.compareAt && p.compareAt > p.price && (
-                <p className="text-meta text-mute">
-                  List:{" "}
-                  <span className="num line-through">{fmt(p.compareAt)}</span>
-                </p>
-              )}
+              <Price usd={p.price} size={featured ? "md" : "sm"} strike={p.compareAt} />
             </>
           )}
         </div>
 
-        {/* 6 · Delivery */}
-        <p className="mt-1 text-meta text-ink-2">
-          {business ? (
-            <>Lead time {p.b2b.leadDays} days</>
-          ) : (
-            <>
-              {p.shipping === 0
-                ? "FREE delivery "
-                : `${fmt(p.shipping)} delivery `}
-              <span className="font-semibold text-ink">{deliveryLabel(p)}</span>
-            </>
-          )}
-        </p>
-
-        {/* Secondary signals: Swatches, Stock urgency, Recommendation reason */}
-        {p.variants.length > 1 && (
-          <div
-            className="-ml-0.5 mt-2 flex items-center gap-1"
-            role="radiogroup"
-            aria-label="Colour"
-          >
-            {p.variants.map((v) => (
-              <button
-                key={v.id}
-                type="button"
-                role="radio"
-                aria-checked={variant.id === v.id}
-                aria-label={v.name}
-                title={v.name}
-                onMouseEnter={() => setVariant(v)}
-                onClick={() => setVariant(v)}
-                suppressHydrationWarning
-                className="grid h-5 w-5 place-items-center"
-              >
-                <span
-                  className={clsx(
-                    "h-3.5 w-3.5 rounded-full transition-transform",
-                    variant.id === v.id
-                      ? "ring-2 ring-brand ring-offset-1 scale-105"
-                      : "ring-1 ring-line-strong hover:scale-110",
-                  )}
-                  style={{ background: v.color }}
-                />
-              </button>
-            ))}
-          </div>
-        )}
-
-        {stock.urgent && (
-          <p className="mt-1 text-meta font-medium text-danger">
+        {/* Stock Urgency Signal */}
+        {stock.urgent && !soldOut && (
+          <p className="mt-1 flex items-center gap-1.5 text-meta font-medium text-warning">
+            <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-warning" />
             {stock.label}
           </p>
         )}
-        {reason && <p className="mt-1 text-meta text-mute">{reason}</p>}
+        {soldOut && wished && (
+          <p className="mt-1 text-meta text-ink-2">We&apos;ll notify you when restocked</p>
+        )}
 
-        <div className="mt-auto pt-3">
-          <button
-            type="button"
-            onClick={add}
-            disabled={p.stock <= 0}
-            suppressHydrationWarning
-            className="btn btn-primary w-full"
-          >
-            {business ? `Add ${Math.max(p.b2b.moq, 1)} to cart` : "Add to cart"}
-          </button>
-        </div>
+        {/* Delivery / Shipping Context */}
+        {!compactLayout && (
+          <p className="mt-1 min-w-0 truncate text-meta text-mute">
+            {discovery}
+          </p>
+        )}
+
+        {reason && <p className="mt-1 line-clamp-1 text-meta text-mute">{reason}</p>}
       </div>
-      {quick && (
-        <QuickView
-          product={p}
-          initialVariant={variant}
-          onClose={() => setQuick(false)}
-        />
-      )}
     </article>
   );
+}
+
+type ImageOption = {
+  key: string;
+  variant: string;
+  view: ImageView;
+  label: string;
+  photo: NonNullable<ReturnType<typeof productPhoto>>;
+};
+
+/**
+ * The real photographs a card can switch between: one per colourway that has its own
+ * photography, otherwise the product's views. Never two thumbnails of the same photo.
+ */
+function imageOptions(p: Product): ImageOption[] {
+  const collect = (pairs: [string, ImageView, string][]) => {
+    const seen = new Set<string>();
+    const out: ImageOption[] = [];
+    for (const [variant, view, label] of pairs) {
+      const photo = productPhoto(p, variant, view);
+      if (!photo || seen.has(photo.id)) continue;
+      seen.add(photo.id);
+      out.push({ key: `${variant}|${view}`, variant, view, label, photo });
+    }
+    return out;
+  };
+  const first = p.variants[0];
+  const byColour = collect(p.variants.map((v) => [v.id, "hero", v.name]));
+  if (byColour.length > 1) return byColour;
+  const byView = collect(productViews(p, first.id).map((v) => [first.id, v.id, v.label]));
+  if (byView.length > 0) return byView;
+  return [{ key: `${first.id}|hero`, variant: first.id, view: "hero", label: first.name, photo: productPhoto(p, first.id)! }];
 }

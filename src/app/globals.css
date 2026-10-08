@@ -190,6 +190,18 @@
   }
 }
 
+/* Animatable custom properties for the showroom stage (colourway glow, light position) */
+@property --sr-glow {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: transparent;
+}
+@property --gx {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 50%;
+}
+
 /* ─── Base ─────────────────────────────────────────────────────── */
 
 @layer base {
@@ -199,6 +211,9 @@
     caret-color: var(--color-ink);
     --header-h: 132px;
     --gutter: 16px;
+    /* Compressed navbar height (header.tsx: h-14 / lg:h-16) and the space between homepage folds */
+    --nav-h: 56px;
+    --fold-gap: 2rem;
     --focus: var(--color-brand-deep);
     /* Channel triplets of the core tokens, for translucent shadows and scrims */
     --rgb-ink: 31 30 28;
@@ -213,6 +228,7 @@
   @media (min-width: 1024px) {
     :root {
       --gutter: 40px;
+      --nav-h: 64px;
     }
   }
 
@@ -460,21 +476,333 @@
     color: var(--color-ink);
   }
 
-  /* Marketplace product card */
-  .mk-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    background: var(--color-white);
-    border: 1px solid var(--color-line);
-    border-radius: var(--radius-surface);
+  /* ─── Liquid Glass Material (2040 Spatial Design) ────────────────
+     Reserved strictly for floating interactive controls over photography.
+     A physical, translucent glass surface with multi-layer specular highlights,
+     tactile refraction, ultra-smooth backdrop blur, and micro-shadows.
+     Adaptively legible over both dark and light photography without screaming. */
+  .glass {
+    color: var(--color-ink);
+    background: linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.76) 0%,
+      rgb(255 255 255 / 0.48) 100%
+    );
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.05);
+    backdrop-filter: blur(20px) saturate(180%) brightness(1.05);
+    box-shadow:
+      inset 0 1px 0.5px 0 rgb(255 255 255 / 0.95),
+      inset 0 0 0 1px rgb(255 255 255 / 0.4),
+      inset 0 -1px 2px rgb(var(--rgb-ink) / 0.04),
+      0 0 0 0.5px rgb(var(--rgb-ink) / 0.08),
+      0 8px 24px -6px rgb(var(--rgb-ink) / 0.24);
     transition:
-      box-shadow 180ms,
-      border-color 180ms;
+      transform 360ms var(--ease-out-expo),
+      background 240ms var(--ease-out-expo),
+      box-shadow 240ms var(--ease-out-expo),
+      opacity 360ms var(--ease-out-expo),
+      color 200ms;
   }
-  .mk-card:hover {
-    border-color: var(--color-line-strong);
-    box-shadow: 0 6px 20px -10px rgb(var(--rgb-ink) / 0.25);
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      background: rgb(255 255 255 / 0.92);
+    }
+  }
+
+  /* Interactive glass controls (Wishlist, Quick look, action buttons) */
+  .glass-btn:hover {
+    background: linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.92) 0%,
+      rgb(255 255 255 / 0.7) 100%
+    );
+    transform: scale(1.06) translate3d(0, -1px, 0);
+    box-shadow:
+      inset 0 1px 0.5px 0 rgb(255 255 255 / 1),
+      inset 0 0 0 1px rgb(255 255 255 / 0.55),
+      0 10px 24px -4px rgb(var(--rgb-ink) / 0.28);
+  }
+  .glass-btn:active {
+    transform: scale(0.95) translate3d(0, 0, 0);
+    transition-duration: 120ms;
+  }
+
+  /* Wide glass bar action (Add to bag) */
+  .glass-press:hover {
+    background: linear-gradient(
+      145deg,
+      rgb(255 255 255 / 0.94) 0%,
+      rgb(255 255 255 / 0.78) 100%
+    );
+    box-shadow:
+      inset 0 1px 0.5px 0 rgb(255 255 255 / 1),
+      inset 0 0 0 1px rgb(255 255 255 / 0.5),
+      0 12px 28px -6px rgb(var(--rgb-ink) / 0.28);
+    transform: translate3d(0, -1px, 0);
+  }
+  .glass-press:active {
+    transform: scale(0.985);
+    transition-duration: 120ms;
+  }
+
+  /* ─── The Master AYIIN Product Card System ───────────────────────
+     Clean, spacious, spatial presentation. The product photograph dominates.
+     Controls float with liquid glass. Information below is minimal, solid,
+     and highly readable. */
+  .pc {
+    contain: layout style;
+  }
+  .pc-stage {
+    transition:
+      transform 600ms var(--ease-out-expo),
+      box-shadow 600ms var(--ease-out-expo);
+  }
+  .pc-layer {
+    transition:
+      opacity 650ms var(--ease-in-out-soft),
+      transform 1000ms var(--ease-out-expo);
+  }
+  .pc-reveal {
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 360ms var(--ease-out-expo),
+      transform 480ms var(--ease-out-expo);
+    transition-delay: 0ms;
+  }
+  .pc-reveal[data-from="bottom"] {
+    transform: translate3d(0, 10px, 0);
+  }
+  .pc-reveal[data-from="right"] {
+    transform: translate3d(8px, 0, 0);
+  }
+  .pc-reveal[data-from="top"] {
+    transform: translate3d(0, -4px, 0);
+  }
+  .pc-rest {
+    transition: opacity 300ms var(--ease-out-expo);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    /* The photograph stays seated in the card's border; only the image zooms. */
+    .pc:has(:focus-visible) {
+      border-color: var(--color-ink);
+    }
+    .pc:hover .pc-layer[data-on="true"] {
+      transform: scale(1.025);
+    }
+    .pc:hover .pc-reveal,
+    .pc:has(:focus-visible) .pc-reveal,
+    .pc-reveal[data-hold="true"] {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+      transition-delay: var(--d, 50ms);
+    }
+    .pc:hover .pc-rest,
+    .pc:has(:focus-visible) .pc-rest {
+      opacity: 0;
+    }
+  }
+
+  /* Touch screens: permanent thumb controls */
+  @media (hover: none), (pointer: coarse) {
+    .pc-reveal {
+      opacity: 1;
+      pointer-events: auto;
+      transform: none;
+    }
+    .pc-hover-only {
+      display: none !important;
+    }
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .pc-touch-only {
+      display: none !important;
+    }
+  }
+
+  /* ─── Showroom card (v2, homepage) ───────────────────────────────
+     A small lit room for one product. The stage is an environment, not a backdrop:
+     a cool pearl (or midnight, for pale products) sweep, a key glow tinted by the
+     selected colourway, and a floor light the product stands in. The product is a
+     transparent studio cut-out with its own contact shadow; a pointer tilts it a few
+     degrees and moves the light with it. */
+  .sr {
+    --sr-ink: #12141c;
+    --sr-blue: #4f6bed;
+    background: #fdfcfa;
+    box-shadow:
+      0 0 0 1px rgb(18 20 28 / 0.05),
+      0 1px 2px rgb(18 20 28 / 0.04),
+      0 18px 40px -28px rgb(30 38 80 / 0.28);
+    transition:
+      transform 700ms var(--ease-out-expo),
+      box-shadow 700ms var(--ease-out-expo);
+  }
+  .sr-stage {
+    --gx: 50%;
+    --rx: 0deg;
+    --ry: 0deg;
+    --lift: 0px;
+    perspective: 900px;
+    /* key light (follows the pointer) · pool of light on the floor · wall → soft horizon → floor */
+    background:
+      radial-gradient(58% 42% at var(--gx) 28%, var(--sr-glow) 0%, transparent 72%),
+      radial-gradient(52% 11% at 50% 69%, var(--sr-floor-light), transparent 78%),
+      linear-gradient(
+        180deg,
+        var(--sr-top) 0%,
+        var(--sr-mid) 57%,
+        var(--sr-horizon) 64%,
+        var(--sr-floor) 100%
+      );
+    transition:
+      --sr-glow 900ms var(--ease-in-out-soft),
+      --gx 900ms var(--ease-out-expo);
+  }
+  .sr-stage[data-env="pearl"] {
+    --sr-top: #e8eaf2;
+    --sr-mid: #f4f3f0;
+    --sr-horizon: #ece9e3;
+    --sr-floor: #e2ded6;
+    --sr-floor-light: rgb(255 255 255 / 0.9);
+    color: var(--sr-ink);
+  }
+  .sr-stage[data-env="midnight"] {
+    --sr-top: #272b3d;
+    --sr-mid: #181b27;
+    --sr-horizon: #13151f;
+    --sr-floor: #0b0d13;
+    --sr-floor-light: rgb(150 166 255 / 0.14);
+    color: #f5f3ef;
+  }
+  /* The product: lifted, tilted and separated from the environment by its own silhouette shadow */
+  .sr-product {
+    transform: translate3d(0, var(--lift), 0) rotateX(var(--rx)) rotateY(var(--ry));
+    transform-style: preserve-3d;
+    filter: drop-shadow(0 10px 14px rgb(16 18 30 / 0.1));
+    transition:
+      transform 900ms var(--ease-out-expo),
+      filter 900ms var(--ease-out-expo),
+      opacity 700ms var(--ease-in-out-soft);
+  }
+  .sr-stage[data-env="midnight"] .sr-product {
+    filter: drop-shadow(0 10px 18px rgb(0 0 0 / 0.35));
+  }
+  /* Bag: a quiet ring at rest; fills and names itself when it is about to be used */
+  .sr-bag {
+    color: var(--sr-ink);
+    box-shadow: inset 0 0 0 1px rgb(18 20 28 / 0.16);
+    transition:
+      background-color 400ms var(--ease-out-expo),
+      color 300ms,
+      box-shadow 400ms,
+      transform 200ms var(--ease-out-expo);
+  }
+  .sr-bag:active {
+    transform: scale(0.96);
+  }
+  .sr-bag-label {
+    display: inline-block;
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition:
+      max-width 520ms var(--ease-out-expo),
+      opacity 300ms var(--ease-out-expo),
+      margin 520ms var(--ease-out-expo);
+  }
+  .sr-bag[data-state="added"] {
+    background: var(--sr-ink);
+    color: #f5f3ef;
+    box-shadow: none;
+  }
+  .sr-bag[data-state="added"] .sr-bag-label {
+    max-width: 6rem;
+    opacity: 1;
+    margin-left: 0.375rem;
+  }
+  @keyframes sr-check {
+    from {
+      stroke-dashoffset: 24;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .sr-bag[data-state="added"] svg path {
+    stroke-dasharray: 24;
+    animation: sr-check 520ms var(--ease-out-expo) both;
+  }
+  @keyframes sr-ring {
+    from {
+      transform: scale(0.6);
+      opacity: 0.5;
+    }
+    to {
+      transform: scale(1.6);
+      opacity: 0;
+    }
+  }
+  .sr-heart[data-on="true"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    box-shadow: 0 0 0 1.5px currentColor;
+    animation: sr-ring 600ms var(--ease-out-expo) both;
+    pointer-events: none;
+  }
+  .sr-heart[data-on="true"] svg {
+    animation: pc-heart 420ms var(--ease-out-expo);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .sr:hover {
+      transform: translate3d(0, -4px, 0);
+      box-shadow:
+        0 0 0 1px rgb(18 20 28 / 0.05),
+        0 2px 4px rgb(18 20 28 / 0.04),
+        0 34px 60px -34px rgb(30 38 80 / 0.42);
+    }
+    .sr:hover .sr-stage {
+      --lift: -6px;
+    }
+    .sr:hover .sr-product {
+      filter: drop-shadow(0 22px 22px rgb(16 18 30 / 0.16));
+    }
+    .sr:hover .sr-stage[data-env="midnight"] .sr-product {
+      filter: drop-shadow(0 24px 26px rgb(0 0 0 / 0.5));
+    }
+    .sr:hover .sr-bag[data-state="idle"] {
+      background: var(--sr-ink);
+      color: #f5f3ef;
+      box-shadow: none;
+    }
+    .sr-bag[data-state="idle"]:hover .sr-bag-label,
+    .sr-bag[data-state="idle"]:focus-visible .sr-bag-label {
+      max-width: 8rem;
+      opacity: 1;
+      margin-left: 0.375rem;
+    }
+  }
+  .sr-bag[data-state="idle"]:focus-visible {
+    background: var(--sr-ink);
+    color: #f5f3ef;
+  }
+
+  /* Saved: the heart settles into place — no bounce, no burst */
+  @keyframes pc-heart {
+    0% {
+      transform: scale(0.72);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .pc-heart[data-on="true"] svg {
+    animation: pc-heart 420ms var(--ease-out-expo);
   }
 
   /* Chips */
@@ -590,6 +918,101 @@
   .thin-scroll {
     scrollbar-width: thin;
     scrollbar-color: var(--color-line-strong) transparent;
+  }
+
+  /* Primary nav items: ink-2 at rest, ink + a hairline underline drawn from
+     the centre on hover, kept while the item's menu is open. */
+  .nav-item {
+    position: relative;
+    color: var(--color-ink-2);
+    transition: color 200ms var(--ease-out-expo);
+  }
+  .nav-item::after {
+    content: "";
+    position: absolute;
+    left: 0.875rem;
+    right: 0.875rem;
+    bottom: 0.3125rem;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transition: transform 280ms var(--ease-out-expo);
+  }
+  .nav-item:hover,
+  .nav-item[aria-expanded="true"] {
+    color: var(--color-ink);
+  }
+  .nav-item:hover::after,
+  .nav-item[aria-expanded="true"]::after {
+    transform: scaleX(1);
+  }
+
+  /* ─── Fold: one homepage section = one laptop viewport ─────────
+     Once the page scrolls the navbar compresses to --nav-h, so a section that
+     starts under it has 100svh − nav − the gap before the next section.
+     `.fold` takes exactly that height; `.fold-body` is the space left after the
+     section's heading, exposed as a size container so grids can size their
+     4:5 product cards from its height (cqh) instead of overflowing it.
+     Below lg, or in very short windows, sections keep their natural height. */
+  .fold {
+    scroll-margin-top: var(--nav-h);
+  }
+  .fold-grid {
+    --cols: 3;
+    --rows: 1;
+    --gap-x: 1rem;
+    --gap-y: 1.5rem;
+    /* Height of the product card's text block under its 4:5 stage */
+    --card-text: 8.75rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-y) var(--gap-x);
+  }
+  @media (min-width: 640px) {
+    .fold-grid {
+      grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) and (min-height: 600px) {
+    .fold {
+      display: flex;
+      flex-direction: column;
+      height: clamp(34rem, calc(100svh - var(--nav-h) - var(--fold-gap)), 61rem);
+    }
+    .fold-body {
+      flex: 1 1 0%;
+      min-height: 0;
+      container-type: size;
+    }
+    .fold-grid {
+      /* The card width at which `rows` cards stack inside the body height */
+      --card-w: calc(
+        (100cqh - var(--rows) * var(--card-text) - (var(--rows) - 1) * var(--gap-y)) /
+          (var(--rows) * 1.25)
+      );
+      width: min(
+        100%,
+        calc(var(--cols) * var(--card-w) + (var(--cols) - 1) * var(--gap-x))
+      );
+      flex: none;
+    }
+  }
+  /* Variant: a leading 4:5 editorial card followed by three product cards.
+     The lead column is wider by 0.8 × the card's text block, which makes a
+     4:5 image exactly as tall as a product card (stage + text). */
+  @media (min-width: 1024px) {
+    .fold-grid-lead {
+      --cols: 4;
+      --lead-extra: calc(0.8 * var(--card-text));
+      grid-template-columns:
+        calc((100% - 3 * var(--gap-x) - var(--lead-extra)) / 4 + var(--lead-extra))
+        repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 1024px) and (min-height: 600px) {
+    .fold-grid-lead {
+      width: min(100%, calc(4 * var(--card-w) + 3 * var(--gap-x) + var(--lead-extra)));
+    }
   }
 
   /* Reveal on scroll */

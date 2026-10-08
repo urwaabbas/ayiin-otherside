@@ -10,6 +10,7 @@ import { Icon } from "@/components/ui/icon";
 /**
  * Editorial lookbook: every product photographed in the same window-lit room.
  * Lays out 3–5 scenes: one large scene, with the rest sharing the other half.
+ * Inside a `.fold` the two rows share the fold height, so the whole lookbook sits on one laptop screen.
  */
 export function Lookbook({ index = "03", items }: { index?: string; items: Product[] }) {
   const rest = items.length - 1;
@@ -22,7 +23,7 @@ export function Lookbook({ index = "03", items }: { index?: string; items: Produ
         description="Every product is photographed on the same stage in the same window light, so the colour you see is the colour that arrives."
         action={{ href: "/search", label: "Browse everything" }}
       />
-      <div className="mt-12 grid auto-rows-[220px] grid-cols-2 gap-3 sm:auto-rows-[300px] lg:grid-cols-4 lg:gap-4 xl:auto-rows-[330px]">
+      <div className="fold-body mt-8 grid auto-rows-[220px] grid-cols-2 gap-3 sm:auto-rows-[300px] lg:grid-cols-4 lg:grid-rows-[repeat(2,minmax(220px,1fr))] lg:gap-4">
         {items.map((p, n) => {
           const big = n === 0;
           return (
@@ -38,10 +39,6 @@ export function Lookbook({ index = "03", items }: { index?: string; items: Produ
                   sizes={big ? "(min-width: 1024px) 50vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"}
                   className="absolute inset-0 transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
-                <span aria-hidden className="absolute left-[58%] top-[34%] grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 place-items-center">
-                  <span className="absolute inset-0 rounded-full bg-brand/45 motion-safe:animate-ping" />
-                  <span className="relative h-2.5 w-2.5 rounded-full bg-brand shadow-[0_0_0_2px_var(--color-ink)]" />
-                </span>
                 <span
                   className={clsx(
                     "absolute bottom-3 left-3 right-3 flex items-center gap-3 rounded-surface bg-white/88 p-2.5 pr-3.5 shadow-[var(--shadow-hair)] backdrop-blur-md transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1",

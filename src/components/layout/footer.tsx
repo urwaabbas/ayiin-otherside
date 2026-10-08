@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
-import { AyiinLogo } from "@/components/brand/ayiin-logo";
+import { AyiinLogo, LOGO_SRC } from "@/components/brand/ayiin-logo";
 import { Icon, type IconName } from "@/components/ui/icon";
 import type { Mode } from "@/lib/types";
 
@@ -137,7 +137,7 @@ export function Footer({ mode }: { mode: Mode }) {
           <div className="flex flex-col justify-between lg:col-span-5">
             <div>
               <Link href="/" aria-label="Ayiin home" className="inline-block transition-opacity hover:opacity-90">
-                <AyiinLogo on="dark" className="!h-8 !w-auto" />
+                <AyiinLogo on="dark" className="h-10" />
               </Link>
 
               <p className="mt-5 max-w-sm font-sans text-[13.5px] leading-relaxed text-white/65">
@@ -198,8 +198,8 @@ export function Footer({ mode }: { mode: Mode }) {
         </div>
       </div>
 
-      {/* ── 3. Giant Interactive Watermark Display (Signature Layaan Feature) ── */}
-      <InteractiveBrandWatermark />
+      {/* ── 3. Closing brand signature ── */}
+      <BrandSignature />
 
       {/* ── 4. Baseline Bar / Copyright / Payment / Back to Top ── */}
       <div className="border-t border-[#2a2622]">
@@ -308,78 +308,28 @@ function FooterNewsletterForm() {
 }
 
 /**
- * Signature Layaan Interactive Watermark
- * Features an outlined text base layer with a pointer-tracking golden spotlight mask layer
+ * Closing signature: the logo artwork itself, used as a mask so it can take one flat
+ * colour — a quiet tint on the dark footer that turns AYIIN amber on hover.
  */
-function InteractiveBrandWatermark() {
-  const [mousePos, setMousePos] = useState<{ x: number; y: number; active: boolean }>({
-    x: -999,
-    y: -999,
-    active: false,
-  });
-
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (e.pointerType !== "mouse") return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      active: true,
-    });
-  };
-
-  const handlePointerLeave = () => {
-    setMousePos((prev) => ({ ...prev, active: false }));
-  };
-
-  const letters = ["A", "Y", "I", "I", "N"];
-  const typographyClass =
-    "block select-none font-display text-[clamp(4.5rem,1.5rem+15vw,17rem)] font-extrabold leading-[0.8] tracking-[-0.03em] text-center";
-
+function BrandSignature() {
   return (
-    <div
-      aria-hidden="true"
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
-      className="relative mx-auto max-w-[1520px] cursor-default select-none overflow-hidden px-4 pt-12 pb-6 sm:px-6 lg:px-8"
-    >
-      {/* Ambient background glow aura */}
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(255,166,36,0.1),transparent_70%)] blur-3xl" />
-
-      {/* 1. Base Layer: Gold Outlined Stroke Typography */}
-      <span
-        className={`${typographyClass}`}
-        style={{
-          WebkitTextStroke: "1px rgba(255, 166, 36, 0.24)",
-          color: "transparent",
-        }}
-      >
-        {letters.map((char, index) => (
-          <span
-            key={index}
-            className="inline-block transition-transform duration-500 hover:scale-[1.02]"
-          >
-            {char}
-          </span>
-        ))}
-      </span>
-
-      {/* 2. Interactive Spotlight Fill Layer (Masked by Pointer Coordinates) */}
-      <span
-        className={`${typographyClass} pointer-events-none absolute inset-x-0 top-12 bg-gradient-to-b from-[#FFF5E6] via-[#FFA624] to-[#A5520C] bg-clip-text text-transparent transition-opacity duration-300 ${
-          mousePos.active ? "opacity-100" : "opacity-0"
-        }`}
-        style={{
-          maskImage: `radial-gradient(circle clamp(120px, 15vw, 260px) at ${mousePos.x}px ${mousePos.y}px, black 30%, transparent 100%)`,
-          WebkitMaskImage: `radial-gradient(circle clamp(120px, 15vw, 260px) at ${mousePos.x}px ${mousePos.y}px, black 30%, transparent 100%)`,
-        }}
-      >
-        {letters.map((char, index) => (
-          <span key={index} className="inline-block">
-            {char}
-          </span>
-        ))}
-      </span>
+    <div className="mx-auto max-w-[1520px] px-4 pb-12 pt-4 sm:px-6 lg:px-8 lg:pb-16">
+      <Link href="/" aria-label="Ayiin home" className="group mx-auto block w-full max-w-[34rem]">
+        <span
+          aria-hidden
+          className="block aspect-[108.43/47.36] w-full bg-white/[0.1] transition-colors duration-500 ease-[var(--ease-out-expo)] group-hover:bg-brand"
+          style={{
+            maskImage: `url(${LOGO_SRC.dark})`,
+            WebkitMaskImage: `url(${LOGO_SRC.dark})`,
+            maskSize: "contain",
+            WebkitMaskSize: "contain",
+            maskRepeat: "no-repeat",
+            WebkitMaskRepeat: "no-repeat",
+            maskPosition: "center",
+            WebkitMaskPosition: "center",
+          }}
+        />
+      </Link>
     </div>
   );
 }

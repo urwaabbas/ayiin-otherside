@@ -39,7 +39,7 @@ const MODES: { id: Mode; label: string; icon: IconName; hint: string }[] = [
 
 export function DeskHero() {
   const ws = useWorkspace();
-  const { fmt } = usePrefs();
+  const { fmt, setMode: setMarketplaceMode } = usePrefs();
   const [mode, setMode] = useState<Mode>("paste");
   const ready = useWorkspaceReady();
   const viewer = ws.members.find((m) => m.id === VIEWER_ID)!;
@@ -59,11 +59,21 @@ export function DeskHero() {
     <section className="shell pt-6 sm:pt-10 lg:pt-12">
       <div className="grid items-start gap-8 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-7">
-          <p className="eyebrow flex animate-fade items-center gap-2">
-            <span className="text-ink">Ayiin Business</span>
-            <span aria-hidden className="h-px w-6 bg-line-strong" />
-            {company.name}
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="eyebrow flex animate-fade items-center gap-2">
+              <span className="text-ink">Ayiin Business</span>
+              <span aria-hidden className="h-px w-6 bg-line-strong" />
+              {company.name}
+            </p>
+            <button
+              type="button"
+              onClick={() => setMarketplaceMode("personal")}
+              className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1 text-support font-medium text-ink shadow-[var(--shadow-hair)] hover:border-ink hover:bg-soft transition-all"
+            >
+              <Icon name="chevronLeft" size={13} />
+              <span>Back to Personal</span>
+            </button>
+          </div>
           <h1 className="display mt-5 text-display-md sm:text-display-lg xl:text-display-xl">
             <span className="block animate-rise">Procurement,</span>
             <span className="block animate-rise [animation-delay:90ms]">

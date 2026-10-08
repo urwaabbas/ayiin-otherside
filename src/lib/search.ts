@@ -296,10 +296,11 @@ export const TRENDING = [
 
 export const EXAMPLE_PROMPTS = {
   personal: [
-    "quiet headphones under $300 for flights",
-    "a gift under $60 that arrives by friday",
-    "running shoes",
+    "headphones for flights under $300",
+    "something for my new apartment",
+    "gift for dad under $100",
     "lamp for a reading corner",
+    "minimalist mechanical keyboard",
   ],
   business: [
     "500 insulated bottles for an offsite",

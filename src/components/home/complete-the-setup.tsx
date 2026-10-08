@@ -3,16 +3,19 @@
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { productBySlug } from "@/lib/catalog/products";
-import { ProductImage } from "@/components/product/product-image";
-import { Rating, Stars } from "@/components/product/rating";
-import { Price } from "@/components/ui/money";
-import { Eyebrow, SignalDot } from "@/components/ui/signal";
+import { ProductCard } from "@/components/product/product-card";
+import { Eyebrow } from "@/components/ui/signal";
 import { Icon } from "@/components/ui/icon";
-import { WORKSPACE_SETUP } from "@/lib/campaigns";
-import { deliveryLabel } from "@/lib/commerce";
+import { usePrefs } from "@/components/providers";
 import { useShop, useUI } from "@/lib/store";
+import { WORKSPACE_SETUP } from "@/lib/campaigns";
 
+/**
+ * Shop-the-setup module: the anchor piece and its companions as one equal row,
+ * with the setup's real total and a single action that bags every in-stock piece.
+ */
 export function CompleteTheSetup() {
+  const { fmt } = usePrefs();
   const addToCart = useShop((s) => s.addToCart);
   const notify = useUI((s) => s.notify);
 
@@ -23,170 +26,59 @@ export function CompleteTheSetup() {
 
   if (!anchor) return null;
 
-  const handleAddProduct = (p: Product) => {
-    addToCart(p.id, p.variants[0].id, 1, false);
-    notify("Added to cart", `${p.name} · Arrives ${deliveryLabel(p)}`, {
-      label: "View cart",
-      href: "/cart",
-    });
+  const pieces = [anchor, ...complementary];
+  const available = pieces.filter((p) => p.stock > 0);
+  const total = available.reduce((sum, p) => sum + p.price, 0);
+
+  const addSetup = () => {
+    available.forEach((p) => addToCart(p.id, p.variants[0].id, 1));
+    notify(`${WORKSPACE_SETUP.title} added`, `${available.length} pieces · ${fmt(total)}`);
   };
 
   return (
     <section
       aria-label="Complete the setup"
-      className="rounded-panel border border-line bg-white p-6 sm:p-8 lg:p-10"
+      className="fold rounded-panel border border-line bg-white p-6 sm:p-8 lg:p-10"
     >
-      {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <Eyebrow index="SETUP">Merchandising</Eyebrow>
-          <h2 className="display mt-2 text-heading tracking-[-0.02em] sm:text-display-sm">
+          <h2 className="display mt-3 text-heading tracking-[-0.02em] sm:text-display-sm">
             {WORKSPACE_SETUP.title}
           </h2>
-          <p className="mt-1 text-body text-mute">
-            {WORKSPACE_SETUP.subtitle}
-          </p>
+          <p className="mt-2 max-w-2xl text-body text-mute">{WORKSPACE_SETUP.subtitle}</p>
         </div>
         <Link
           href="/c/office"
-          className="link-underline inline-flex items-center gap-1.5 text-support font-medium text-brand-deep self-start sm:self-auto"
+          className="link-underline inline-flex shrink-0 items-center gap-1.5 self-start text-support font-medium text-brand-deep sm:self-auto"
         >
           <span>Explore all workspace essentials</span>
           <Icon name="arrowRight" size={15} />
         </Link>
       </div>
 
-      {/* Grid: Anchor Feature on Left, 4 Complementary on Right */}
-      <div className="mt-8 grid gap-6 lg:grid-cols-12 lg:gap-8">
-        {/* Anchor Product Spotlight */}
-        <div className="flex flex-col overflow-hidden rounded-surface border border-line bg-white p-3 sm:p-4 lg:col-span-5">
-          <div className="flex items-center justify-between px-1 pt-1 sm:px-2">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-meta font-medium text-ink shadow-[var(--shadow-hair)]">
-              <SignalDot tone="brand" live /> Anchor piece
-            </span>
-            <span className="text-meta text-mute">{anchor.brand}</span>
-          </div>
-
-          {/* Large Product Image Container — Expands with flex-1 */}
-          <Link
-            href={`/p/${anchor.slug}`}
-            className="group my-4 block w-full flex-1 min-h-[300px] sm:min-h-[360px] lg:min-h-[420px] xl:min-h-[460px] overflow-hidden rounded-media bg-porcelain"
-          >
-            <ProductImage
-              product={anchor}
-              view="hero"
-              sizes="(min-width: 1024px) 450px, 90vw"
-              className="h-full w-full transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-105"
-              imgClassName="!object-cover"
-            />
-          </Link>
-
-          {/* Details, Specs, Price & Action — Tightly structured, zero dead space */}
-          <div className="flex flex-col px-1 pb-1 sm:px-2 sm:pb-2">
-            <Link
-              href={`/p/${anchor.slug}`}
-              className="display text-heading leading-tight tracking-[-0.01em] text-ink hover:text-brand-deep sm:text-display-xs"
-            >
-              {anchor.name}
-            </Link>
-
-            <div className="mt-1.5 flex items-center gap-2">
-              <Rating value={anchor.rating} count={anchor.reviewCount} />
-              <span className="text-meta text-mute">·</span>
-              <span className="text-meta font-medium text-emerald-700">In stock</span>
-            </div>
-
-            <p className="mt-2 text-support text-ink-2 line-clamp-2 leading-relaxed">
-              {anchor.summary}
-            </p>
-
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {anchor.highlights.slice(0, 3).map((h) => (
-                <span
-                  key={h}
-                  className="rounded-full bg-white px-2.5 py-1 text-meta text-ink-2 shadow-[var(--shadow-hair)] border border-line/60"
-                >
-                  ✓ {h}
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-5 flex items-center justify-between border-t border-line/80 pt-4">
-              <div>
-                <p className="text-meta text-mute">Delivered price</p>
-                <Price usd={anchor.price} size="lg" />
-              </div>
-              <button
-                type="button"
-                onClick={() => handleAddProduct(anchor)}
-                suppressHydrationWarning
-                className="btn btn-primary h-11 px-6 text-support font-semibold shadow-[0_2px_8px_rgb(var(--rgb-brand)/0.3)] transition-transform hover:scale-[1.02]"
-              >
-                <span>Add to cart</span>
-                <Icon name="arrowRight" size={16} />
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* 4 Complementary Products Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:col-span-7">
-          {complementary.map((p) => (
-            <div
-              key={p.id}
-              className="group flex flex-col justify-between rounded-surface border border-line bg-white p-3 transition-all duration-300 hover:border-line-strong hover:shadow-[var(--shadow-soft)]"
-            >
-              <div className="flex flex-col">
-                <Link
-                  href={`/p/${p.slug}`}
-                  className="block overflow-hidden rounded-media bg-porcelain"
-                >
-                  <ProductImage
-                    product={p}
-                    view="hero"
-                    sizes="(min-width: 1024px) 220px, 45vw"
-                    className="aspect-square w-full transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:scale-105"
-                    imgClassName="!object-cover"
-                  />
-                </Link>
-
-                <div className="mt-3 flex items-center justify-between gap-1">
-                  <p className="truncate text-meta font-medium uppercase tracking-wider text-mute">
-                    {p.brand}
-                  </p>
-                  <span className="text-[11px] text-mute">{p.subcategory}</span>
-                </div>
-
-                <Link
-                  href={`/p/${p.slug}`}
-                  className="mt-0.5 line-clamp-2 text-support font-medium text-ink hover:text-brand-deep hover:underline"
-                >
-                  {p.name}
-                </Link>
-
-                <div className="mt-1.5 flex items-center gap-1.5">
-                  <Stars value={p.rating} size={11} />
-                  <span className="num text-meta font-medium text-ink">
-                    {p.rating.toFixed(1)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-4 flex items-center justify-between border-t border-line/70 pt-3">
-                <Price usd={p.price} size="sm" />
-                <button
-                  type="button"
-                  onClick={() => handleAddProduct(p)}
-                  suppressHydrationWarning
-                  className="btn btn-primary h-8 px-3 text-meta font-semibold shadow-sm transition-transform hover:scale-[1.02]"
-                >
-                  <span>Add to cart</span>
-                  <Icon name="arrowRight" size={13} />
-                </button>
-              </div>
-            </div>
+      <div className="fold-body mt-8 lg:flex lg:items-center lg:justify-center">
+        <div className="fold-grid lg:[--cols:5]">
+          {pieces.map((p, i) => (
+            <ProductCard key={p.id} product={p} label={i === 0 ? "Anchor piece" : undefined} />
           ))}
         </div>
+      </div>
+
+      <div className="mt-6 flex shrink-0 flex-col gap-3 border-t border-line pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-support text-ink-2">
+          The complete setup · {available.length} pieces ·{" "}
+          <span className="num font-medium text-ink">{fmt(total)}</span>
+        </p>
+        <button
+          type="button"
+          onClick={addSetup}
+          disabled={available.length === 0}
+          className="btn btn-primary h-11 self-start px-5 text-support font-semibold sm:self-auto"
+        >
+          <Icon name="bag" size={16} />
+          Add the setup to bag
+        </button>
       </div>
     </section>
   );

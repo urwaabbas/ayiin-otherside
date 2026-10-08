@@ -55,7 +55,8 @@ export function ModeSwitch({
       aria-label="Shopping mode"
       onKeyDown={onKey}
       className={clsx(
-        "relative isolate grid min-w-[216px] grid-cols-2 rounded-full p-[3px] transition-colors duration-300",
+        "relative isolate grid grid-cols-2 rounded-full p-[3px] transition-colors duration-300",
+        compact ? "min-w-[176px]" : "min-w-[216px]",
         tone === "dark"
           ? "bg-graphite"
           : business
@@ -89,12 +90,12 @@ export function ModeSwitch({
             onClick={() => setMode(o.value)}
             suppressHydrationWarning
             className={clsx(
-              "group relative flex min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-3 text-center transition-colors duration-200 focus-visible:z-10",
-              compact ? "h-10" : "h-11",
+              "group relative flex min-w-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-full px-2.5 text-center transition-colors duration-200 focus-visible:z-10",
+              compact ? "h-9 text-xs" : "h-11",
               active
                 ? o.value === "business"
-                  ? "text-porcelain"
-                  : "text-ink"
+                  ? "text-porcelain font-semibold"
+                  : "text-ink font-semibold"
                 : tone === "dark"
                   ? "text-mute-dark hover:text-porcelain"
                   : "text-ink-2 hover:text-ink",

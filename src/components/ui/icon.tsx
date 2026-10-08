@@ -60,6 +60,14 @@ const paths = {
   wand: <><path d="m4 20 11-11" /><path d="m13.5 7.5 3 3" /><path d="M18 3v3M16.5 4.5h3M20 9v2M19 10h2M9 3v2M8 4h2" /></>,
   approve: <><circle cx="12" cy="12" r="8.5" /><path d="m8.5 12.2 2.4 2.4 4.8-4.9" /></>,
   wallet: <><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3" /><path d="M4 7.5V18a2 2 0 0 0 2 2h14V9H6.5A2.5 2.5 0 0 1 4 7.5Z" /><circle cx="16" cy="14.5" r="1.2" fill="currentColor" /></>,
+  /* Department glyphs (see category-icon.tsx) */
+  hanger: <><path d="M10 6a2 2 0 1 1 2 2v1.5" /><path d="M12 9.5 3.6 16a.9.9 0 0 0 .55 1.6h15.7a.9.9 0 0 0 .55-1.6Z" /></>,
+  armchair: <><path d="M5.5 11V8.5A2.5 2.5 0 0 1 8 6h8a2.5 2.5 0 0 1 2.5 2.5V11" /><path d="M3.5 12.5a1.5 1.5 0 0 1 3 0V14h11v-1.5a1.5 1.5 0 0 1 3 0V17.5h-17Z" /><path d="M5.5 17.5V20M18.5 17.5V20" /></>,
+  coffee: <><path d="M4.5 9.5h11V14a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5Z" /><path d="M15.5 11h1.5a2.5 2.5 0 0 1 0 5h-1.9" /><path d="M8 3.5v3M11.5 3.5v3" /></>,
+  headphones: <><path d="M4 15.5V12a8 8 0 0 1 16 0v3.5" /><rect x="3.5" y="14" width="4" height="6.5" rx="1.5" /><rect x="16.5" y="14" width="4" height="6.5" rx="1.5" /></>,
+  serum: <><rect x="9.5" y="2.5" width="5" height="4.5" rx="1" /><path d="M8 9.5A2.5 2.5 0 0 1 10.5 7h3A2.5 2.5 0 0 1 16 9.5V19a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 8 19Z" /><path d="M8 12.5h8" /></>,
+  chair: <><path d="M8 3.5h8a1 1 0 0 1 1 1V12H7V4.5a1 1 0 0 1 1-1Z" /><path d="M5 12h14" /><path d="M12 12v4.5" /><path d="m7.5 20.5 4.5-4 4.5 4" /></>,
+  helmet: <><path d="M4 16.5a8 8 0 0 1 16 0" /><path d="M2.5 16.5h19v2.5h-19Z" /><path d="M10 9V5.5h4V9" /></>,
   store: <><path d="M4.5 9.5V20h15V9.5" /><path d="M3 9.5 5 4h14l2 5.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0Z" /><path d="M9.5 20v-5h5v5" /></>,
 } as const;
 

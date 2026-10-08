@@ -73,26 +73,22 @@ export function SearchPanel({
     return (
       <div className={clsx("grid gap-8 md:grid-cols-[1.2fr_1fr]", className)}>
         <div>
-          <p className="eyebrow mb-3 flex items-center gap-2">
-            <Icon name="sparkle" size={14} /> Describe what you need
-          </p>
-          <ul className="space-y-1">
+          <p className="eyebrow mb-3 px-3">Popular searches</p>
+          <ul className="space-y-0.5">
             {EXAMPLE_PROMPTS[mode].map((ex) => (
               <li key={ex}>
                 <button
                   type="button"
                   onClick={() => setQuery(ex)}
-                  className="group flex w-full items-center justify-between gap-3 rounded-control px-3 py-2.5 text-left text-body text-ink-2 transition-colors hover:bg-mist hover:text-ink"
+                  className="group flex w-full items-center gap-3 rounded-control px-3 py-2.5 text-left text-body text-ink-2 transition-colors hover:bg-mist hover:text-ink"
                 >
-                  <span>“{ex}”</span>
-                  <Icon name="arrowUpRight" size={16} className="opacity-0 transition-opacity group-hover:opacity-100" />
+                  <Icon name="search" size={15} className="shrink-0 text-mute transition-colors group-hover:text-ink" />
+                  <span className="flex-1 first-letter:uppercase">{ex}</span>
+                  <Icon name="arrowUpRight" size={15} className="text-mute opacity-0 transition-opacity group-hover:opacity-100" />
                 </button>
               </li>
             ))}
           </ul>
-          <p className="mt-4 px-3 text-meta leading-relaxed text-mute">
-            Ayiin understands budgets, quantities, delivery dates and use-cases — no filters required.
-          </p>
         </div>
         <div className="space-y-7">
           {hydrated && searches.length > 0 && (
@@ -143,9 +139,7 @@ export function SearchPanel({
     <div className={className}>
       {intent && intent.chips.length > 0 && (
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          <span className="eyebrow mr-1 flex items-center gap-1.5">
-            <Icon name="sparkle" size={13} /> Understood
-          </span>
+          <span className="eyebrow mr-1">Refined by</span>
           {intent.chips.map((c) => (
             <span key={c.key} className="inline-flex h-7 items-center gap-1.5 rounded-full bg-brand-soft px-2.5 text-meta font-medium text-ink">
               <span className="h-1.5 w-1.5 rounded-full bg-ink" />

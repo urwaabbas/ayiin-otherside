@@ -5,9 +5,9 @@ import { clsx } from "clsx";
 import { useState } from "react";
 import type { Product } from "@/lib/types";
 import { productBySlug } from "@/lib/catalog/products";
-import { ProductImage } from "@/components/product/product-image";
+import { productPhoto, photoUrl } from "@/lib/images";
 import { ProductCard } from "@/components/product/product-card";
-import { Eyebrow, SignalDot } from "@/components/ui/signal";
+import { Eyebrow } from "@/components/ui/signal";
 import { Icon } from "@/components/ui/icon";
 
 type EditStory = {
@@ -97,17 +97,19 @@ export function AyiinEdit() {
   const sideProducts = story.productSlugs
     .map(productBySlug)
     .filter(Boolean) as Product[];
+  // Cropped at the CDN to the card's 4:5 frame, so the whole photograph is shown.
+  const photo = featured ? productPhoto(featured, undefined, story.featuredView ?? "hero") : undefined;
 
   return (
-    <section aria-label="The Ayiin Edit" className="space-y-6">
+    <section aria-label="The Ayiin Edit" className="fold lg:py-6">
       {/* Editorial Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <Eyebrow index="03">Curation</Eyebrow>
-          <h2 className="display mt-2 text-heading tracking-[-0.02em] sm:text-display-sm">
+          <h2 className="display mt-3 text-heading tracking-[-0.02em] sm:text-display-sm">
             The Ayiin Edit.
           </h2>
-          <p className="mt-1 text-body text-mute">
+          <p className="mt-2 text-body text-mute">
             Considered product collections gathered around real moments of living and work.
           </p>
         </div>
@@ -126,84 +128,75 @@ export function AyiinEdit() {
                 role="tab"
                 id={`edit-tab-${e.id}`}
                 aria-selected={active}
+                aria-controls="edit-panel"
                 onClick={() => setActiveId(e.id)}
                 suppressHydrationWarning
                 className={clsx(
                   "chip text-support transition-all",
-                  active
-                    ? "!bg-ink !text-white !border-ink shadow-[0_2px_8px_rgb(var(--rgb-ink)/0.18)]"
-                    : "hover:bg-mist",
+                  active ? "!border-ink !bg-ink !text-white" : "hover:bg-mist",
                 )}
               >
-                <span>{e.title}</span>
-                {active && <SignalDot tone="brand" live />}
+                {e.title}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Composition: Editorial Hero Feature + 3 Companion Product Cards */}
-      <div className="grid gap-5 lg:grid-cols-12">
-        {/* Left: Curated Story Spotlight */}
-        {featured && (
-          <div className="flex flex-col justify-between overflow-hidden rounded-surface border border-line bg-white p-3 lg:col-span-4">
-            <Link
-              href={`/p/${featured.slug}`}
-              className="group relative block aspect-[4/3] w-full overflow-hidden rounded-media bg-mist"
-              aria-label={featured.name}
-            >
-              <ProductImage
-                product={featured}
-                view={story.featuredView ?? "hero"}
-                sizes="(min-width: 1024px) 420px, 95vw"
-                className="h-full w-full transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
-                imgClassName="!object-cover"
-              />
-              <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-meta font-medium shadow-[var(--shadow-hair)] backdrop-blur">
-                <SignalDot tone="brand" live />
-                Curated anchor
-              </span>
-            </Link>
+      {/* Composition: full-bleed editorial card + 3 companion product cards */}
+      <div
+        id="edit-panel"
+        role="tabpanel"
+        aria-labelledby={`edit-tab-${story.id}`}
+        className="fold-body mt-8 lg:flex lg:items-start"
+      >
+        <div className="fold-grid fold-grid-lead">
+          {featured && (
+            <div className="group relative col-span-full aspect-[4/5] overflow-hidden rounded-surface bg-ink text-white sm:aspect-[16/10] lg:col-span-1 lg:aspect-auto">
+              {photo && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={photo.id}
+                  src={photoUrl(photo, 900, 82, 1.25)}
+                  alt={featured.name}
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
+                />
+              )}
+              <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
 
-            <div className="flex flex-1 flex-col justify-between px-1 pb-1 pt-4 sm:px-2 sm:pb-2">
-              <div>
-                <p className="eyebrow text-brand-deep">{story.kicker}</p>
-                <h3 className="display mt-1.5 text-heading leading-tight tracking-[-0.02em] sm:text-display-xs">
-                  {story.title}
-                </h3>
-                <p className="mt-2 text-support leading-relaxed text-ink-2 line-clamp-3">
-                  {story.blurb}
-                </p>
-              </div>
+              <div className="relative flex h-full flex-col justify-between p-6 lg:p-7">
+                <span className="self-start rounded-full border border-white/25 bg-black/25 px-3 py-1 font-mono text-meta uppercase tracking-[0.14em] text-white backdrop-blur-md">
+                  {story.kicker}
+                </span>
 
-              <div className="mt-5 flex items-center justify-between border-t border-line/80 pt-4">
                 <div>
-                  <p className="text-meta text-mute">Featured anchor piece</p>
+                  <h3 className="display text-heading leading-[0.98] tracking-[-0.02em] text-white">
+                    {story.title}
+                  </h3>
+                  <p className="mt-2 line-clamp-3 text-support leading-relaxed text-white/80">
+                    {story.blurb}
+                  </p>
                   <Link
                     href={`/p/${featured.slug}`}
-                    className="mt-0.5 block text-support font-semibold text-ink hover:text-brand-deep hover:underline"
+                    className="mt-3 block truncate text-meta text-white/65 underline-offset-[3px] hover:text-white hover:underline"
                   >
-                    {featured.name} →
+                    Anchor piece · {featured.name}
+                  </Link>
+                  <Link
+                    href={story.href}
+                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-support font-semibold text-ink transition-colors duration-300 hover:bg-brand"
+                  >
+                    <span>{story.ctaLabel}</span>
+                    <Icon name="arrowRight" size={15} />
                   </Link>
                 </div>
-                <Link
-                  href={story.href}
-                  className="btn btn-secondary text-support h-10 px-4"
-                >
-                  <span>{story.ctaLabel}</span>
-                  <Icon name="arrowRight" size={14} />
-                </Link>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Right: Companion Product Grid */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:col-span-8">
           {sideProducts.map((p) => (
-            <div key={p.id} className="animate-fade flex flex-col">
-              <ProductCard product={p} className="h-full" />
+            <div key={p.id} className="animate-fade">
+              <ProductCard product={p} />
             </div>
           ))}
         </div>

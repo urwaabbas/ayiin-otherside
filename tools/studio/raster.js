@@ -1,4 +1,6 @@
-// Accumulated-rasterisation studio renderer. Query: kind, c, a, t (hex, no #), view (hero|angle|detail|scene), size, frames, shape.
+// Accumulated-rasterisation studio renderer. Query: kind, c, a, t (hex, no #), view (hero|angle|detail|scene|cut), size, frames, shape.
+// view=cut renders the hero framing on a transparent background: no sweep, only the product and the soft
+// shadow it casts on an invisible floor — a cut-out the site can place in any environment.
 import { THREE, sweep, noiseTex, RoundedBoxGeometry } from './studio.js';
 import { FullScreenQuad } from 'three/addons/postprocessing/Pass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
@@ -18,8 +20,9 @@ const job = {
   env: +(q.get('env') || 0.42),
 };
 const S = job.size;
+const isCut = job.view === 'cut';
 
-const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true });
+const renderer = new THREE.WebGLRenderer({ antialias: false, preserveDrawingBuffer: true, alpha: isCut });
 renderer.setSize(S, S);
 renderer.setPixelRatio(1);
 renderer.toneMapping = THREE.NeutralToneMapping;
@@ -33,9 +36,9 @@ const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.03).texture;
 scene.environmentIntensity = job.env;
 scene.environmentRotation.y = 0.6;
-scene.background = new THREE.Color(job.tint);
+scene.background = isCut ? null : new THREE.Color(job.tint);
 
-const built = await BUILDERS[job.kind]({ color: job.color, accent: job.accent, tint: job.tint, view: job.view, shape: q.get('shape') });
+const built = await BUILDERS[job.kind]({ color: job.color, accent: job.accent, tint: job.tint, view: isCut ? 'hero' : job.view, shape: q.get('shape') });
 const obj = built.object;
 scene.add(obj);
 obj.traverse((o) => { if (o.isMesh) { o.castShadow = o.userData.noShadow ? false : true; o.receiveShadow = true; } });
@@ -50,7 +53,13 @@ const isScene = job.view === 'scene';
 const wallColor = isScene ? new THREE.Color(job.tint).lerp(new THREE.Color('#cfc6b6'), 0.35) : new THREE.Color(job.tint);
 const backdrop = sweep(wallColor, { radius: (isScene ? 0.6 : 3.2) * L, depth: (isScene ? -1.1 : -2.2) * L, width: 60 * L, front: 40 * L, top: 40 * L });
 backdrop.receiveShadow = true;
-scene.add(backdrop);
+if (isCut) {
+  // shadow catcher: invisible except where the product's shadow falls
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(60 * L, 60 * L), new THREE.ShadowMaterial({ opacity: +(q.get('shadow') || 0.34) }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+} else scene.add(backdrop);
 const floorStanding = ['chair', 'taskchair'].includes(job.kind);
 if (isScene) {
   scene.background = wallColor.clone();
@@ -111,8 +120,9 @@ const views = {
   detail: { az: -0.18, el: 0.16, fill: 2.0, aperture: 0.035 },
   top: { az: -0.2, el: 0.95, fill: 0.64 },
   scene: { az: -0.28, el: 0.14, fill: 0.56 },
+  cut: { az: -0.34, el: 0.2, fill: 0.74 },
 };
-const v = { ...(views[job.view] ?? views.hero), ...(built.view?.[job.view] ?? {}) };
+const v = { ...(views[job.view] ?? views.hero), ...(built.view?.[isCut ? 'hero' : job.view] ?? {}), ...(isCut ? { fill: views.cut.fill * ((built.view?.hero?.fill ?? views.hero.fill) / views.hero.fill) } : {}) };
 const radius = size.length() / 2;
 const dist = (radius / Math.sin(THREE.MathUtils.degToRad(camera.fov / 2)) / v.fill) * 0.8;
 const target = v.target ? new THREE.Vector3(...v.target) : isScene ? center.clone().add(new THREE.Vector3(0, -0.04 * L, 0)) : center.clone();
@@ -174,7 +184,8 @@ window.render = async () => {
     camera.lookAt(target);
     camera.setViewOffset(S, S, rnd() - 0.5, rnd() - 0.5, S, S);
     renderer.setRenderTarget(rtFrame);
-    renderer.setClearColor(scene.background, 1);
+    if (isCut) renderer.setClearColor(0x000000, 0);
+    else renderer.setClearColor(scene.background, 1);
     renderer.clear();
     renderer.render(scene, camera);
     renderer.setRenderTarget(rtAcc);

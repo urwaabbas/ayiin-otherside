@@ -47,14 +47,11 @@ const inCategory = (slug: string) => products.filter((p) => p.category === slug)
 export function HomePersonal() {
   const heroSlides = getHeroCampaigns();
 
-  // Curated Pinned Items for Signature Compositions
-  const trendingHero = productBySlug("loom-lounge-chair") ?? shopper[0];
-  const trendingSupporting = [
-    productBySlug("arc-table-lamp"),
-    productBySlug("stoneware-bud-vases"),
-    productBySlug("pour-gooseneck-kettle"),
-    productBySlug("transit-daypack-22"),
-  ].filter((p): p is Product => p != null);
+  // Trending: the six best sellers of the last seven days (bulk consumables excluded)
+  const trending = shopper
+    .filter((p) => !p.tags.includes("bulk"))
+    .sort((a, b) => b.soldLastWeek - a.soldLastWeek)
+    .slice(0, 6);
 
   const flagships = [
     {
@@ -80,12 +77,16 @@ export function HomePersonal() {
     productBySlug("night-recovery-oil"),
   ].filter((p): p is Product => p != null);
 
-  const homeProducts = inCategory("home-living");
+  // Each department shelf shows six real products; small departments are
+  // completed with the closest companions from neighbouring departments.
+  const bySlugs = (slugs: string[]) =>
+    slugs.map(productBySlug).filter((p): p is Product => p != null);
+  const homeProducts = [...inCategory("home-living"), ...bySlugs(["everyday-stoneware-mugs"])];
   const audioProducts = inCategory("audio-tech");
   const kitchenProducts = [
     ...inCategory("kitchen"),
-    productBySlug("trail-bottle-750"),
-  ].filter((p): p is Product => p != null);
+    ...bySlugs(["trail-bottle-750", "stoneware-bud-vases", "ember-soy-candle"]),
+  ];
 
   // Deals feed
   const deals = shopper
@@ -115,17 +116,18 @@ export function HomePersonal() {
       {/* ── 01 · PRIMARY MARKETPLACE CAMPAIGN HERO ── */}
       <CampaignHero slides={heroSlides} />
 
-      <div className="shell mt-10 space-y-12 sm:mt-14 sm:space-y-16 lg:space-y-20">
-        {/* ── 02 · DISCOVERY: SHOP THE WAY YOU THINK (Asymmetric Bento Grid) ── */}
+      {/* On laptops each section below is a `.fold` — one screen tall — separated by --fold-gap */}
+      <div className="shell mt-10 space-y-12 sm:mt-14 sm:space-y-16 lg:space-y-[var(--fold-gap)]">
+        {/* ── 02 · DISCOVERY: ALL EIGHT DEPARTMENTS (2 × 4 directory) ── */}
         <DiscoveryTiles />
 
-        {/* ── 03 · COMMERCE COMPOSITION: FEATURE + 4 (Trending Across Ayiin) ── */}
+        {/* ── 03 · COMMERCE COMPOSITION: TRENDING (3 × 2, ranked by last week's sales) ── */}
         <FeaturePlusFour
           title="Trending now across Ayiin"
-          subtitle="Pieces attracting the most buyer inquiries, saved to wishlists, and dispatched today."
+          subtitle="The pieces buyers are ordering most this week — in stock and ready to dispatch."
           eyebrow="HIGH DEMAND"
-          featured={trendingHero}
-          supporting={trendingSupporting}
+          note="Ranked by units sold in the last 7 days"
+          products={trending}
         />
 
         {/* ── 04 · CATEGORY STORY 01: HOME & LIVING (Warm Architectural Aesthetic) ── */}
@@ -241,14 +243,14 @@ export function HomePersonal() {
 
         {/* ── 15 · LIFESTYLE CONTEXT: LOOKBOOK ("Shop the Scene") ── */}
         {lookbookItems.length >= 3 && (
-          <div className="rounded-panel border border-line bg-white p-5 sm:p-7 lg:p-8">
+          <div className="fold rounded-panel border border-line bg-white p-5 sm:p-7 lg:p-8">
             <Lookbook index="05" items={lookbookItems} />
           </div>
         )}
 
         {/* ── 16 · BUYER INTELLIGENCE: COMPARE SPECS ── */}
         {compareItems.length >= 3 && (
-          <div className="rounded-panel border border-line bg-porcelain/60 p-5 sm:p-8 lg:p-10">
+          <div className="fold justify-center rounded-panel border border-line bg-porcelain/60 p-5 sm:p-8 lg:p-10">
             <CompareTeaser items={compareItems} />
           </div>
         )}

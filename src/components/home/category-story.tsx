@@ -5,7 +5,7 @@ import { clsx } from "clsx";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
 import { Icon } from "@/components/ui/icon";
-import { SignalDot, Eyebrow } from "@/components/ui/signal";
+import { Eyebrow } from "@/components/ui/signal";
 
 export type SubcategoryLink = {
   name: string;
@@ -13,6 +13,12 @@ export type SubcategoryLink = {
   count?: string;
 };
 
+/**
+ * Department story in two parts:
+ * 1. the story (one laptop fold) — full-height photograph beside the heading, copy and CTA;
+ * 2. the shelf — "Featured in this category": heading and collection links above
+ *    six products, three across in two rows, spanning the panel.
+ */
 export function CategoryStory({
   kicker = "DEPARTMENT STORY",
   title,
@@ -36,184 +42,109 @@ export function CategoryStory({
     label: string;
     href: string;
   };
+  /** Exactly six fill the shelf */
   products: Product[];
   reverse?: boolean;
 }) {
   const isDark = theme === "dark";
+  const panel = "fold relative overflow-hidden rounded-panel border p-6 sm:p-8 lg:p-10";
+  const shelf = products.slice(0, 6);
 
   return (
-    <section
-      aria-label={title}
-      className={clsx(
-        "relative overflow-hidden rounded-panel border p-6 sm:p-8 lg:p-10 transition-shadow duration-300",
-        isDark
-          ? "border-line bg-ink text-white shadow-[var(--shadow-lift)]"
-          : "border-line bg-white text-ink",
-      )}
-    >
-      {/* Editorial Category Visual + Story Row */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-10">
-        {/* Large Photographic Visual */}
-        <div
-          className={clsx(
-            "group relative min-h-[300px] overflow-hidden rounded-surface bg-porcelain sm:min-h-[380px] lg:col-span-7",
-            reverse && "lg:order-2",
-          )}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={heroImage}
-            alt=""
-            loading="lazy"
-            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1600ms] ease-[var(--ease-out-expo)] group-hover:scale-105"
-          />
+    <div className="space-y-[var(--fold-gap)]">
+      {/* ── Fold 1 · Story ── */}
+      <section aria-label={title} className={clsx(panel, isDark ? "border-ink bg-ink text-white" : "border-line bg-white text-ink")}>
+        <div className="fold-body grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-12">
           <div
-            aria-hidden
             className={clsx(
-              "absolute inset-0",
-              isDark
-                ? "bg-gradient-to-t from-black/80 via-transparent to-transparent"
-                : "bg-gradient-to-t from-black/60 via-transparent to-transparent",
+              "group relative min-h-[300px] overflow-hidden rounded-surface bg-porcelain sm:min-h-[380px] lg:col-span-7 lg:min-h-0",
+              reverse && "lg:order-2",
             )}
-          />
-          <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/20 px-3 py-1 text-meta font-medium text-white backdrop-blur-md">
-              <SignalDot tone="brand" live />
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={heroImage}
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1600ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.03]"
+            />
+            <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+            <span className="absolute bottom-4 left-4 inline-flex items-center rounded-full border border-white/25 bg-white/15 px-3 py-1 text-meta font-medium text-white backdrop-blur-md">
               Curated department edit
             </span>
           </div>
-        </div>
 
-        {/* Narrative & Navigation Pathways */}
-        <div
-          className={clsx(
-            "flex flex-col justify-between lg:col-span-5",
-            reverse && "lg:order-1",
-          )}
-        >
-          <div>
-            <Eyebrow index={kicker} className={isDark ? "text-brand" : undefined}>
-              Department
-            </Eyebrow>
-
-            <h3
-              className={clsx(
-                "display mt-2 text-balance text-heading leading-[0.98] tracking-[-0.02em] sm:text-display-sm lg:text-display-md",
-                isDark ? "text-white" : "text-ink",
-              )}
-            >
-              {title}
-            </h3>
-
-            {subtitle && (
-              <p
+          <div
+            className={clsx(
+              "flex min-h-0 flex-col justify-between gap-8 lg:col-span-5 lg:py-2",
+              reverse && "lg:order-1",
+            )}
+          >
+            <div>
+              <Eyebrow index={kicker} tone={isDark ? "dark" : undefined}>
+                Department
+              </Eyebrow>
+              <h3
                 className={clsx(
-                  "mt-2 font-serif italic text-emphasis leading-snug",
-                  isDark ? "text-white/80" : "text-ink-2",
+                  "display mt-4 text-balance text-display-sm leading-[0.98] tracking-[-0.02em] lg:text-display-md",
+                  isDark ? "text-white" : "text-ink",
                 )}
               >
-                {subtitle}
-              </p>
-            )}
-
-            <p
-              className={clsx(
-                "mt-4 text-body leading-relaxed",
-                isDark ? "text-white/75" : "text-ink-2",
-              )}
-            >
-              {description}
-            </p>
-
-            {/* Subcategory Pathway Chips */}
-            {subcategories && subcategories.length > 0 && (
-              <div className="mt-6">
-                <p
-                  className={clsx(
-                    "font-mono text-meta uppercase tracking-[0.14em]",
-                    isDark ? "text-white/50" : "text-mute",
-                  )}
-                >
-                  Featured Collections
+                {title}
+              </h3>
+              {subtitle && (
+                <p className={clsx("mt-4 font-serif text-emphasis italic leading-snug", isDark ? "text-white/80" : "text-ink-2")}>
+                  {subtitle}
                 </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {subcategories.map((sub) => (
-                    <Link
-                      key={sub.name}
-                      href={sub.href}
-                      className={clsx(
-                        "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-support font-medium transition-all duration-200",
-                        isDark
-                          ? "border-white/20 bg-white/10 text-white hover:bg-white/20"
-                          : "border-line bg-porcelain text-ink hover:border-brand hover:bg-white",
-                      )}
-                    >
-                      <span>{sub.name}</span>
-                      {sub.count && (
-                        <span
-                          className={clsx(
-                            "text-meta",
-                            isDark ? "text-white/50" : "text-mute",
-                          )}
-                        >
-                          ({sub.count})
-                        </span>
-                      )}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* CTA Action */}
-          <div className="mt-8 border-t border-line/80 pt-6">
-            <Link
-              href={cta.href}
-              className={clsx(
-                "btn h-12 px-6 text-support font-semibold transition-transform hover:scale-[1.02]",
-                isDark
-                  ? "btn-primary shadow-[0_2px_12px_rgba(255,166,36,0.3)]"
-                  : "btn-primary shadow-[0_2px_8px_rgb(var(--rgb-brand)/0.3)]",
               )}
-            >
-              <span>{cta.label}</span>
-              <Icon name="arrowRight" size={16} />
-            </Link>
+              <p className={clsx("mt-4 max-w-md text-body leading-relaxed", isDark ? "text-white/70" : "text-ink-2")}>
+                {description}
+              </p>
+            </div>
+
+            <div className={clsx("border-t pt-6", isDark ? "border-white/15" : "border-line")}>
+              <Link href={cta.href} className="btn btn-primary h-12 px-6 text-support font-semibold">
+                <span>{cta.label}</span>
+                <Icon name="arrowRight" size={16} />
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Embedded Commerce Shelf: Real Products in This World */}
-      {products.length > 0 && (
-        <div className="mt-10 border-t border-line/80 pt-8">
-          <div className="mb-5 flex items-baseline justify-between">
-            <h4
-              className={clsx(
-                "text-emphasis font-semibold tracking-[-0.01em]",
-                isDark ? "text-white" : "text-ink",
-              )}
-            >
-              Featured in this category
-            </h4>
-            <Link
-              href={cta.href}
-              className={clsx(
-                "text-support font-medium hover:underline",
-                isDark ? "text-brand" : "text-brand-deep",
-              )}
-            >
-              Shop all {products.length}+ items →
-            </Link>
+      {/* ── Featured in this category: heading above six products, three across in two rows ── */}
+      {shelf.length > 0 && (
+        <section aria-label={`Featured in ${kicker.toLowerCase()}`} className="rounded-panel border border-line bg-white p-6 text-ink sm:p-8 lg:p-10">
+          <div className="mb-8 flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <Eyebrow index={kicker}>Featured</Eyebrow>
+              <h4 className="display mt-3 text-heading tracking-[-0.02em] text-ink lg:text-display-sm">
+                Featured in this category
+              </h4>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              {subcategories?.map((sub) => (
+                <Link
+                  key={sub.name}
+                  href={sub.href}
+                  className="link-underline text-support text-ink-2 transition-colors hover:text-ink"
+                >
+                  {sub.name}
+                </Link>
+              ))}
+              <Link href={cta.href} className="link-underline text-support font-medium text-brand-deep">
+                Shop the full department →
+              </Link>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            {products.slice(0, 4).map((p) => (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:gap-x-6 lg:gap-y-10">
+            {shelf.map((p) => (
               <ProductCard key={p.id} product={p} />
             ))}
           </div>
-        </div>
+        </section>
       )}
-    </section>
+    </div>
   );
 }

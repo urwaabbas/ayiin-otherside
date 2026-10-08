@@ -116,22 +116,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
           <Icon name="expand" size={17} />
         </button>
         <div className="absolute inset-x-4 bottom-4 flex items-center justify-between gap-3">
-          <p className="rounded-full bg-white/85 px-3 py-1.5 text-meta text-ink-2 backdrop-blur">
-            {photo ? (
-              <>
-                {current.label} · Photo by{" "}
-                <a href={photo.profile} target="_blank" rel="noopener noreferrer" className="link-underline text-ink" onClick={(e) => e.stopPropagation()}>
-                  {photo.by}
-                </a>{" "}
-                on{" "}
-                <a href={photo.page} target="_blank" rel="noopener noreferrer" className="link-underline text-ink" onClick={(e) => e.stopPropagation()}>
-                  Unsplash
-                </a>
-              </>
-            ) : (
-              <>Studio image · true to colour · {current.label}</>
-            )}
-          </p>
+
           <div className={clsx("flex gap-1.5 sm:hidden", single && "hidden")} aria-hidden>
             {views.map((vw) => (
               <span key={vw.id} className={clsx("h-1.5 rounded-full transition-all", vw.id === view ? "w-5 bg-ink" : "w-1.5 bg-ink/25")} />

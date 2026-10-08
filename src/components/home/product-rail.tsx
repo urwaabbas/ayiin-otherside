@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { ProductCard } from "@/components/product/product-card";
 
-/** A marketplace shelf: white panel, title + "See all", and a row of identical cards. */
+/** A marketplace shelf: white panel, title + "See all", and a row of compact product cards. */
 export function ProductRail({
   title,
   href,
@@ -25,10 +25,10 @@ export function ProductRail({
           See all
         </Link>
       </div>
-      <ul className="scroll-x -mx-4 mt-4 flex gap-3 px-4 pb-1 sm:-mx-5 sm:px-5">
+      <ul className="scroll-x -mx-4 mt-4 flex gap-4 px-4 pb-1 sm:-mx-5 sm:px-5">
         {products.map((p, i) => (
-          <li key={p.id} className="w-[200px] shrink-0 sm:w-[220px]">
-            <ProductCard product={p} rank={ranked ? i + 1 : undefined} reason={reason?.(p)} />
+          <li key={p.id} className="w-[200px] shrink-0 has-[.sr]:w-[244px] sm:has-[.sr]:w-[272px] sm:w-[220px]">
+            <ProductCard product={p} layout="compact" rank={ranked ? i + 1 : undefined} reason={reason?.(p)} />
           </li>
         ))}
       </ul>

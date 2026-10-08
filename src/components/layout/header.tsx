@@ -5,95 +5,111 @@ import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import { useEffect, useRef, useState } from "react";
 import { AyiinLogo } from "@/components/brand/ayiin-logo";
-import { Icon, type IconName } from "@/components/ui/icon";
-import { ModeSwitch } from "@/components/layout/mode-switch";
+import { Icon } from "@/components/ui/icon";
+import { CategoryIcon } from "@/components/ui/category-icon";
+import { ContextStrip } from "@/components/layout/context-strip";
 import { MegaMenu } from "@/components/layout/mega-menu";
-import { SearchPanel, useSearchController } from "@/components/layout/search";
+import { DiscoverMenu } from "@/components/layout/discover-menu";
+import { SearchPanel, useRotatingPlaceholder, useSearchController } from "@/components/layout/search";
 import { usePrefs } from "@/components/providers";
+import { ModeSwitch } from "@/components/layout/mode-switch";
 import { useHydrated, useShop, useUI } from "@/lib/store";
 import { categories } from "@/lib/catalog/categories";
-import { CURRENCIES, type Currency } from "@/lib/format";
-import { creditAvailable, waitingOn } from "@/lib/b2b/policy";
-import { company, useWorkspace, useWorkspaceReady } from "@/lib/b2b/workspace";
 
-/* ─────────────────────────────────────────────────────────────
-   Header
-   · At rest: spacious three-tier header (utility strip, main row, category rail)
-   · On scroll: collapses to a single 64px row on a blurred porcelain glass
-   The header is fixed; a spacer holds its resting height so nothing below jumps.
-   ───────────────────────────────────────────────────────────── */
-
+/**
+ * AYIIN Master 2040 Navbar System
+ *
+ * Clean 8-item hierarchy:
+ * AYIIN | Discover | Departments | Deals | Search | Saved | Account | Bag
+ *
+ * Intelligent Scroll Behavior:
+ * - Top of page: Spacious, dynamic context strip visible, primary navigation relaxed.
+ * - Scrolling down: Context strip slides away, navbar compresses.
+ * - Deep scroll (>280px scrolling down): Minimizes distraction to essentials: AYIIN + Search + Bag.
+ * - Scrolling up: Smoothly restores full navigation (Discover, Departments, Deals, Saved, Account).
+ */
 export function Header() {
   const pathname = usePathname();
-  const { mode } = usePrefs();
+  const { mode, setMode } = usePrefs();
   const business = mode === "business";
-  const [scrolled, setScrolled] = useState(false);
-  const [rolledUp, setRolledUp] = useState(false);
+
+  // Scroll state
+  const [scrollY, setScrollY] = useState(0);
+  const [scrollingDown, setScrollingDown] = useState(false);
   const lastScrollY = useRef(0);
-  const [megaOpen, setMegaOpen] = useState(false);
-  const [scope, setScope] = useState("");
+
+  // Overlay state: "discover" | "departments" | null
+  const [activeMenu, setActiveMenu] = useState<"discover" | "departments" | null>(null);
+
   const searchOpen = useUI((s) => s.searchOpen);
   const openSearch = useUI((s) => s.openSearch);
   const closeSearch = useUI((s) => s.closeSearch);
   const menuOpen = useUI((s) => s.menuOpen);
   const setMenu = useUI((s) => s.setMenu);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const mobileInputRef = useRef<HTMLInputElement>(null);
   const headerRef = useRef<HTMLElement>(null);
+
   const search = useSearchController(inputRef);
   const mobileSearch = useSearchController(mobileInputRef);
+  const rotatingPlaceholder = useRotatingPlaceholder(!searchOpen);
 
+  // Scroll dynamics
   useEffect(() => {
     let raf = 0;
-    const on = () => {
+    const onScroll = () => {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const currentY = window.scrollY;
-        setScrolled(currentY > 28);
         const diff = currentY - lastScrollY.current;
+        setScrollY(currentY);
+
         if (currentY <= 60) {
-          setRolledUp(false);
-        } else if (diff > 8) {
-          setRolledUp(true);
-        } else if (diff < -8) {
-          setRolledUp(false);
+          setScrollingDown(false);
+        } else if (diff > 5) {
+          setScrollingDown(true);
+        } else if (diff < -5) {
+          setScrollingDown(false);
         }
         lastScrollY.current = currentY;
       });
     };
-    on();
-    window.addEventListener("scroll", on, { passive: true });
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
-      window.removeEventListener("scroll", on);
+      window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
     };
   }, []);
 
-  // Close overlays on navigation (local state adjusts during render; shared UI store in an effect)
+  // Close overlays on route change
   const [lastPath, setLastPath] = useState(pathname);
   if (lastPath !== pathname) {
     setLastPath(pathname);
-    setMegaOpen(false);
+    setActiveMenu(null);
   }
   useEffect(() => {
     closeSearch();
     setMenu(false);
   }, [pathname, closeSearch, setMenu]);
 
-  // Global shortcuts: ⌘K / Ctrl+K / "/" to search, Esc to close
+  // Keyboard: Ctrl/⌘+K or "/" focuses search, Escape closes overlays
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
-      const typing = target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
+      const typing =
+        target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable;
       if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || (e.key === "/" && !typing)) {
         e.preventDefault();
-        setMegaOpen(false);
+        setActiveMenu(null);
         openSearch();
         const desktop = window.matchMedia("(min-width: 1024px)").matches;
         requestAnimationFrame(() => (desktop ? inputRef.current : mobileInputRef.current)?.focus());
       }
       if (e.key === "Escape") {
-        setMegaOpen(false);
+        setActiveMenu(null);
         closeSearch();
       }
     };
@@ -101,108 +117,191 @@ export function Header() {
     return () => window.removeEventListener("keydown", onKey);
   }, [openSearch, closeSearch]);
 
-  // Click outside closes desktop panels
+  // Click outside closes desktop overlays
   useEffect(() => {
-    if (!megaOpen && !searchOpen) return;
+    if (!activeMenu && !searchOpen) return;
     const onDown = (e: MouseEvent) => {
       if (headerRef.current && !headerRef.current.contains(e.target as Node)) {
-        setMegaOpen(false);
+        setActiveMenu(null);
         if (window.matchMedia("(min-width: 1024px)").matches) closeSearch();
       }
     };
     document.addEventListener("mousedown", onDown);
     return () => document.removeEventListener("mousedown", onDown);
-  }, [megaOpen, searchOpen, closeSearch]);
+  }, [activeMenu, searchOpen, closeSearch]);
 
-  const compact = scrolled;
-  const overlay = megaOpen || (searchOpen && typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
-  const isHidden = rolledUp && !overlay && !menuOpen;
+  const isTop = scrollY < 24;
+  const isCompressed = scrollY >= 24;
+  // Deep scroll state: > 280px and scrolling down reduces navbar to AYIIN + Search + Bag
+  const isDeep = scrollY > 280 && scrollingDown && !activeMenu && !searchOpen;
+
+  const overlayActive =
+    activeMenu !== null ||
+    (searchOpen && typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
 
   const submitSearch = () => {
     const q = search.query.trim();
     if (q) search.navigate(`/search?q=${encodeURIComponent(q)}`, q);
-    else if (scope) search.navigate(`/c/${scope}`);
     else search.navigate("/search");
   };
 
   return (
     <>
-      <div aria-hidden className="h-[124px] lg:h-[150px]" />
-      {/* Scrim for desktop overlays */}
+      {/* Spacer to prevent layout jump: accounts for top strip + navbar */}
+      <div aria-hidden className="h-[100px] lg:h-[104px]" />
+
+      {/* Scrim for desktop dropdowns & search */}
       <div
         aria-hidden
         onClick={() => {
-          setMegaOpen(false);
+          setActiveMenu(null);
           closeSearch();
         }}
         className={clsx(
           "fixed inset-0 z-40 bg-ink/30 backdrop-blur-[2px] transition-opacity duration-300",
-          overlay ? "opacity-100" : "pointer-events-none opacity-0",
+          overlayActive ? "opacity-100" : "pointer-events-none opacity-0",
         )}
       />
+
       <header
         ref={headerRef}
-        data-scrolled={compact}
-        className={clsx(
-          "fixed inset-x-0 top-0 z-50 transition-transform duration-300 ease-[var(--ease-out-expo)]",
-          isHidden ? "-translate-y-full" : "translate-y-0",
-        )}
+        data-top={isTop}
+        data-compressed={isCompressed}
+        data-deep={isDeep}
+        className="fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-[var(--ease-out-expo)]"
       >
-        {/* ── 1 · Charcoal strip ── */}
-        <div className="hidden bg-ink text-white lg:block">
-          <div className="mx-auto flex h-8 max-w-[1520px] items-center justify-between px-6 text-meta text-white/80">
-            <span className="flex items-center gap-1.5">
-              <Icon name="pin" size={13} className="text-brand" /> Deliver to <span className="font-semibold text-white">San Francisco 94107</span>
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-              {business ? <BusinessTicker /> : "Real prices · exact delivery dates · verified sellers"}
-            </span>
-            <nav aria-label="Utility" className="flex items-center gap-5">
-              {!business && <Link href="/business" className="hover:text-white">Ayiin Business</Link>}
-              <Link href="/sell" className="hover:text-white">Sell on Ayiin</Link>
-              <Link href="/help" className="hover:text-white">Help</Link>
-              <LocaleMenu />
-            </nav>
-          </div>
-        </div>
-
-        {/* ── 2 · Glass main bar ── */}
+        {/* ── 01 · DYNAMIC CONTEXT STRIP (Top Micro-strip) ── */}
         <div
           className={clsx(
-            "border-b border-line/80 bg-porcelain/80 backdrop-blur-xl backdrop-saturate-150 transition-shadow duration-300",
-            compact && "shadow-[0_10px_30px_-18px_rgb(var(--rgb-ink)/0.35)]",
+            "transition-all duration-300 ease-[var(--ease-out-expo)] overflow-hidden",
+            isTop ? "max-h-8 opacity-100" : "max-h-0 opacity-0 pointer-events-none",
           )}
         >
-          <div className="mx-auto flex h-16 max-w-[1520px] items-center justify-between gap-3 px-3 sm:px-4 lg:h-[72px] lg:gap-6 lg:px-6">
-            <div className="flex shrink-0 items-center gap-1">
-              <button type="button" aria-label="Open menu" onClick={() => setMenu(true)} suppressHydrationWarning className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft lg:hidden">
-                <Icon name="menu" size={22} />
+          <ContextStrip />
+        </div>
+
+        {/* ── 02 · PRIMARY NAVBAR ── */}
+        <div
+          className={clsx(
+            "border-b border-line/80 bg-porcelain/90 backdrop-blur-xl backdrop-saturate-150 transition-all duration-300",
+            isCompressed && "shadow-[0_10px_30px_-18px_rgb(var(--rgb-ink)/0.25)]",
+          )}
+        >
+          <div
+            className={clsx(
+              "mx-auto flex max-w-[1520px] items-center justify-between gap-3 px-4 sm:px-6 transition-all duration-300",
+              isCompressed ? "h-14 lg:h-16" : "h-16 lg:h-[68px]",
+            )}
+          >
+            {/* Left: Brand + Editorial Discovery Controls */}
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-4 lg:gap-6">
+              {/* Mobile menu trigger */}
+              <button
+                type="button"
+                aria-label="Open navigation menu"
+                onClick={() => setMenu(true)}
+                suppressHydrationWarning
+                className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft lg:hidden"
+              >
+                <Icon name="menu" size={20} />
               </button>
-              <Link href="/" aria-label="Ayiin home" className="flex items-center">
-                <AyiinLogo on="light" priority className="h-8 lg:h-10" />
+
+              {/* AYIIN Brand Logo */}
+              <Link href="/" aria-label="Ayiin homepage" className="flex items-center transition-opacity duration-200 hover:opacity-80">
+                <AyiinLogo
+                  on="light"
+                  priority
+                  className={clsx(
+                    "transition-all duration-300",
+                    isCompressed ? "h-7 lg:h-8" : "h-8 lg:h-9",
+                  )}
+                />
               </Link>
+
+              {/* Primary Navigation Items: Discover | Departments | Deals */}
+              <nav
+                aria-label="Main marketplace navigation"
+                className={clsx(
+                  "hidden items-center gap-1 transition-all duration-300 lg:flex",
+                  isDeep
+                    ? "opacity-0 pointer-events-none -translate-x-2 w-0 overflow-hidden"
+                    : "opacity-100 translate-x-0",
+                )}
+              >
+                {/* 1. Discover Menu Button (WHY/INTENT) */}
+                <button
+                  type="button"
+                  aria-expanded={activeMenu === "discover"}
+                  aria-controls="discover-menu"
+                  onClick={() => {
+                    closeSearch();
+                    setActiveMenu((curr) => (curr === "discover" ? null : "discover"));
+                  }}
+                  className="nav-item group flex items-center gap-1.5 px-3.5 py-2 text-support font-medium"
+                >
+                  <span>Discover</span>
+                  <Icon
+                    name="chevronDown"
+                    size={13}
+                    className={clsx(
+                      "transition-[transform,color] duration-200 text-mute group-hover:text-ink",
+                      activeMenu === "discover" && "rotate-180 text-ink",
+                    )}
+                  />
+                </button>
+
+                {/* 2. Departments Menu Button (WHAT) */}
+                <button
+                  type="button"
+                  aria-expanded={activeMenu === "departments"}
+                  aria-controls="departments-menu"
+                  onClick={() => {
+                    closeSearch();
+                    setActiveMenu((curr) => (curr === "departments" ? null : "departments"));
+                  }}
+                  className="nav-item group flex items-center gap-1.5 px-3.5 py-2 text-support font-medium"
+                >
+                  <span>Departments</span>
+                  <Icon
+                    name="chevronDown"
+                    size={13}
+                    className={clsx(
+                      "transition-[transform,color] duration-200 text-mute group-hover:text-ink",
+                      activeMenu === "departments" && "rotate-180 text-ink",
+                    )}
+                  />
+                </button>
+
+                {/* 3. Deals Link */}
+                <Link
+                  href="/search?deal=1"
+                  className="nav-item flex items-center gap-1.5 px-3.5 py-2 text-support font-medium"
+                >
+                  <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+                  <span>Deals</span>
+                </Link>
+              </nav>
             </div>
 
-            {/* Search pill */}
+            {/* Center: Intelligent Natural Intent Search */}
             <form
               role="search"
               onSubmit={(e) => {
                 e.preventDefault();
                 submitSearch();
               }}
-              className="relative hidden h-12 min-w-0 max-w-[760px] flex-1 items-center rounded-full bg-white p-1 shadow-[var(--shadow-hair)] transition-shadow focus-within:shadow-[0_0_0_3px_rgb(var(--rgb-brand)/0.45)] lg:flex"
+              className="relative hidden h-11 min-w-0 max-w-[620px] flex-1 items-center rounded-full bg-white px-2 py-1 shadow-[var(--shadow-hair)] transition-shadow duration-200 hover:shadow-[0_0_0_1px_var(--color-line-hover)] focus-within:!shadow-[0_0_0_2px_rgb(var(--rgb-ink)/0.25)] lg:flex"
             >
-              <label htmlFor="site-search-scope" className="sr-only">
-                Search in
-              </label>
-              <DepartmentScope value={scope} onChange={setScope} onOpen={closeSearch} />
-              <label htmlFor="site-search" className="sr-only">
-                Search Ayiin
+              <span className="grid h-8 w-8 shrink-0 place-items-center text-mute pl-1">
+                <Icon name="search" size={17} strokeWidth={2} />
+              </span>
+
+              <label htmlFor="master-search-input" className="sr-only">
+                Search Ayiin products with natural intent
               </label>
               <input
                 ref={inputRef}
-                id="site-search"
+                id="master-search-input"
                 type="search"
                 role="combobox"
                 aria-expanded={searchOpen}
@@ -213,104 +312,112 @@ export function Header() {
                 value={search.query}
                 onChange={(e) => search.setQuery(e.target.value)}
                 onFocus={() => {
-                  setMegaOpen(false);
+                  setActiveMenu(null);
                   openSearch();
                 }}
                 onKeyDown={search.onKeyDown}
-                placeholder={business ? "Search products, SKUs or describe a purchase" : "What are you looking for?"}
-                className="h-full min-w-0 flex-1 bg-transparent px-4 text-body text-ink outline-none placeholder:text-mute"
+                placeholder={business ? "Search products, bulk SKUs or specs" : rotatingPlaceholder}
+                className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-body text-ink outline-none placeholder:text-mute"
               />
-              <button type="submit" aria-label="Search" suppressHydrationWarning className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand text-ink transition-transform hover:scale-105">
-                <Icon name="search" size={19} strokeWidth={2.1} />
-              </button>
+
             </form>
 
-            <nav aria-label="Account" className="flex shrink-0 items-center gap-1 sm:gap-2">
-              <ModeSwitch compact className="hidden xl:grid" />
-              <NavIcon href={business ? "/business" : "/account"} icon={business ? "building" : "user"} label={business ? "Business" : "Account"} />
-              <NavIcon href="/track" icon="box" label="Orders" className="hidden md:flex" />
-              <SavedIcon />
+            {/* Right: ModeSwitch | Saved | Account | Bag (+ Mobile Search) */}
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+              {/* Mobile quick toggle back to Personal when in Business mode */}
+              {business && (
+                <button
+                  type="button"
+                  onClick={() => setMode("personal")}
+                  aria-label="Switch back to Personal mode"
+                  className="flex md:hidden h-8 items-center gap-1.5 rounded-full bg-brand px-3 text-caption font-bold text-ink shadow-[0_2px_8px_rgba(240,165,0,0.3)] transition-transform active:scale-95"
+                >
+                  <Icon name="chevronLeft" size={13} strokeWidth={2.5} />
+                  <span>Personal</span>
+                </button>
+              )}
+
+              {/* Mobile Search button */}
+              <button
+                type="button"
+                onClick={() => {
+                  openSearch();
+                  requestAnimationFrame(() => mobileInputRef.current?.focus());
+                }}
+                aria-label="Search"
+                className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft text-ink lg:hidden"
+              >
+                <Icon name="search" size={19} />
+              </button>
+
+              {/* Mode switch (Desktop & Tablet) */}
+              <div
+                className={clsx(
+                  "hidden md:flex items-center transition-all duration-300 mr-1",
+                  isDeep
+                    ? "opacity-0 pointer-events-none w-0 overflow-hidden -translate-x-2"
+                    : "opacity-100 translate-x-0",
+                )}
+              >
+                <ModeSwitch compact className="min-w-[176px]" />
+              </div>
+
+              {/* Secondary Navigation (Deep scroll hides Saved & Account to focus on Bag) */}
+              <div
+                className={clsx(
+                  "flex items-center gap-1 sm:gap-2 transition-all duration-300",
+                  isDeep
+                    ? "opacity-0 pointer-events-none w-0 overflow-hidden -translate-x-2"
+                    : "opacity-100 translate-x-0",
+                )}
+              >
+                {/* Saved / Wishlist */}
+                <SavedButton />
+
+                {/* Account / Business */}
+                <Link
+                  href={business ? "/business" : "/account"}
+                  className="nav-item hidden md:flex h-10 items-center gap-2 px-3.5 text-support font-medium"
+                >
+                  <Icon name={business ? "building" : "user"} size={17} />
+                  <span>{business ? "Business" : "Account"}</span>
+                </Link>
+              </div>
+
+              {/* Bag / Cart Action Button (Always visible) */}
               <CartButton />
-            </nav>
-          </div>
-
-          {/* Mobile search pill */}
-          <div className="px-3 pb-3 lg:hidden">
-            <button
-              type="button"
-              onClick={() => {
-                openSearch();
-                requestAnimationFrame(() => mobileInputRef.current?.focus());
-              }}
-              suppressHydrationWarning
-              className="flex h-11 w-full items-center rounded-full bg-white p-1 pl-4 text-left text-body text-mute shadow-[var(--shadow-hair)]"
-            >
-              <span className="flex-1 truncate">{business ? "Search products or SKUs" : "What are you looking for?"}</span>
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-brand text-ink">
-                <Icon name="search" size={18} strokeWidth={2.1} />
-              </span>
-            </button>
+            </div>
           </div>
         </div>
 
-        {/* ── 3 · Departments, justified across the width ── */}
-        <div className="hidden border-b border-line/80 bg-white/85 backdrop-blur-xl lg:block">
-          <nav aria-label="Departments" className="mx-auto flex h-[46px] max-w-[1520px] items-stretch justify-between px-6 text-support font-medium text-ink-2">
-            <button
-              type="button"
-              aria-expanded={megaOpen}
-              aria-controls="mega-menu"
-              onClick={() => {
-                closeSearch();
-                setMegaOpen((o) => !o);
-              }}
-              suppressHydrationWarning
-              className={clsx("dept-link flex items-center gap-1.5 font-semibold text-ink", megaOpen && "is-active")}
-            >
-              <Icon name="grid" size={16} /> All departments
-            </button>
-            {business ? (
-              <>
-                <DeptLink href="/business?tab=quick">Quick order</DeptLink>
-                <DeptLink href="/business?tab=quotes">Quotes</DeptLink>
-                <DeptLink href="/business?tab=lists">Reorder</DeptLink>
-                <DeptLink href="/business?tab=approvals">Approvals</DeptLink>
-                {categories.filter((c) => c.business).map((c) => (
-                  <DeptLink key={c.slug} href={`/c/${c.slug}`}>{c.short}</DeptLink>
-                ))}
-              </>
-            ) : (
-              <>
-                <DeptLink href="/search?deal=1" accent>
-                  Today&apos;s deals
-                </DeptLink>
-                <DeptLink href="/search?sort=popular">Best sellers</DeptLink>
-                {categories.map((c) => (
-                  <DeptLink key={c.slug} href={`/c/${c.slug}`}>{c.short}</DeptLink>
-                ))}
-              </>
-            )}
-          </nav>
-        </div>
+        {/* ── 03 · DISCOVER MEGA-MENU (Why / Intent) ── */}
+        <DropdownPanel open={activeMenu === "discover"} id="discover-menu">
+          <DiscoverMenu onClose={() => setActiveMenu(null)} />
+        </DropdownPanel>
 
-        {/* ── Desktop mega menu ─────────────────────────────── */}
-        <Panel open={megaOpen} id="mega-menu">
-          <MegaMenu onClose={() => setMegaOpen(false)} />
-        </Panel>
+        {/* ── 04 · DEPARTMENTS MEGA-MENU (What) ── */}
+        <DropdownPanel open={activeMenu === "departments"} id="departments-menu">
+          <MegaMenu onClose={() => setActiveMenu(null)} />
+        </DropdownPanel>
 
-        {/* ── Desktop search panel ──────────────────────────── */}
-        <Panel open={searchOpen} id="search-panel" className="hidden lg:block">
+        {/* ── 05 · INTELLIGENT SEARCH PANEL ── */}
+        <DropdownPanel open={searchOpen} id="search-panel" className="hidden lg:block">
           <div className="shell py-7">
-            <SearchPanel query={search.query} setQuery={search.setQuery} active={search.active} onNavigate={search.navigate} />
+            <SearchPanel
+              query={search.query}
+              setQuery={search.setQuery}
+              active={search.active}
+              onNavigate={search.navigate}
+            />
           </div>
-        </Panel>
+        </DropdownPanel>
       </header>
 
-      {/* ── Mobile search sheet ─────────────────────────────── */}
+      {/* ── Mobile Search Sheet ── */}
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Search"
+        aria-label="Search Ayiin"
         className={clsx(
           "fixed inset-0 z-[60] flex flex-col bg-porcelain transition-[opacity,transform] duration-300 ease-[var(--ease-out-expo)] lg:hidden",
           searchOpen ? "opacity-100" : "pointer-events-none translate-y-3 opacity-0",
@@ -318,230 +425,95 @@ export function Header() {
       >
         <div className="shell flex items-center gap-2 border-b border-line py-3">
           <div className="relative flex-1">
-            <Icon name="search" size={18} className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-ink-2" />
+            <Icon
+              name="search"
+              size={18}
+              className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-mute"
+            />
             <input
               ref={mobileInputRef}
               type="search"
               aria-label="Search Ayiin"
               role="combobox"
               aria-expanded={searchOpen}
-              aria-controls="search-options"
+              aria-controls="mobile-search-options"
               aria-activedescendant={mobileSearch.activeId}
               value={mobileSearch.query}
               onChange={(e) => mobileSearch.setQuery(e.target.value)}
               onKeyDown={mobileSearch.onKeyDown}
-              placeholder="Describe what you need…"
-              className="h-12 w-full rounded-full border border-ink bg-white pl-10 pr-4 text-body outline-none"
+              placeholder="headphones for flights under $300…"
+              className="h-12 w-full rounded-full border border-line bg-white pl-10 pr-4 text-body outline-none focus:border-ink"
             />
           </div>
-          <button type="button" onClick={closeSearch} className="h-12 px-2 text-support font-medium">
+          <button
+            type="button"
+            onClick={closeSearch}
+            className="h-12 px-3 text-support font-medium text-ink hover:text-mute"
+          >
             Cancel
           </button>
         </div>
         <div className="shell flex-1 overflow-y-auto py-5">
           {searchOpen && (
-            <SearchPanel query={mobileSearch.query} setQuery={mobileSearch.setQuery} active={mobileSearch.active} onNavigate={mobileSearch.navigate} />
+            <SearchPanel
+              query={mobileSearch.query}
+              setQuery={mobileSearch.setQuery}
+              active={mobileSearch.active}
+              onNavigate={mobileSearch.navigate}
+            />
           )}
         </div>
       </div>
 
-      <MobileMenu open={menuOpen} onClose={() => setMenu(false)} />
+      {/* ── Mobile Navigation Drawer ── */}
+      <MobileDrawer open={menuOpen} onClose={() => setMenu(false)} />
     </>
   );
 }
 
-function DepartmentScope({ value, onChange, onOpen }: { value: string; onChange: (value: string) => void; onOpen: () => void }) {
-  const [open, setOpen] = useState(false);
-  const selectedIndex = Math.max(0, categories.findIndex((category) => category.slug === value) + 1);
-  const [activeIndex, setActiveIndex] = useState(selectedIndex);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const options = [
-    { slug: "", name: "All departments", detail: `Search across ${categories.length} departments`, accent: null as string | null },
-    ...categories.map((category) => ({
-      slug: category.slug,
-      name: category.name,
-      detail: category.subcategories.join(" · "),
-      accent: category.accent,
-    })),
-  ];
-  const selected = options[selectedIndex];
-
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (event: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) setOpen(false);
-    };
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
-  }, [open]);
-
-  const choose = (index: number) => {
-    onChange(options[index].slug);
-    setActiveIndex(index);
-    setOpen(false);
-  };
-
-  const openMenu = () => {
-    onOpen();
-    setActiveIndex(selectedIndex);
-    setOpen(true);
-  };
-
-  const onTriggerKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
-      event.preventDefault();
-      setOpen(true);
-      setActiveIndex((current) => {
-        if (!open) return selectedIndex;
-        return (current + (event.key === "ArrowDown" ? 1 : -1) + options.length) % options.length;
-      });
-    } else if (open && event.key === "Home") {
-      event.preventDefault();
-      setActiveIndex(0);
-    } else if (open && event.key === "End") {
-      event.preventDefault();
-      setActiveIndex(options.length - 1);
-    } else if (open && (event.key === "Enter" || event.key === " ")) {
-      event.preventDefault();
-      choose(activeIndex);
-    } else if (open && event.key === "Escape") {
-      event.preventDefault();
-      event.stopPropagation();
-      setOpen(false);
-    }
-  };
-
-  return (
-    <div
-      ref={rootRef}
-      className="relative h-full w-[168px] shrink-0"
-      onPointerEnter={(event) => {
-        if (event.pointerType === "mouse" && !open) openMenu();
-      }}
-      onPointerLeave={(event) => {
-        if (event.pointerType === "mouse" && !rootRef.current?.contains(document.activeElement)) setOpen(false);
-      }}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
-      }}
-    >
-      <button
-        id="site-search-scope"
-        type="button"
-        role="combobox"
-        aria-label={`Search in ${selected.name}`}
-        aria-haspopup="listbox"
-        aria-expanded={open}
-        aria-controls="search-department-options"
-        aria-activedescendant={open ? `search-department-option-${activeIndex}` : undefined}
-        onClick={() => {
-          if (open) setOpen(false);
-          else openMenu();
-        }}
-        onKeyDown={onTriggerKeyDown}
-        suppressHydrationWarning
-        className="flex h-full w-full items-center justify-between gap-2 rounded-full bg-mist pl-4 pr-3 text-left text-support font-medium text-ink-2 transition-colors hover:bg-soft focus-visible:bg-white"
-      >
-        <span className="min-w-0 flex-1 truncate">{selected.name}</span>
-        <Icon name="chevronDown" size={14} className={clsx("shrink-0 transition-transform duration-200", open && "rotate-180")} />
-      </button>
-      <div
-        hidden={!open}
-        inert={!open}
-        className="absolute left-0 top-full z-20 w-[min(340px,calc(100vw-24px))] pt-2"
-      >
-        <div className="max-h-[70vh] overflow-y-auto rounded-surface border border-line bg-white p-2 text-ink shadow-[var(--shadow-float)]">
-          <p className="px-3 pb-2 pt-2 font-mono text-meta uppercase tracking-[0.14em] text-mute">Choose a department</p>
-          <div id="search-department-options" role="listbox" aria-label="Departments" className="space-y-0.5">
-            {options.map((option, index) => {
-              const isSelected = value === option.slug;
-              const isActive = activeIndex === index;
-              return (
-              <div
-                key={option.slug || "all"}
-                id={`search-department-option-${index}`}
-                role="option"
-                aria-selected={isSelected}
-                onMouseDown={(event) => event.preventDefault()}
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => choose(index)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    choose(index);
-                  }
-                }}
-                className={clsx(
-                  "flex w-full cursor-pointer items-center gap-3 rounded-control px-3 py-2.5 text-left transition-colors",
-                  isSelected ? "bg-brand-soft text-ink" : "text-ink-2 hover:bg-mist hover:text-ink",
-                  isActive && "ring-1 ring-inset ring-brand-deep",
-                )}
-                >
-                  <span className={clsx("grid h-9 w-9 shrink-0 place-items-center rounded-control", option.accent ? "bg-mist" : "bg-brand-soft")}>
-                    {option.accent ? <span aria-hidden className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: option.accent }} /> : <Icon name="grid" size={16} />}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-support font-medium">{option.name}</span>
-                    <span className="line-clamp-2 block text-meta leading-snug text-mute">{option.detail}</span>
-                  </span>
-                  {isSelected && <Icon name="check" size={15} className="shrink-0 text-brand-deep" />}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Panel({ open, children, id, className }: { open: boolean; children: React.ReactNode; id: string; className?: string }) {
+function DropdownPanel({
+  open,
+  id,
+  className,
+  children,
+}: {
+  open: boolean;
+  id: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div
       id={id}
+      aria-hidden={!open}
       className={clsx(
-        "absolute inset-x-0 top-full origin-top bg-porcelain text-ink shadow-[0_40px_80px_-40px_rgb(var(--rgb-ink)/0.45)] transition-[opacity,transform,visibility] duration-400 ease-[var(--ease-out-expo)]",
-        open ? "visible translate-y-0 opacity-100" : "invisible -translate-y-2 opacity-0",
+        "border-b border-line/80 bg-porcelain/95 shadow-[0_24px_48px_-16px_rgb(var(--rgb-ink)/0.18)] backdrop-blur-2xl transition-all duration-300 ease-[var(--ease-out-expo)]",
+        open ? "max-h-[85vh] opacity-100 overflow-y-auto" : "max-h-0 opacity-0 overflow-hidden pointer-events-none",
         className,
       )}
-      inert={!open}
     >
-      <div className="max-h-[calc(100vh-120px)] overflow-y-auto thin-scroll">{children}</div>
+      {open ? children : null}
     </div>
   );
 }
 
-function DeptLink({ href, children, accent }: { href: string; children: React.ReactNode; accent?: boolean }) {
-  const pathname = usePathname();
-  const active = pathname === href.split("?")[0] && !href.includes("?");
-  return (
-    <Link href={href} aria-current={active ? "page" : undefined} className={clsx("dept-link flex items-center whitespace-nowrap", active && "is-active", accent && "text-brand-deep")}>
-      {children}
-    </Link>
-  );
-}
-
-function NavIcon({ href, icon, label, className }: { href: string; icon: IconName; label: string; className?: string }) {
-  return (
-    <Link href={href} className={clsx("group flex flex-col items-center gap-0.5 px-1.5 text-meta font-medium text-ink-2 hover:text-ink", className)}>
-      <span className="grid h-10 w-10 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] transition-colors group-hover:bg-brand-soft">
-        <Icon name={icon} size={19} />
-      </span>
-      <span className="hidden lg:block">{label}</span>
-    </Link>
-  );
-}
-
-function SavedIcon() {
+function SavedButton() {
   const hydrated = useHydrated();
   const count = useShop((s) => s.wishlist.length);
+  const shown = hydrated ? count : 0;
   return (
-    <Link href="/wishlist" aria-label={`Saved${hydrated && count ? `, ${count}` : ""}`} className="group relative hidden flex-col items-center gap-0.5 px-1.5 text-meta font-medium text-ink-2 hover:text-ink sm:flex">
-      <span className="grid h-10 w-10 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)] transition-colors group-hover:bg-brand-soft">
-        <Icon name="heart" size={19} />
-      </span>
-      <span className="hidden lg:block">Saved</span>
-      {hydrated && count > 0 && <span className="num absolute right-1 top-0 grid h-4 min-w-4 place-items-center rounded-full bg-ink px-1 text-meta text-white">{count}</span>}
+    <Link
+      href="/wishlist"
+      aria-label={`Saved pieces (${shown})`}
+      className="nav-item relative flex h-10 items-center gap-1.5 px-3.5 text-support font-medium"
+    >
+      <Icon name="heart" size={17} />
+      <span className="hidden sm:inline">Saved</span>
+      {shown > 0 && (
+        <span className="grid h-4 min-w-4 place-items-center rounded-full bg-ink px-1 font-mono text-[10px] font-bold text-white">
+          {shown}
+        </span>
+      )}
     </Link>
   );
 }
@@ -555,176 +527,166 @@ function CartButton() {
     <button
       type="button"
       onClick={openCart}
-      aria-label={`Cart, ${shown} ${shown === 1 ? "item" : "items"}`}
+      aria-label={`Shopping bag (${shown} items)`}
       suppressHydrationWarning
-      className="group relative flex flex-col items-center gap-0.5 px-1.5 text-meta font-medium text-ink-2 hover:text-ink"
+      className="group relative flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-support font-medium text-white transition-all hover:bg-graphite active:scale-95"
     >
-      <span className="grid h-10 w-10 place-items-center rounded-full bg-ink text-white transition-colors group-hover:bg-graphite">
-        <Icon name="bag" size={19} />
-      </span>
-      <span className="hidden lg:block">Cart</span>
-      <span className="num absolute -right-0.5 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-brand px-1 text-meta font-bold text-ink ring-2 ring-porcelain">{shown > 99 ? "99+" : shown}</span>
+      <Icon name="bag" size={17} />
+      <span>Bag</span>
+      {shown > 0 && (
+        <span className="grid h-5 min-w-5 place-items-center rounded-full bg-brand px-1 font-mono text-[11px] font-bold text-ink">
+          {shown > 99 ? "99+" : shown}
+        </span>
+      )}
     </button>
   );
 }
 
-function LocaleMenu({ dark }: { dark?: boolean }) {
-  const { currency, setCurrency } = usePrefs();
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    const onDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    };
-    document.addEventListener("mousedown", onDown);
-    return () => document.removeEventListener("mousedown", onDown);
-  }, [open]);
-  return (
-    <div ref={ref} className="relative">
-      <button type="button" aria-expanded={open} aria-haspopup="listbox" onClick={() => setOpen((o) => !o)} suppressHydrationWarning className="flex items-center gap-1.5 hover:text-white">
-        <Icon name="globe" size={14} />
-        EN · <span className="num">{currency}</span>
-        <Icon name="chevronDown" size={12} />
-      </button>
-      {open && (
-        <div
-          role="listbox"
-          aria-label="Currency"
-          className={clsx(
-            "absolute right-0 top-8 z-10 w-56 rounded-surface p-1.5 shadow-[var(--shadow-float)]",
-            dark ? "bg-graphite text-porcelain" : "bg-white text-ink",
-          )}
-        >
-          <p className={clsx("px-3 pb-1 pt-2 font-mono text-meta uppercase tracking-[0.14em]", dark ? "text-mute-dark" : "text-mute")}>Language</p>
-          <p className="flex items-center justify-between rounded-control px-3 py-2 text-support">
-            English (US) <Icon name="check" size={14} />
-          </p>
-          <p className={clsx("px-3 pb-1 pt-2 font-mono text-meta uppercase tracking-[0.14em]", dark ? "text-mute-dark" : "text-mute")}>Currency</p>
-          {CURRENCIES.map((c) => (
-            <button
-              key={c.code}
-              type="button"
-              role="option"
-              aria-selected={currency === c.code}
-              onClick={() => {
-                setCurrency(c.code as Currency);
-                setOpen(false);
-              }}
-              className={clsx("flex w-full items-center justify-between rounded-control px-3 py-2 text-left text-support", dark ? "hover:bg-graphite-2" : "hover:bg-mist")}
-            >
-              <span>
-                <span className="num mr-2 inline-block w-4">{c.symbol}</span>
-                {c.label}
-              </span>
-              {currency === c.code && <Icon name="check" size={14} />}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function MobileMenu({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { mode, currency, setCurrency } = usePrefs();
+function MobileDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [tab, setTab] = useState<"discover" | "departments">("discover");
+  const { mode } = usePrefs();
   const business = mode === "business";
+
   return (
     <>
       <div
         aria-hidden
         onClick={onClose}
-        className={clsx("fixed inset-0 z-[60] bg-ink/30 transition-opacity duration-500 lg:hidden", open ? "opacity-100" : "pointer-events-none opacity-0")}
+        className={clsx(
+          "fixed inset-0 z-[60] bg-ink/30 transition-opacity duration-300 lg:hidden",
+          open ? "opacity-100" : "pointer-events-none opacity-0",
+        )}
       />
       <div
         role="dialog"
         aria-modal="true"
-        aria-label="Menu"
-        inert={!open}
+        aria-label="Navigation drawer"
         className={clsx(
-          "fixed inset-y-0 left-0 z-[61] flex w-[88vw] max-w-[400px] flex-col bg-porcelain transition-transform duration-500 ease-[var(--ease-out-expo)] lg:hidden",
+          "fixed inset-y-0 left-0 z-[61] flex w-[86vw] max-w-[380px] flex-col bg-porcelain shadow-2xl transition-transform duration-400 ease-[var(--ease-out-expo)] lg:hidden",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-[60px] items-center justify-between border-b border-line px-5">
-          <Link href="/" aria-label="Ayiin home" onClick={onClose} className="flex items-center">
+        {/* Drawer header */}
+        <div className="flex h-16 items-center justify-between border-b border-line px-5">
+          <Link href="/" aria-label="Ayiin" onClick={onClose}>
             <AyiinLogo on="light" className="h-8" />
           </Link>
-          <button type="button" aria-label="Close menu" onClick={onClose} suppressHydrationWarning className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft">
-            <Icon name="close" size={22} />
+          <button
+            type="button"
+            aria-label="Close menu"
+            onClick={onClose}
+            className="grid h-9 w-9 place-items-center rounded-full hover:bg-soft text-ink"
+          >
+            <Icon name="close" size={20} />
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto px-5 py-5">
-          <ModeSwitch className="w-full" />
-          <p className="eyebrow mb-2 mt-7">Categories</p>
-          <ul className="divide-y divide-line border-y border-line">
-            {categories.map((c) => (
-              <li key={c.slug}>
-                <Link href={`/c/${c.slug}`} onClick={onClose} className="flex items-center justify-between py-3.5 text-body">
-                  <span className="flex items-center gap-3">
-                    <span className="h-2 w-2 rounded-full" style={{ background: c.accent }} />
-                    {c.name}
-                  </span>
-                  <Icon name="chevronRight" size={18} className="text-mute" />
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className="eyebrow mb-2 mt-7">{business ? "Procurement" : "Shortcuts"}</p>
-          <div className="grid grid-cols-2 gap-2">
-            {(business
-              ? ([
-                  ["/business?tab=quick", "bolt", "Quick order"],
-                  ["/business?tab=quotes", "file", "Quotes"],
-                  ["/business?tab=lists", "repeat", "Reorder"],
-                  ["/business?tab=approvals", "approve", "Approvals"],
-                ] as const)
-              : ([
-                  ["/search?deal=1", "tag", "Verified deals"],
-                  ["/search?fast=1", "bolt", "Arrives tomorrow"],
-                  ["/wishlist", "heart", "Saved"],
-                  ["/compare", "compare", "Compare"],
-                ] as const)
-            ).map(([href, icon, label]) => (
-              <Link key={href} href={href} onClick={onClose} className="flex items-center gap-2.5 rounded-surface bg-white p-3.5 text-support shadow-[var(--shadow-hair)]">
-                <Icon name={icon} size={18} /> {label}
-              </Link>
-            ))}
+
+        {/* Shopping Mode Switcher inside Drawer */}
+        <div className="border-b border-line bg-white/70 p-3">
+          <div className="mb-2 flex items-center justify-between px-1 text-[11px] font-mono text-mute">
+            <span>SHOPPING MODE</span>
+            <span className="font-semibold text-ink">{business ? "Business Mode" : "Personal Mode"}</span>
           </div>
-          <ul className="mt-7 space-y-3 text-body text-ink-2">
-            <li><Link href="/track" onClick={onClose}>Track order</Link></li>
-            <li><Link href="/help" onClick={onClose}>Help & returns</Link></li>
-            <li><Link href="/sell" onClick={onClose}>Sell on Ayiin</Link></li>
-            <li><Link href="/brand" onClick={onClose}>Brand</Link></li>
-          </ul>
-          <div className="mt-7 flex gap-2">
-            {CURRENCIES.map((c) => (
-              <button key={c.code} type="button" aria-pressed={currency === c.code} onClick={() => setCurrency(c.code)} className="chip">
-                {c.symbol} {c.code}
-              </button>
-            ))}
+          <ModeSwitch compact className="w-full min-w-0" />
+        </div>
+
+        {/* Tab switch: Discover vs Departments */}
+        <div className="grid grid-cols-2 border-b border-line p-2 gap-1 bg-soft/50">
+          <button
+            type="button"
+            onClick={() => setTab("discover")}
+            className={clsx(
+              "rounded-full py-2 text-support font-medium transition-all text-center",
+              tab === "discover" ? "bg-white text-ink shadow-sm" : "text-mute hover:text-ink",
+            )}
+          >
+            Discover
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab("departments")}
+            className={clsx(
+              "rounded-full py-2 text-support font-medium transition-all text-center",
+              tab === "departments" ? "bg-white text-ink shadow-sm" : "text-mute hover:text-ink",
+            )}
+          >
+            Departments
+          </button>
+        </div>
+
+        {/* Drawer content */}
+        <div className="flex-1 overflow-y-auto px-5 py-4">
+          {tab === "discover" ? (
+            <div className="space-y-4">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-mute">
+                SHOP BY INTENT
+              </p>
+              <ul className="divide-y divide-line/60">
+                {[
+                  { name: "For Your Home", href: "/c/home-living" },
+                  { name: "For Your Workspace", href: "/c/office" },
+                  { name: "For Travel & Transit", href: "/search?q=travel" },
+                  { name: "For Gifting", href: "/search?intent=gift" },
+                  { name: "Under $50 Essentials", href: "/search?maxPrice=50" },
+                  { name: "Best Rated (4.8★+)", href: "/search?sort=popular" },
+                  { name: "Arrives Tomorrow", href: "/search?fast=1" },
+                  { name: "Today's Verified Deals", href: "/search?deal=1" },
+                ].map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      onClick={onClose}
+                      className="flex items-center justify-between py-3.5 text-body text-ink hover:text-brand"
+                    >
+                      <span>{item.name}</span>
+                      <Icon name="chevronRight" size={16} className="text-mute" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-mute">
+                ALL DEPARTMENTS
+              </p>
+              <ul className="divide-y divide-line/60">
+                {categories.map((c) => (
+                  <li key={c.slug}>
+                    <Link
+                      href={`/c/${c.slug}`}
+                      onClick={onClose}
+                      className="flex items-center justify-between py-3.5 text-body text-ink hover:text-brand"
+                    >
+                      <span className="flex items-center gap-3">
+                        <CategoryIcon slug={c.slug} className="text-mute" />
+                        <span>{c.name}</span>
+                      </span>
+                      <Icon name="chevronRight" size={16} className="text-mute" />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Utility links */}
+          <div className="mt-8 border-t border-line pt-4 space-y-2.5 text-support text-mute">
+            <Link href="/wishlist" onClick={onClose} className="flex items-center gap-2 text-ink hover:text-brand">
+              <Icon name="heart" size={16} /> Saved Items
+            </Link>
+            <Link href="/account" onClick={onClose} className="flex items-center gap-2 text-ink hover:text-brand">
+              <Icon name="user" size={16} /> Your Account
+            </Link>
+            <Link href="/track" onClick={onClose} className="flex items-center gap-2 text-ink hover:text-brand">
+              <Icon name="box" size={16} /> Track Shipments
+            </Link>
+            <Link href="/business" onClick={onClose} className="flex items-center gap-2 text-ink hover:text-brand">
+              <Icon name="building" size={16} /> Ayiin Business
+            </Link>
           </div>
         </div>
       </div>
-    </>
-  );
-}
-
-/** Utility-bar account line in business mode — reads the live workspace. */
-function BusinessTicker() {
-  const ws = useWorkspace();
-  const ready = useWorkspaceReady();
-  const { fmt } = usePrefs();
-  const pending = waitingOn(ws.requisitions).length;
-  if (!ready) return <>{company.name} · {company.terms} · Tax exempt</>;
-  return (
-    <>
-      {company.name} · {company.terms} · {fmt(Math.round(creditAvailable(ws)))} credit available
-      {pending > 0 && (
-        <Link href="/business?tab=approvals" className="ml-1 text-brand hover:underline">
-          · {pending} to approve
-        </Link>
-      )}
     </>
   );
 }

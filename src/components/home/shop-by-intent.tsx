@@ -6,7 +6,7 @@ import { useMemo, useState } from "react";
 import type { Product } from "@/lib/types";
 import { products } from "@/lib/catalog/products";
 import { ProductCard } from "@/components/product/product-card";
-import { Eyebrow, SignalDot } from "@/components/ui/signal";
+import { Eyebrow } from "@/components/ui/signal";
 import { Icon, type IconName } from "@/components/ui/icon";
 
 type IntentDef = {
@@ -111,16 +111,16 @@ export function ShopByIntent() {
   return (
     <section
       aria-label="Shop by intent"
-      className="rounded-panel border border-line bg-white p-5 sm:p-7 lg:p-8"
+      className="fold rounded-panel border border-line bg-white p-5 sm:p-7 lg:p-8"
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <Eyebrow index="02">Intent Discovery</Eyebrow>
-          <h2 className="display mt-2 text-heading tracking-[-0.02em] sm:text-display-sm">
+          <h2 className="display mt-3 text-heading tracking-[-0.02em] sm:text-display-sm">
             Shop by intent.
           </h2>
-          <p className="mt-1.5 text-body text-mute">
-            Not sure which department? Tell AYIIN what you need it for.
+          <p className="mt-2 text-body text-mute">
+            Start from what it&apos;s for — the right pieces from every department, in one place.
           </p>
         </div>
         <Link
@@ -136,7 +136,7 @@ export function ShopByIntent() {
       <div
         role="tablist"
         aria-label="Discovery intents"
-        className="scroll-x -mx-5 mt-6 flex gap-2 px-5 pb-2 sm:-mx-7 sm:px-7 lg:-mx-8 lg:px-8"
+        className="scroll-x -mx-5 mt-5 flex shrink-0 gap-2 px-5 pb-1 sm:-mx-7 sm:px-7 lg:-mx-8 lg:px-8"
       >
         {INTENTS.map((intent) => {
           const isSelected = intent.id === activeId;
@@ -164,7 +164,6 @@ export function ShopByIntent() {
                 )}
               />
               <span>{intent.label}</span>
-              {isSelected && <SignalDot tone="brand" live />}
             </button>
           );
         })}
@@ -175,7 +174,7 @@ export function ShopByIntent() {
         id={`intent-panel-${activeIntent.id}`}
         role="tabpanel"
         aria-labelledby={`intent-tab-${activeIntent.id}`}
-        className="mt-6 flex flex-col gap-2 rounded-control bg-porcelain/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+        className="mt-4 flex shrink-0 flex-col gap-2 rounded-control bg-porcelain/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
       >
         <div className="flex items-center gap-2">
           <span className="font-mono text-meta uppercase tracking-wider text-brand-deep font-semibold">
@@ -193,12 +192,14 @@ export function ShopByIntent() {
       </div>
 
       {/* Matched product cards */}
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-        {matchedProducts.map((p) => (
-          <div key={p.id} className="animate-fade">
-            <ProductCard product={p} />
-          </div>
-        ))}
+      <div className="fold-body mt-6 lg:flex lg:items-end lg:justify-center">
+        <div className="fold-grid [--cols:4]">
+          {matchedProducts.map((p) => (
+            <div key={p.id} className="animate-fade">
+              <ProductCard product={p} />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

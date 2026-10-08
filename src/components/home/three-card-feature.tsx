@@ -1,14 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
 import type { Product } from "@/lib/types";
-import { ProductImage } from "@/components/product/product-image";
-import { Price } from "@/components/ui/money";
-import { useShop, useUI } from "@/lib/store";
-import { QuickView } from "@/components/product/quick-view";
+import { ProductCard } from "@/components/product/product-card";
 import { Icon } from "@/components/ui/icon";
-import { Eyebrow, SignalDot } from "@/components/ui/signal";
+import { Eyebrow } from "@/components/ui/signal";
 
 type FeatureItem = {
   product: Product;
@@ -16,6 +12,10 @@ type FeatureItem = {
   badge: string;
 };
 
+/**
+ * Premium showcase — a centred editorial heading over three flagships at the card's featured density.
+ * On laptops the cards size from the fold height, so heading, photographs and prices share one screen.
+ */
 export function ThreeCardFeature({
   title = "Design Icons & Flagships",
   subtitle = "High-performing architectural tools and enduring furniture engineered to last decades.",
@@ -29,133 +29,28 @@ export function ThreeCardFeature({
   items: FeatureItem[];
   browseHref?: string;
 }) {
-  const addToCart = useShop((s) => s.addToCart);
-  const notify = useUI((s) => s.notify);
-  const [quickProduct, setQuickProduct] = useState<Product | null>(null);
-
-  const handleAdd = (product: Product) => {
-    addToCart(product.id, product.variants[0].id, 1);
-    notify(`Added ${product.name} to bag`);
-  };
-
   return (
-    <section aria-label={title} className="relative">
-      {/* Header */}
-      <div className="mb-6 flex flex-col justify-between gap-3 sm:mb-8 sm:flex-row sm:items-end">
-        <div>
-          <Eyebrow index={eyebrow}>Signature Pieces</Eyebrow>
-          <h2 className="display mt-1 text-display-xs leading-tight tracking-[-0.02em] sm:text-display-sm lg:text-display-md text-ink">
-            {title}
-          </h2>
-          {subtitle && (
-            <p className="mt-1 text-body text-ink-2 max-w-xl">{subtitle}</p>
-          )}
-        </div>
-
+    <section aria-label={title} className="fold lg:py-6">
+      <div className="mx-auto mb-8 flex max-w-2xl flex-col items-center text-center lg:mb-7">
+        <Eyebrow index={eyebrow}>Signature Pieces</Eyebrow>
+        <h2 className="display mt-3 text-balance text-display-sm text-ink lg:text-display-md">{title}</h2>
+        {subtitle && <p className="mt-3 max-w-xl text-body leading-relaxed text-ink-2">{subtitle}</p>}
         <Link
           href={browseHref}
-          className="link-underline flex items-center gap-1.5 text-support font-medium text-brand-deep shrink-0 self-start sm:self-auto"
+          className="link-underline mt-4 inline-flex items-center gap-1.5 text-support font-medium text-brand-deep"
         >
           <span>View all flagships</span>
           <Icon name="arrowRight" size={14} />
         </Link>
       </div>
 
-      {/* 3-Card Premium Grid */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-3 lg:gap-6">
-        {items.slice(0, 3).map(({ product, highlightSpec, badge }) => (
-          <div
-            key={product.id}
-            className="group flex flex-col justify-between rounded-surface border border-line bg-white p-3 transition-all duration-300 hover:border-line-strong hover:shadow-[var(--shadow-soft)] sm:p-4"
-          >
-            <div>
-              {/* Header Badge */}
-              <div className="flex items-center justify-between px-1 pt-1 sm:px-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-porcelain px-3 py-1 text-meta font-medium text-ink">
-                  <SignalDot tone="brand" live />
-                  {badge}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => setQuickProduct(product)}
-                  suppressHydrationWarning
-                  className="inline-flex items-center gap-1 text-meta font-medium text-mute hover:text-ink transition-colors"
-                >
-                  <Icon name="sparkle" size={13} />
-                  <span>Quick look</span>
-                </button>
-              </div>
-
-              {/* Large Portrait Image */}
-              <Link
-                href={`/p/${product.slug}`}
-                className="relative mt-4 block aspect-[4/5] w-full overflow-hidden rounded-media bg-porcelain"
-              >
-                <ProductImage
-                  product={product}
-                  view="hero"
-                  sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 90vw"
-                  className="h-full w-full"
-                  imgClassName="object-cover transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:scale-105"
-                />
-              </Link>
-
-              {/* Details */}
-              <div className="mt-5 px-1 sm:px-2">
-                <p className="font-mono text-meta uppercase tracking-[0.14em] text-mute">
-                  {product.brand}
-                </p>
-                <Link href={`/p/${product.slug}`}>
-                  <h3 className="display mt-1 text-heading leading-tight tracking-[-0.01em] text-ink group-hover:text-brand-deep transition-colors">
-                    {product.name}
-                  </h3>
-                </Link>
-                <p className="mt-1.5 text-support text-ink-2 line-clamp-2 leading-relaxed">
-                  {product.summary}
-                </p>
-
-                {/* Spec Highlight Pill */}
-                <div className="mt-3.5 rounded-lg border border-line/70 bg-porcelain/60 px-3 py-2 text-meta text-ink-2 font-mono">
-                  <span className="text-ink font-medium">Spec: </span>
-                  {highlightSpec}
-                </div>
-              </div>
-            </div>
-
-            {/* Price & Action */}
-            <div className="mx-1 mb-1 mt-6 border-t border-line/80 pt-4 sm:mx-2 sm:mb-2">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Price
-                    usd={product.price}
-                    strike={product.compareAt}
-                    size="md"
-                  />
-                  <p className="mt-0.5 text-meta text-mute">Verified pricing</p>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => handleAdd(product)}
-                  suppressHydrationWarning
-                  className="btn btn-secondary h-11 px-4 text-support font-semibold hover:border-brand hover:text-brand-deep transition-all"
-                >
-                  <span>Add to bag</span>
-                  <Icon name="arrowRight" size={14} />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="fold-body lg:flex lg:justify-center">
+        <div className="fold-grid [--card-text:11.75rem] [--gap-x:1.5rem] max-sm:!grid-cols-1">
+          {items.slice(0, 3).map(({ product, highlightSpec, badge }) => (
+            <ProductCard key={product.id} product={product} layout="featured" label={badge} note={highlightSpec} />
+          ))}
+        </div>
       </div>
-
-      {quickProduct && (
-        <QuickView
-          product={quickProduct}
-          initialVariant={quickProduct.variants[0]}
-          onClose={() => setQuickProduct(null)}
-        />
-      )}
     </section>
   );
 }
