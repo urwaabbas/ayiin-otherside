@@ -48,7 +48,7 @@ export function InvoicesView({ go }: { go: (id: string, extra?: string) => void 
       <PageHead
         eyebrow="Track"
         title="Invoices"
-        description={`One statement for every supplier on Ayiin. ${company.terms}, PO-matched, with your ${company.exemptionCert.split(" · ")[0]} applied.`}
+        description={`One statement for every supplier. ${company.terms}, matched to your POs, with your ${company.exemptionCert.split(" · ")[0]} applied.`}
         actions={
           <button type="button" onClick={statement} className="btn btn-secondary">
             <Icon name="upload" size={16} className="rotate-180" /> Download statement

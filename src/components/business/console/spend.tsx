@@ -50,7 +50,7 @@ export function SpendView() {
       <PageHead
         eyebrow="Track"
         title="Spend"
-        description="Where the money goes, by month, department and supplier — with savings measured against list price, not a made-up “was” price."
+        description="Where the money goes, by month, team and supplier. Savings are measured against list price."
         actions={
           <button type="button" onClick={exportCsv} className="btn btn-secondary">
             <Icon name="upload" size={16} className="rotate-180" /> Export CSV

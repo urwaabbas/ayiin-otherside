@@ -28,10 +28,12 @@ import { categories } from "@/lib/catalog/categories";
  * - Deep scroll (>280px scrolling down): Minimizes distraction to essentials: AYIIN + Search + Bag.
  * - Scrolling up: Smoothly restores full navigation (Discover, Departments, Deals, Saved, Account).
  */
-type ScrollBands = { atTop: boolean; past80: boolean; past120: boolean; past280: boolean; down: boolean; expanded: boolean };
-const INITIAL_BANDS: ScrollBands = { atTop: true, past80: false, past120: false, past280: false, down: false, expanded: false };
+type ScrollBands = { atTop: boolean; past80: boolean; past120: boolean; past280: boolean; down: boolean; expanded: boolean; moving: boolean };
+const INITIAL_BANDS: ScrollBands = { atTop: true, past80: false, past120: false, past280: false, down: false, expanded: false, moving: false };
 /** Upward scroll distance (px) after which the full navbar returns — about three wheel notches. */
 const FULL_NAV_TRAVEL = 300;
+/** Quiet time (ms) after the last scroll event before the bar slides back down from the top. */
+const SETTLE_MS = 160;
 /** Pause (ms) after scrolling up before the minimal bar opens into the full one. */
 const IDLE_EXPAND_MS = 900;
 
@@ -46,13 +48,40 @@ export function Header() {
   const lastScrollY = useRef(0);
   const upTravel = useRef(0);
   const idleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const settleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Overlay state: "discover" | "departments" | null
   const [activeMenu, setActiveMenu] = useState<"discover" | "departments" | null>(null);
 
+  // Mouse users open the menus by hovering: a short intent delay on the way in so a pass across the
+  // bar doesn't flash a panel, and a short grace on the way out so the pointer can cross the gap
+  // between a tab and its panel. Touch and keyboard still use the click toggle.
+  const hoverOpen = (e: React.PointerEvent, menu: "discover" | "departments" | null) => {
+    if (e.pointerType !== "mouse" || !window.matchMedia("(min-width: 1024px)").matches) return;
+    clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => {
+      if (menu) closeSearchRef.current();
+      setActiveMenu(menu);
+    }, menu ? 90 : 120);
+  };
+  const canHover = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  const hoverHold = (e: React.PointerEvent) => {
+    if (e.pointerType === "mouse") clearTimeout(hoverTimer.current);
+  };
+  const hoverLeave = (e: React.PointerEvent) => {
+    if (e.pointerType !== "mouse") return;
+    clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setActiveMenu(null), 180);
+  };
+
   const searchOpen = useUI((s) => s.searchOpen);
   const openSearch = useUI((s) => s.openSearch);
   const closeSearch = useUI((s) => s.closeSearch);
+  const closeSearchRef = useRef(closeSearch);
+  useEffect(() => {
+    closeSearchRef.current = closeSearch;
+  }, [closeSearch]);
   const menuOpen = useUI((s) => s.menuOpen);
   const localNav = useUI((s) => s.localNav);
   const setMenu = useUI((s) => s.setMenu);
@@ -77,6 +106,7 @@ export function Header() {
         lastScrollY.current = y;
         setScroll((prev) => {
           let { down, expanded } = prev;
+          const moving = diff !== 0;
           if (y <= 60) {
             down = false;
             expanded = false;
@@ -92,9 +122,14 @@ export function Header() {
               if (upTravel.current >= FULL_NAV_TRAVEL) expanded = true;
             }
           }
-          const next: ScrollBands = { atTop: y < 24, past80: y > 80, past120: y > 120, past280: y > 280, down, expanded };
+          const next: ScrollBands = { atTop: y < 24, past80: y > 80, past120: y > 120, past280: y > 280, down, expanded, moving: moving || prev.moving };
           return (Object.keys(next) as (keyof ScrollBands)[]).every((k) => next[k] === prev[k]) ? prev : next;
         });
+        // The bar stays away while the page moves and drops in from the top once it stops.
+        clearTimeout(settleTimer.current);
+        settleTimer.current = setTimeout(() => {
+          setScroll((p) => (p.moving ? { ...p, moving: false } : p));
+        }, SETTLE_MS);
         // Stop scrolling while the bar is back in its minimal form and, after a beat, it opens up fully.
         clearTimeout(idleTimer.current);
         idleTimer.current = setTimeout(() => {
@@ -109,6 +144,8 @@ export function Header() {
       window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
       clearTimeout(idleTimer.current);
+      clearTimeout(settleTimer.current);
+      clearTimeout(hoverTimer.current);
     };
   }, []);
 
@@ -164,13 +201,13 @@ export function Header() {
   // after a small scroll up. Scrolling up FULL_NAV_TRAVEL px restores every item.
   const isDeep = scroll.past280 && !scroll.expanded && !activeMenu && !searchOpen;
 
-  // Scrolling down past the compressed state slides the whole header out of view;
-  // the first small scroll up brings it back. Open menus/search/drawer keep it in place.
+  // Past the compressed state the whole header leaves while the page is moving, in either direction,
+  // and slides back down from the top the moment scrolling stops. Open menus/search/drawer keep it in place.
   const isHidden =
     // A page with its own pinned local nav (product pages) owns the top edge once you leave the top: the
     // main navbar stays away, scrolling up or down, and comes back only at the very top.
     (localNav && scroll.past80 && !activeMenu && !searchOpen && !menuOpen) ||
-    (scroll.past120 && scroll.down && !activeMenu && !searchOpen && !menuOpen);
+    (scroll.past120 && scroll.moving && !activeMenu && !searchOpen && !menuOpen);
 
   const overlayActive =
     activeMenu !== null ||
@@ -206,9 +243,11 @@ export function Header() {
         data-compressed={isCompressed}
         data-deep={isDeep}
         data-hidden={isHidden}
+        onPointerEnter={hoverHold}
+        onPointerLeave={hoverLeave}
         onFocusCapture={() => setScroll((p) => (p.down ? { ...p, down: false } : p))}
         className={clsx(
-          "fixed inset-x-0 top-0 z-50 transition-[transform,opacity] duration-300 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
+          "fixed inset-x-0 top-0 z-50 transition-[transform,opacity] duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
           isHidden && "pointer-events-none -translate-y-full",
         )}
       >
@@ -275,9 +314,10 @@ export function Header() {
                   type="button"
                   aria-expanded={activeMenu === "discover"}
                   aria-controls="discover-menu"
-                  onClick={() => {
+                  onPointerEnter={(e) => hoverOpen(e, "discover")}
+                  onClick={(e) => {
                     closeSearch();
-                    setActiveMenu((curr) => (curr === "discover" ? null : "discover"));
+                    setActiveMenu((curr) => (curr === "discover" && (e.detail === 0 || !canHover()) ? null : "discover"));
                   }}
                   className="nav-item group flex items-center gap-1.5 px-3.5 py-2 text-support font-medium"
                 >
@@ -297,9 +337,10 @@ export function Header() {
                   type="button"
                   aria-expanded={activeMenu === "departments"}
                   aria-controls="departments-menu"
-                  onClick={() => {
+                  onPointerEnter={(e) => hoverOpen(e, "departments")}
+                  onClick={(e) => {
                     closeSearch();
-                    setActiveMenu((curr) => (curr === "departments" ? null : "departments"));
+                    setActiveMenu((curr) => (curr === "departments" && (e.detail === 0 || !canHover()) ? null : "departments"));
                   }}
                   className="nav-item group flex items-center gap-1.5 px-3.5 py-2 text-support font-medium"
                 >
@@ -317,6 +358,7 @@ export function Header() {
                 {/* 3. Deals Link */}
                 <Link
                   href="/search?deal=1"
+                  onPointerEnter={(e) => hoverOpen(e, null)}
                   className="nav-item flex items-center gap-1.5 px-3.5 py-2 text-support font-medium"
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-brand" />

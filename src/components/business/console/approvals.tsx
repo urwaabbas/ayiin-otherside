@@ -28,7 +28,7 @@ export function ApprovalsView() {
       <PageHead
         eyebrow="Control"
         title="Approvals"
-        description="Your policy decides what needs a second look. Everything inside it becomes a purchase order the moment it's placed."
+        description="Your rules decide what needs approval. Everything else becomes a purchase order as soon as it's placed."
       />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
         <div className="space-y-4">
@@ -71,7 +71,7 @@ function PolicyPanel() {
   const ws = useWorkspace();
   const approvers = ws.members.filter((m) => m.status === "active" && (m.role === "Admin" || m.role === "Approver"));
   return (
-    <Panel title="Approval policy" meta="Checked top to bottom — the first match picks the approver">
+    <Panel title="Approval policy" meta="Checked top to bottom. The first match picks the approver">
       <ol className="space-y-2">
         {ws.rules.map((r, i) => (
           <RuleRow key={r.id} rule={r} index={i + 1} approvers={approvers} />

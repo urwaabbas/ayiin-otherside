@@ -138,12 +138,13 @@ export function ProductRow({ product: p }: { product: Product }) {
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <QtyStepper
                 value={qty}
                 onChange={setQty}
                 min={p.b2b.moq}
                 size="sm"
+                className="self-start"
                 label={`Quantity of ${p.name}`}
               />
               <button
@@ -155,7 +156,7 @@ export function ProductRow({ product: p }: { product: Product }) {
                     `${qty} × ${p.name} · ${fmt(unit * qty, { cents: true })}`,
                   );
                 }}
-                className="btn btn-primary flex-1"
+                className="btn btn-primary w-full min-w-0 whitespace-nowrap"
               >
                 Add · <span className="num">{fmt(unit * qty)}</span>
               </button>

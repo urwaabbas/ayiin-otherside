@@ -10,6 +10,7 @@ import { CartDrawer } from "@/components/layout/cart-drawer";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { Toast } from "@/components/layout/toast";
 import { CompareTray } from "@/components/layout/compare-tray";
+import { PageMotion } from "@/components/motion/page-motion";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ayiin.com"),
@@ -63,6 +64,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <MobileNav />
           <CompareTray />
           <Toast />
+          <PageMotion />
         </Providers>
       </body>
     </html>

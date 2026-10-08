@@ -59,7 +59,7 @@ export function OrdersView() {
       <PageHead
         eyebrow="Track"
         title="Orders"
-        description="Every purchase order across the company — from checkout, approvals, quotes and scheduled reorders — with live delivery status."
+        description="Every purchase order in one place, with live delivery status."
         actions={
           <button type="button" onClick={exportCsv} className="btn btn-secondary">
             <Icon name="upload" size={16} className="rotate-180" /> Export CSV

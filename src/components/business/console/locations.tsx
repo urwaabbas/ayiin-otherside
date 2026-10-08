@@ -49,7 +49,7 @@ export function LocationsView() {
       <PageHead
         eyebrow="Control"
         title="Locations"
-        description="Ship any order to any site. Receiving notes and dock hours travel with every purchase order, so the driver knows before they arrive."
+        description="Ship any order to any site. Receiving notes and dock hours go on every purchase order."
         actions={
           <button type="button" onClick={() => setOpen(true)} className="btn btn-primary">
             <Icon name="plus" size={16} /> Add location

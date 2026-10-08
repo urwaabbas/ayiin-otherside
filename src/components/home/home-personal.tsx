@@ -7,7 +7,6 @@ import { photoFullUrl } from "@/lib/images";
 import { priceInsight, savingsPct } from "@/lib/commerce";
 import { hasView } from "@/lib/images";
 import { COMPARE_SLUGS, BRIDGE_SLUG } from "@/lib/home-plan";
-import { getHeroCampaigns } from "@/lib/campaigns";
 
 // Hero & Discovery Modules
 import { CampaignHero } from "@/components/home/campaign-hero";
@@ -45,8 +44,6 @@ const shopper = products.filter((p) => SHOPPER_CATEGORIES.has(p.category));
 const inCategory = (slug: string) => products.filter((p) => p.category === slug);
 
 export function HomePersonal() {
-  const heroSlides = getHeroCampaigns();
-
   // Trending: the six best sellers of the last seven days (bulk consumables excluded)
   const trending = shopper
     .filter((p) => !p.tags.includes("bulk"))
@@ -114,7 +111,7 @@ export function HomePersonal() {
   return (
     <div className="pb-24">
       {/* ── 01 · PRIMARY MARKETPLACE CAMPAIGN HERO ── */}
-      <CampaignHero slides={heroSlides} />
+      <CampaignHero />
 
       {/* On laptops each section below is a `.fold` — one screen tall — separated by --fold-gap */}
       <div className="shell mt-10 space-y-12 sm:mt-14 sm:space-y-16 lg:space-y-[var(--fold-gap)]">

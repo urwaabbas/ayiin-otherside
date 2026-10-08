@@ -9,6 +9,7 @@ export function SectionHeader({
   description,
   action,
   tone,
+  compact,
   className,
 }: {
   index?: string;
@@ -17,6 +18,8 @@ export function SectionHeader({
   description?: React.ReactNode;
   action?: { href: string; label: string };
   tone?: "dark";
+  /** On laptops the heading scales with the screen height so a one-screen section keeps room for its body */
+  compact?: boolean;
   className?: string;
 }) {
   return (
@@ -36,7 +39,9 @@ export function SectionHeader({
           className={clsx(
             "display",
             kicker && "mt-4",
+            kicker && compact && "lg:mt-[clamp(0.25rem,1.2svh,1rem)]",
             " text-balance text-display-sm sm:text-display-md lg:text-display-md",
+            compact && "lg:!text-[clamp(1.75rem,calc(1rem+3.6svh),3.5rem)] lg:!leading-[0.98]",
             tone === "dark" && "text-porcelain",
           )}
         >
@@ -46,6 +51,7 @@ export function SectionHeader({
           <p
             className={clsx(
               "mt-4 max-w-xl text-body leading-relaxed",
+              compact && "lg:mt-[clamp(0.25rem,1.2svh,1rem)] lg:text-support [@media(min-width:1024px)_and_(max-height:820px)]:hidden",
               tone === "dark" ? "text-mute-dark" : "text-mute",
             )}
           >

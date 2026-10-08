@@ -25,38 +25,6 @@ export type CampaignConfig = {
   accent?: string;
 };
 
-export type HeroCampaignSlide = {
-  id: string;
-  kicker: string;
-  title: string;
-  description: string;
-  cta: {
-    label: string;
-    href: string;
-  };
-  secondaryCta?: {
-    label: string;
-    href: string;
-  };
-  image: string;
-  position: string;
-  tag: string;
-  /** A product showcase (real product photos, background removed) instead of a background photograph */
-  showcase?: HeroShowcaseItem[];
-};
-
-/**
- * One product in a hero showcase. `crop` is the product's bounding box inside the background-removed
- * photo (x0, y0, x1, y1 as fractions) and `aspect` the photo's width ÷ height, so the layout can seat
- * the product itself — not its transparent canvas — on a pedestal.
- */
-export type HeroShowcaseItem = {
-  slug: string;
-  slot: "anchor" | "accent" | "tall";
-  crop: [number, number, number, number];
-  aspect: number;
-};
-
 /** Helper to extract high-resolution image URL from a product view */
 function getProductPhotoUrl(
   slug: string,
@@ -67,88 +35,6 @@ function getProductPhotoUrl(
   if (!p) return "";
   const photo = productPhoto(p, undefined, view) ?? productPhoto(p, undefined, "hero");
   return photo ? photoFullUrl(photo, 2000) : "";
-}
-
-/**
- * 01 · Hero Campaign Slides
- * Multi-slide primary campaign banner inspired by US/UK department stores
- * (Nordstrom, Selfridges, Crate & Barrel, SSENSE).
- */
-export function getHeroCampaigns(): HeroCampaignSlide[] {
-  return [
-    {
-      id: "everyday-edit",
-      kicker: "Curated picks. Honest prices.",
-      title: "Things worth discovering.",
-      description: "Curated products from verified sellers. Everyday things that make life better.",
-      cta: { label: "Shop now", href: "/search" },
-      secondaryCta: { label: "Explore categories", href: "/c/home-living" },
-      image: "",
-      position: "center",
-      tag: "Everyday",
-      // Audio, home, kitchen, carry, accessories and beauty — six departments, one room.
-      // Audio, home audio and carry — measured once from the cut-outs (see HeroShowcaseItem).
-      showcase: [
-        { slug: "aurel-anc-over-ear", slot: "anchor", crop: [0.297, 0.187, 0.695, 0.806], aspect: 400 / 268 },
-        { slug: "halo-speaker-mini", slot: "accent", crop: [0.322, 0.296, 0.625, 0.758], aspect: 1.5 },
-        { slug: "trail-bottle-750", slot: "tall", crop: [0.389, 0.235, 0.6, 0.894], aspect: 0.75 },
-      ],
-    },
-    {
-      id: "hear-more-carry-less",
-      kicker: "Acoustics & Motion",
-      title: "Hear more. Carry less.",
-      description:
-        "Class-leading -38 dB adaptive noise cancelling and 40-hour battery life engineered for long flights and open desks.",
-      cta: {
-        label: "Explore Audio & Tech",
-        href: "/c/audio-tech",
-      },
-      secondaryCta: {
-        label: "Compare Headphones",
-        href: "/compare",
-      },
-      image: getProductPhotoUrl("aurel-anc-over-ear", "hero", "kova-book-14-air"),
-      position: "50% 50%",
-      tag: "Audio & Tech",
-    },
-    {
-      id: "start-with-something-good",
-      kicker: "Morning Rituals",
-      title: "Start with something good.",
-      description:
-        "Electric gooseneck kettles with ±1° precision, freshly roasted washed Guji coffee, and satin-glazed stoneware.",
-      cta: {
-        label: "Shop Kitchen & Coffee",
-        href: "/c/kitchen",
-      },
-      secondaryCta: {
-        label: "Verified Deals",
-        href: "/search?deal=1",
-      },
-      image: getProductPhotoUrl("pour-gooseneck-kettle", "scene", "everyday-stoneware-mugs"),
-      position: "60% 45%",
-      tag: "Kitchen & Coffee",
-    },
-    {
-      id: "build-a-better-workday",
-      kicker: "Workspace Ergonomics",
-      title: "Build a better workday.",
-      description:
-        "BIFMA-certified adaptive lumbar seating, 4K color-accurate displays, and silent low-profile tactile typing.",
-      cta: {
-        label: "Shop Workspace",
-        href: "/c/office",
-      },
-      secondaryCta: {
-        label: "Ayiin for Business",
-        href: "/business",
-      },
-      image: getProductPhotoUrl("ergo-task-chair-pro", "scene", "kova-book-14-air"),
-      position: "50% 40%",
-      tag: "Office & Workspace",
-    },
-  ];
 }
 
 /**

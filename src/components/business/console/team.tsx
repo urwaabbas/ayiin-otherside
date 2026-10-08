@@ -49,7 +49,7 @@ export function TeamView() {
 
   return (
     <div className="space-y-6">
-      <PageHead eyebrow="Control" title="Team" description="One company account, one bill. Everyone buys within the limit and cost centre you set — spend rolls up by person." />
+      <PageHead eyebrow="Control" title="Team" description="One company account. Everyone buys within the limit and team budget you set." />
 
       <Panel title="Invite a teammate">
         <form onSubmit={invite} noValidate className="grid gap-3 md:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,1fr)_auto] md:items-end">

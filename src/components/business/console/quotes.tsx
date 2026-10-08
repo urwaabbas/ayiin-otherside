@@ -30,7 +30,7 @@ export function QuotesView() {
       <PageHead
         eyebrow="Buy"
         title="Quotes"
-        description="Describe it once. Ayiin sends the request to every qualified supplier, normalises replies to landed cost and turns the winner into a purchase order."
+        description="Describe it once. We send it to qualified suppliers, compare the replies, and the winner becomes a purchase order."
       />
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)]">
         <NewRequest

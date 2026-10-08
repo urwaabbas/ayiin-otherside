@@ -24,7 +24,7 @@ export function BudgetsView({ go }: { go: (id: string, extra?: string) => void }
       <PageHead
         eyebrow={`Control · ${quarterLabel()}`}
         title="Budgets"
-        description="Quarterly budgets per cost centre. Spend counts the moment a purchase order is issued; pending requests show what's about to land."
+        description="A quarterly budget for each team. Spend counts when a purchase order is issued. Pending requests show what's coming."
       />
       <dl className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         <Stat label="Quarter budget" value={fmt(Math.round(budget))} foot={`${ws.costCenters.length} cost centres`} />

@@ -112,9 +112,6 @@ export function MegaMenu({ onClose }: { onClose: () => void }) {
 
         {/* Subcategories */}
         <div className="mt-6">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-mute mb-2">
-            EXPLORE SUBCATEGORIES
-          </p>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1 sm:grid-cols-3">
             {cat.subcategories.map((s) => (
               <Link
@@ -132,28 +129,13 @@ export function MegaMenu({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        {/* Shopping Guide Box */}
-        <div className="mt-6 rounded-surface border border-line/70 bg-white p-4 shadow-[var(--shadow-hair)]">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-mute flex items-center gap-2">
-            <Icon name="sparkle" size={12} className="text-brand" /> {cat.guide.title}
-          </p>
-          <ul className="mt-2.5 grid gap-2 text-support text-ink-2 sm:grid-cols-3">
-            {cat.guide.points.map((pt) => (
-              <li key={pt} className="flex gap-2">
-                <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-ink" />
-                <span className="leading-snug">{pt}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
         {/* Dynamic Context Filter Pills */}
         <div className="mt-5 flex flex-wrap gap-2">
           <Link href={`/c/${cat.slug}?fast=1`} onClick={onClose} className="chip">
             <SignalDot /> {fastCount > 0 ? `${fastCount} arrive tomorrow` : "Fastest delivery"}
           </Link>
           <Link href={`/c/${cat.slug}?deal=1`} onClick={onClose} className="chip">
-            <Icon name="tag" size={13} /> {dealCount > 0 ? `${dealCount} verified deals` : "Verified deals"}
+            <Icon name="tag" size={13} /> {dealCount > 0 ? `${dealCount} verified ${dealCount === 1 ? "deal" : "deals"}` : "Verified deals"}
           </Link>
           {business && (
             <Link href={`/business?tab=quotes`} onClick={onClose} className="chip">

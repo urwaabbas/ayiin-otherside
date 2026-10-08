@@ -40,7 +40,7 @@ export function QuickView() {
       <PageHead
         eyebrow="Buy"
         title="Quick order"
-        description="Paste SKUs, product names or spreadsheet rows. Each line is matched to the catalogue and priced at your contract and volume rate."
+        description="Paste SKUs, product names or spreadsheet rows. Each line is matched to the catalogue and priced at your contract rate."
       />
       <QuickOrder key={csv ?? "empty"} initial={csv ?? undefined} />
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
@@ -152,7 +152,7 @@ export function ListsView() {
       <PageHead
         eyebrow="Buy"
         title="Lists & reorders"
-        description="Every list reorders in one click. Put one on a schedule and Ayiin places the order for you — with a heads-up two days before."
+        description="Reorder any list in one click, or put it on a schedule. We remind you two days before it runs."
         actions={
           <form
             onSubmit={(e) => {

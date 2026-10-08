@@ -792,221 +792,6 @@
     color: #f5f3ef;
   }
 
-  /* ─── Hero showcase ──────────────────────────────────────────────
-     White page, a great disc of the logo's sunlit amber on the right, real product
-     photography (background removed) on white pedestals. Stage geometry is in container
-     units so the composition scales as one object. */
-  .hs {
-    --mx: 0;
-    --my: 0;
-  }
-  .hs-field {
-    position: absolute;
-    left: 61%;
-    top: 50%;
-    width: max(1500px, 110vw);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    transform: translate3d(calc(var(--mx) * -10px), -50%, 0);
-    background:
-      radial-gradient(circle at 18% 46%, rgb(255 255 255 / 0.22), transparent 26%),
-      linear-gradient(160deg, var(--color-brand-yellow) -10%, var(--color-brand) 34%, var(--color-brand-orange) 78%);
-    transition: transform 1200ms var(--ease-out-expo);
-  }
-  .hs-stage {
-    container-type: size;
-  }
-  @media (min-width: 1024px) {
-    .hs-stage {
-      margin-right: calc(var(--gutter) * -1);
-    }
-  }
-  .hs-pedestal,
-  .hs-product,
-  .hs-badge {
-    position: absolute;
-    transform: translate3d(calc(var(--mx) * var(--d) * -28px), calc(var(--my) * var(--d) * -12px), 0);
-    transition:
-      transform 1100ms var(--ease-out-expo),
-      opacity 900ms var(--ease-out-expo),
-      translate 1100ms var(--ease-out-expo);
-  }
-  .hs[data-active="false"] :is(.hs-pedestal, .hs-product, .hs-badge) {
-    opacity: 0;
-    translate: 0 26px;
-  }
-  .hs[data-active="false"] .hs-copy > * {
-    opacity: 0;
-    translate: 0 14px;
-  }
-  .hs-copy > * {
-    transition:
-      opacity 900ms var(--ease-out-expo),
-      translate 1100ms var(--ease-out-expo);
-  }
-
-  /* Pedestals: white cylinders; the anchor wears an amber band, the accent an amber top */
-  .hs-pedestal {
-    --ry: calc(var(--pw) * 0.13);
-    left: var(--px);
-    width: var(--pw);
-    bottom: calc(var(--pb) - var(--ry));
-    height: calc(var(--ph) + var(--ry));
-    border-radius: 0 0 50% 50% / 0 0 var(--ry) var(--ry);
-    background:
-      linear-gradient(90deg, rgb(var(--rgb-ink) / 0.1), transparent 30%, transparent 62%, rgb(var(--rgb-ink) / 0.08)),
-      linear-gradient(180deg, #ffffff 0%, #f4f2ee 100%);
-    box-shadow: 0 30px 40px -24px rgb(120 60 0 / 0.45);
-  }
-  .hs-pedestal::before {
-    content: "";
-    position: absolute;
-    inset-inline: 0;
-    top: calc(var(--ry) * -1);
-    height: calc(var(--ry) * 2);
-    border-radius: 50%;
-    background: radial-gradient(120% 140% at 40% 30%, #ffffff, #efece6);
-    box-shadow: inset 0 -1px 0 rgb(var(--rgb-ink) / 0.06);
-  }
-  .hs-pedestal--anchor {
-    --d: 0.5;
-    --px: 0cqw;
-    --pw: 66cqw;
-    --pb: 14cqh;
-    --ph: 12cqh;
-    background:
-      linear-gradient(90deg, rgb(var(--rgb-ink) / 0.12), transparent 30%, transparent 62%, rgb(var(--rgb-ink) / 0.1)),
-      linear-gradient(180deg, #ffffff 0%, #f4f2ee 52%, var(--color-brand) 52%, var(--color-brand-orange) 100%);
-  }
-  .hs-pedestal--accent {
-    --d: 0.8;
-    --px: 52cqw;
-    --pw: 38cqw;
-    --pb: 7cqh;
-    --ph: 13cqh;
-    z-index: 3;
-  }
-  .hs-pedestal--accent::before {
-    background: radial-gradient(120% 140% at 40% 30%, var(--color-brand-hover), var(--color-brand-orange));
-  }
-
-  .hs-product {
-    display: block;
-    transform-origin: 50% 100%;
-  }
-  .hs-box {
-    transition: transform 700ms var(--ease-out-expo);
-    filter: drop-shadow(0 18px 18px rgb(var(--rgb-ink) / 0.18));
-  }
-  .hs-product--anchor {
-    --d: 0.5;
-    left: 4cqw;
-    width: 58cqw;
-    bottom: calc(26cqh - 1.5cqw);
-    z-index: 2;
-  }
-  .hs-product--accent {
-    --d: 0.8;
-    left: 57.5cqw;
-    width: 27cqw;
-    bottom: calc(20cqh - 1cqw);
-    z-index: 4;
-  }
-  .hs-product--tall {
-    --d: 0.25;
-    left: 74cqw;
-    width: 17cqw;
-    bottom: 22cqh;
-    z-index: 1;
-  }
-  .hs-product--tall .hs-box {
-    rotate: 8deg;
-  }
-  .hs-badge {
-    --d: 0.65;
-    z-index: 5;
-    display: grid;
-    place-items: center;
-    align-content: center;
-    width: clamp(96px, 19cqw, 124px);
-    aspect-ratio: 1;
-    border-radius: 50%;
-    background: #ffffff;
-    color: var(--color-brand-deep);
-    box-shadow: var(--shadow-lift);
-  }
-  .hs-badge--top {
-    left: 43cqw;
-    top: 5cqh;
-  }
-  .hs-badge--bottom {
-    left: 74cqw;
-    bottom: 3cqh;
-  }
-
-  .hs-tag {
-    position: absolute;
-    left: 50%;
-    bottom: 100%;
-    width: max-content;
-    max-width: 19rem;
-    padding: 0.625rem 0.875rem;
-    border-radius: var(--radius-control);
-    background: rgb(255 255 255 / 0.96);
-    box-shadow: var(--shadow-float);
-    pointer-events: none;
-    opacity: 0;
-    transform: translate3d(-50%, 8px, 0);
-    transition:
-      opacity 360ms var(--ease-out-expo),
-      transform 520ms var(--ease-out-expo);
-  }
-  .hs-cta-arrow {
-    transition: transform 400ms var(--ease-out-expo);
-  }
-  .hs-cta:hover .hs-cta-arrow {
-    transform: translateX(4px);
-  }
-  .hs-product:focus-visible,
-  .hs-product:hover {
-    outline: none;
-    z-index: 10;
-  }
-  .hs-product:focus-visible .hs-box {
-    outline: 2px solid var(--focus);
-    outline-offset: 6px;
-    border-radius: var(--radius-control);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .hs-product:hover .hs-box {
-      transform: translate3d(0, -10px, 0) scale(1.03);
-    }
-    .hs-product:hover .hs-tag {
-      opacity: 1;
-      transform: translate3d(-50%, 0, 0);
-    }
-  }
-  .hs-product:focus-visible .hs-tag {
-    opacity: 1;
-    transform: translate3d(-50%, 0, 0);
-  }
-
-  @media (max-width: 1023px) {
-    .hs-field {
-      left: -20%;
-      top: auto;
-      bottom: -40%;
-      width: 150%;
-      transform: none;
-    }
-    .hs-badge {
-      display: none;
-    }
-    .hs-stage {
-      margin-inline: calc(var(--gutter) * -0.5);
-    }
-  }
-
   /* Saved: the heart settles into place — no bounce, no burst */
   @keyframes pc-heart {
     0% {
@@ -1060,6 +845,95 @@
   .panel-ink {
     background: var(--color-ink);
     color: var(--color-porcelain);
+  }
+
+  /* ─── Ayiin Business: the control room ───────────────────────────
+     Personal is a sunlit shop; Business is the desk behind it. Same charcoal and amber as the
+     logo, but inverted: graphite surfaces, amber used only for signal (what needs you, what is
+     live, what moved), figures in mono. */
+  .biz-deck {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-radius: var(--radius-panel);
+    color: var(--color-porcelain);
+    background:
+      radial-gradient(60% 80% at 100% 0%, rgb(var(--rgb-brand) / 0.2), transparent 62%),
+      radial-gradient(50% 70% at 0% 100%, rgb(var(--rgb-brand) / 0.07), transparent 60%),
+      linear-gradient(160deg, #262421 0%, #181715 58%, #131211 100%);
+    box-shadow: 0 40px 80px -40px rgb(var(--rgb-ink) / 0.55), inset 0 0 0 1px rgb(255 255 255 / 0.05);
+  }
+  .biz-deck::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(80% 90% at 70% 10%, black, transparent 78%);
+  }
+  .biz-deck .btn-secondary:hover:not(:disabled) {
+    background: rgb(255 255 255 / 0.1);
+  }
+  .biz-glass {
+    border-radius: var(--radius-surface);
+    background: rgb(255 255 255 / 0.045);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.09);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+  .biz-rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.14), transparent);
+  }
+  /* A pulsing amber point — "live" */
+  .biz-live {
+    position: relative;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-brand);
+  }
+  .biz-live::after {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid var(--color-brand);
+    opacity: 0;
+    animation: biz-ping 2.4s var(--ease-out-expo) infinite;
+  }
+  @keyframes biz-ping {
+    0% {
+      transform: scale(0.5);
+      opacity: 0.9;
+    }
+    80%,
+    100% {
+      transform: scale(1.6);
+      opacity: 0;
+    }
+  }
+  .biz-sheen {
+    background-image: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.1) 50%, transparent 70%);
+    background-size: 220% 100%;
+    animation: biz-sheen 5s linear infinite;
+  }
+  @keyframes biz-sheen {
+    from {
+      background-position: 120% 0;
+    }
+    to {
+      background-position: -120% 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .biz-live::after,
+    .biz-sheen {
+      animation: none;
+    }
   }
 
   /* Inputs */

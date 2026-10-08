@@ -1,6 +1,8 @@
 "use client";
 
 import { clsx } from "clsx";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { creditAvailable, inFlight, unpaid, waitingOn } from "@/lib/b2b/policy";
 import {
@@ -27,6 +29,8 @@ import { TeamView } from "@/components/business/console/team";
 import { LocationsView } from "@/components/business/console/locations";
 import { SpendView } from "@/components/business/console/spend";
 import { ListsView, QuickView } from "@/components/business/console/buying";
+import { CommandPalette } from "@/components/business/console/command-palette";
+import { CountUp, EASE } from "@/components/motion/primitives";
 
 type Tab = { id: string; label: string; icon: IconName };
 
@@ -71,6 +75,19 @@ export function Console() {
   const tab = ALL.some((t) => t.id === sp.get("tab"))
     ? sp.get("tab")!
     : "overview";
+  const [jumpOpen, setJumpOpen] = useState(false);
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const t = e.target as HTMLElement;
+      if (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable) return;
+      if (e.key.toLowerCase() === "j" && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        setJumpOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
   const go = (id: string, extra = "") => {
     router.replace(`${pathname}?tab=${id}${extra}`, { scroll: false });
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -91,14 +108,15 @@ export function Console() {
     <div className="mt-6 grid gap-8 lg:mt-8 lg:grid-cols-[248px_minmax(0,1fr)] lg:gap-10">
       <aside className="lg:sticky lg:top-[96px] lg:self-start">
         {/* Account identity */}
-        <div className="panel-ink hidden rounded-surface p-4 lg:block">
+        <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE }} className="biz-deck hidden p-4 lg:block">
           <div className="flex items-center gap-3">
             <span className="grid h-10 w-10 shrink-0 place-items-center rounded-control bg-porcelain font-mono text-meta font-medium text-ink">
               {company.initials}
             </span>
             <div className="min-w-0">
-              <p className="truncate text-support font-medium">
+              <p className="flex items-center gap-2 truncate text-support font-medium">
                 {company.name}
+                <span className="biz-live shrink-0" aria-hidden />
               </p>
               <p className="truncate text-meta text-mute-dark">
                 {company.plan}
@@ -109,7 +127,7 @@ export function Console() {
             <div className="flex items-baseline justify-between text-meta">
               <span className="text-mute-dark">Available credit</span>
               <span className="num">
-                {ready ? fmt(Math.round(available)) : "—"}
+                {ready ? <CountUp value={Math.round(available)} format={(n) => fmt(Math.round(n))} /> : "—"}
               </span>
             </div>
             <Meter
@@ -122,7 +140,17 @@ export function Console() {
               {company.terms} · limit {fmt(Math.round(company.creditLimit))}
             </p>
           </div>
-        </div>
+        </motion.div>
+
+        <button
+          type="button"
+          onClick={() => setJumpOpen(true)}
+          className="group mt-3 hidden w-full items-center gap-2.5 rounded-control bg-white px-3 py-2.5 text-left text-support text-mute shadow-[var(--shadow-hair)] transition-shadow hover:text-ink hover:shadow-[var(--shadow-soft)] lg:flex"
+        >
+          <Icon name="search" size={16} />
+          <span className="flex-1">Jump to…</span>
+          <kbd className="num rounded-compact bg-mist px-1.5 py-0.5 text-meta text-ink-2">J</kbd>
+        </button>
 
         <nav aria-label="Business console" className="lg:mt-4">
           <ul className="scroll-x -mx-[var(--gutter)] flex gap-1 px-[var(--gutter)] lg:mx-0 lg:block lg:space-y-5 lg:px-0">
@@ -144,22 +172,29 @@ export function Console() {
                           onClick={() => go(t.id)}
                           aria-current={active ? "page" : undefined}
                           className={clsx(
-                            "flex w-full items-center gap-3 rounded-full px-3.5 py-2 text-left text-support transition-colors lg:rounded-control",
+                            "relative flex w-full items-center gap-3 rounded-full px-3.5 py-2 text-left text-support transition-colors lg:rounded-control",
                             active
-                              ? "bg-ink text-porcelain"
+                              ? "text-porcelain"
                               : "text-ink-2 hover:bg-mist hover:text-ink",
                           )}
                         >
+                          {active && (
+                            <motion.span
+                              layoutId="console-nav-pill"
+                              className="absolute inset-0 rounded-full bg-ink shadow-[0_8px_20px_-10px_rgb(var(--rgb-ink)/0.7)] lg:rounded-control"
+                              transition={{ type: "spring", stiffness: 420, damping: 38 }}
+                            />
+                          )}
                           <Icon
                             name={t.icon}
                             size={17}
-                            className={active ? "text-brand" : undefined}
+                            className={clsx("relative", active && "text-brand")}
                           />
-                          <span className="whitespace-nowrap">{t.label}</span>
+                          <span className="relative whitespace-nowrap">{t.label}</span>
                           {ready && c && c.n > 0 && (
                             <span
                               className={clsx(
-                                "num ml-auto grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-meta",
+                                "num relative ml-auto grid h-5 min-w-5 place-items-center rounded-full px-1.5 text-meta",
                                 c.alert
                                   ? "bg-brand text-ink"
                                   : active
@@ -207,7 +242,15 @@ export function Console() {
         )}
       </aside>
 
-      <div key={tab} className="min-w-0 animate-fade pb-8">
+      <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={tab}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.32, ease: EASE }}
+        className="min-w-0 pb-8"
+      >
         {!ready ? (
           <Loading label="Loading your workspace">
             <PageHeaderSkeleton />
@@ -228,7 +271,9 @@ export function Console() {
             {tab === "addresses" && <LocationsView />}
           </>
         )}
-      </div>
+      </motion.div>
+      </AnimatePresence>
+      <CommandPalette open={jumpOpen} onClose={() => setJumpOpen(false)} go={go} />
     </div>
   );
 }

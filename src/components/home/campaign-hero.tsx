@@ -1,212 +1,203 @@
 "use client";
 
 import Link from "next/link";
-import { clsx } from "clsx";
-import { useEffect, useState } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
+import { useState } from "react";
 import { Icon } from "@/components/ui/icon";
-import type { HeroCampaignSlide } from "@/lib/campaigns";
-import { HeroWorld } from "@/components/home/hero-world";
+import { Money } from "@/components/ui/money";
+import { products, productBySlug } from "@/lib/catalog/products";
+import { photoUrl, productPhoto } from "@/lib/images";
 
-export function CampaignHero({ slides }: { slides: HeroCampaignSlide[] }) {
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const count = slides.length;
+/**
+ * Home hero: a centred headline, two ways in, and a fan of real products rising from the bottom edge.
+ * The fan opens from the middle card outwards; resting the pointer on a card straightens and lifts it
+ * while its neighbours step aside, and the whole fan leans a few pixels toward the pointer.
+ * Everything below the headline is a link to a real product page.
+ */
 
-  useEffect(() => {
-    if (
-      isPaused ||
-      count < 2 ||
-      (typeof window !== "undefined" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-    ) {
-      return;
-    }
-    const timer = window.setTimeout(() => {
-      setActiveIdx((prev) => (prev + 1) % count);
-    }, 6800);
-    return () => window.clearTimeout(timer);
-  }, [activeIdx, isPaused, count]);
+/** Left to right; the middle card leads. */
+const FAN = ["ergo-task-chair-pro", "pour-gooseneck-kettle", "aurel-anc-over-ear", "loom-lounge-chair", "stride-runner-2"] as const;
 
-  if (!slides.length) return null;
-  // Product-world slides are light rooms; the rail switches to ink over them.
-  const light = Boolean(slides[activeIdx]?.showcase);
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+// Reviews across the whole catalogue, weighted by how many each product has.
+const reviewTotal = products.reduce((s, p) => s + p.reviewCount, 0);
+const averageRating = products.reduce((s, p) => s + p.rating * p.reviewCount, 0) / reviewTotal;
+
+export function CampaignHero() {
+  const reduce = useReducedMotion();
+  const [hovered, setHovered] = useState<number | null>(null);
+
+  // The fan leans toward the pointer.
+  const px = useMotionValue(0);
+  const lean = useSpring(px, { stiffness: 90, damping: 20, mass: 0.6 });
+  const onMove = (e: React.PointerEvent<HTMLElement>) => {
+    if (e.pointerType !== "mouse" || reduce) return;
+    const r = e.currentTarget.getBoundingClientRect();
+    px.set(((e.clientX - r.left) / r.width - 0.5) * -26);
+  };
+
+  const rise = (delay: number, y = 22) => (reduce ? {} : { initial: { opacity: 0, y }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.9, ease: EASE, delay } });
 
   return (
-    <section
-      role="region"
-      aria-roledescription="carousel"
-      aria-label="Featured marketplace campaigns"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onFocusCapture={() => setIsPaused(true)}
-      onBlurCapture={() => setIsPaused(false)}
-      className={clsx("relative w-full overflow-hidden transition-colors duration-1000 h-[calc(100svh-112px)] lg:h-[calc(100svh-152px)] min-h-[560px] lg:min-h-[520px] max-h-[720px]", light ? "bg-white" : "bg-ink")}
-    >
-      {slides.map((slide, idx) => {
-        const isActive = idx === activeIdx;
-        return (
-          <div
-            key={slide.id}
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${idx + 1} of ${count}: ${slide.title}`}
-            aria-hidden={!isActive}
-            inert={!isActive}
-            className={clsx(
-              "absolute inset-0 transition-opacity duration-1000 ease-[var(--ease-out-expo)]",
-              isActive ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none",
-            )}
-          >
-            {slide.showcase ? (
-              <HeroWorld slide={slide} active={isActive} first={idx === 0} />
-            ) : (
-            <>
-            {/* Background Photography with subtle slow motion */}
-            {slide.image && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={slide.image}
-                alt=""
-                loading={idx === 0 ? "eager" : "lazy"}
-                className={clsx(
-                  "absolute inset-0 h-full w-full object-cover transition-transform duration-[7000ms] ease-linear",
-                  isActive ? "scale-105" : "scale-100",
-                )}
-                style={{ objectPosition: slide.position || "center" }}
-              />
-            )}
-
-            {/* Editorial Multi-layer Lighting & Scrim */}
-            <div
-              aria-hidden
-              className="absolute inset-0 bg-[linear-gradient(90deg,rgb(var(--rgb-ink)/0.92)_0%,rgb(var(--rgb-ink)/0.78)_36%,rgb(var(--rgb-ink)/0.35)_68%,transparent_90%)]"
+    <section aria-label="Shop Ayiin" className="shell pt-3 sm:pt-4">
+      <div
+        onPointerMove={onMove}
+        onPointerLeave={() => px.set(0)}
+        className="relative isolate flex h-[clamp(560px,calc(100svh-200px),760px)] flex-col overflow-hidden rounded-panel bg-white shadow-[var(--shadow-hair)] lg:h-[clamp(540px,calc(100svh-132px),860px)]"
+      >
+        {/* Sunlit ground: the logo's amber, rising from the bottom edge */}
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10"
+          style={{
+            background:
+              "radial-gradient(60% 55% at 50% 108%, rgb(var(--rgb-brand) / 0.42), transparent 70%), radial-gradient(35% 30% at 50% 100%, rgb(253 210 7 / 0.28), transparent 70%)",
+          }}
+        />
+        <svg aria-hidden viewBox="0 0 1200 600" preserveAspectRatio="xMidYMax slice" className="absolute inset-x-0 bottom-0 -z-10 h-full w-full text-ink/[0.07]">
+          {[260, 400, 540, 680].map((r, i) => (
+            <motion.circle
+              key={r}
+              cx="600"
+              cy="640"
+              r={r}
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1"
+              initial={reduce ? false : { opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1.6, ease: EASE, delay: 0.2 + i * 0.12 }}
+              style={{ transformOrigin: "600px 640px" }}
             />
-            <div
-              aria-hidden
-              className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(to_top,rgb(var(--rgb-ink)/0.85),transparent)]"
-            />
-            <div
-              aria-hidden
-              className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(255,166,36,0.12),transparent_55%)]"
-            />
+          ))}
+        </svg>
 
-            {/* Content Presentation */}
-            <div className="shell relative flex h-full flex-col justify-center pt-6 pb-20 sm:pt-8 sm:pb-22">
-              <div className="max-w-2xl">
-                {/* Headline in Funnel Display */}
-                <h1 className="display text-balance text-heading leading-[1.0] tracking-[-0.035em] text-white sm:text-display-sm lg:text-display-md xl:text-display-lg">
-                  {slide.title}
-                </h1>
+        {/* Message */}
+        <div className="relative z-10 mx-auto flex max-w-[56rem] shrink-0 flex-col items-center px-5 pt-[clamp(1.25rem,5.4svh,4.25rem)] text-center">
+          <motion.p {...rise(0.05, 10)} className="inline-flex items-center gap-2 rounded-full bg-mist/80 px-3.5 py-1.5 text-support text-ink-2 ring-1 ring-line max-sm:hidden">
+            <span className="h-1.5 w-1.5 rounded-full bg-brand" aria-hidden />
+            Every price checked against 12 weeks of history
+          </motion.p>
 
-                {/* Call-to-Action Group */}
-                <div className="mt-5 sm:mt-6 flex flex-wrap items-center gap-3">
-                  <Link
-                    href={slide.cta.href}
-                    className="btn btn-primary h-11 px-6 text-support font-semibold shadow-[0_4px_16px_rgba(255,166,36,0.35)] transition-all hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    <span>{slide.cta.label}</span>
-                    <Icon name="arrowRight" size={17} />
-                  </Link>
-
-                  {slide.secondaryCta && (
-                    <Link
-                      href={slide.secondaryCta.href}
-                      className="btn h-11 border border-white/30 bg-white/10 px-5 text-support font-medium text-white backdrop-blur-md transition-all hover:border-white/60 hover:bg-white/20 hover:text-white active:scale-[0.98]"
-                    >
-                      <span>{slide.secondaryCta.label}</span>
-                    </Link>
-                  )}
-                </div>
-              </div>
-            </div>
-            </>
-            )}
-          </div>
-        );
-      })}
-
-      {/* Intentional Bottom Progress & Navigation Rail */}
-      <div className="absolute inset-x-0 bottom-5 sm:bottom-6 z-20 pointer-events-none">
-        <div className={clsx("shell flex items-end gap-4 pointer-events-auto", light ? "justify-start" : "justify-between")}>
-          {/* Segmented Slide Indicators with Labels */}
-          <div className={clsx("flex max-w-2xl flex-1 items-center gap-2 transition-opacity duration-500 sm:gap-4", light && "hidden")}>
-            {slides.map((s, k) => {
-              const isCurrent = k === activeIdx;
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  aria-label={`Go to slide ${k + 1}: ${s.title}`}
-                  aria-current={isCurrent}
-                  onClick={() => setActiveIdx(k)}
-                  className="group flex min-w-0 flex-1 flex-col gap-1.5 py-1 text-left transition-opacity cursor-pointer"
-                >
-                  <div className="flex min-w-0 items-center gap-2 text-meta">
-                    <span
-                      className={clsx(
-                        "shrink-0 font-mono font-medium transition-colors",
-                        isCurrent ? (light ? "text-brand-deep" : "text-brand") : light ? "text-ink/45 group-hover:text-ink/75" : "text-white/50 group-hover:text-white/80",
-                      )}
-                    >
-                      0{k + 1}
-                    </span>
-                    <span
-                      className={clsx(
-                        "hidden min-w-0 truncate text-[11px] tracking-wide transition-colors sm:block",
-                        isCurrent ? (light ? "text-ink font-medium" : "text-white/90 font-medium") : light ? "text-ink/40 group-hover:text-ink/70" : "text-white/40 group-hover:text-white/70",
-                      )}
-                    >
-                      {s.tag}
-                    </span>
-                  </div>
-                  <div className={clsx("relative h-[3px] w-full overflow-hidden rounded-full transition-colors", light ? "bg-ink/12 group-hover:bg-ink/20" : "bg-white/20 group-hover:bg-white/30")}>
-                    <div
-                      key={`${k}-${activeIdx}-${isPaused}`}
-                      className={clsx(
-                        "absolute inset-y-0 left-0 rounded-full bg-brand transition-all",
-                        k < activeIdx && "w-full",
-                        k > activeIdx && "w-0",
-                        isCurrent && !isPaused && "animate-[hero-progress_6.8s_linear_forwards]",
-                        isCurrent && isPaused && "w-full",
-                      )}
+          <h1 className="display mt-[clamp(0.75rem,2.4svh,1.5rem)] text-[clamp(2.1rem,min(calc(1.4rem+7.2svh),13vw),6rem)] leading-[0.96] tracking-[-0.045em] text-ink">
+            <span className="block overflow-hidden pb-[0.06em]">
+              <motion.span className="inline-block" initial={reduce ? false : { y: "105%" }} animate={{ y: 0 }} transition={{ duration: 1, ease: EASE, delay: 0.12 }}>
+                Shop what&apos;s{" "}
+                <span className="relative inline-block text-brand-deep">
+                  worth
+                  <svg aria-hidden viewBox="0 0 220 14" preserveAspectRatio="none" className="absolute -bottom-[0.06em] left-0 h-[0.16em] w-full text-brand">
+                    <motion.path
+                      d="M3 9 C 40 2, 90 2, 130 6 S 195 10, 217 4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                      initial={reduce ? false : { pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 0.9, ease: EASE, delay: 0.9 }}
                     />
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Navigation Capsule */}
-          <div className={clsx("flex items-center gap-1.5 rounded-full border p-1 backdrop-blur-md transition-colors duration-700", light ? "border-ink/10 bg-white/60 text-ink" : "border-white/20 bg-black/30 text-white")}>
-            <button
-              type="button"
-              aria-label="Previous campaign"
-              onClick={() => setActiveIdx((prev) => (prev - 1 + count) % count)}
-              className={clsx("grid h-8 w-8 place-items-center rounded-full transition-all", light ? "text-ink/70 hover:bg-ink/5 hover:text-ink" : "text-white/80 hover:bg-white/20 hover:text-white")}
-            >
-              <Icon name="chevronLeft" size={17} />
-            </button>
-            <span className={clsx("px-2 font-mono text-meta select-none", light ? "text-ink/60" : "text-white/70")}>
-              0{activeIdx + 1} / 0{count}
+                  </svg>
+                </span>{" "}
+                it.
+              </motion.span>
             </span>
-            <button
-              type="button"
-              aria-label="Next campaign"
-              onClick={() => setActiveIdx((prev) => (prev + 1) % count)}
-              className={clsx("grid h-8 w-8 place-items-center rounded-full transition-all", light ? "text-ink/70 hover:bg-ink/5 hover:text-ink" : "text-white/80 hover:bg-white/20 hover:text-white")}
+          </h1>
+
+          <motion.p {...rise(0.35)} className="mt-[clamp(0.5rem,1.8svh,1.25rem)] max-w-[34rem] text-[clamp(0.95rem,1.1rem+0.1vw,1.2rem)] leading-snug text-mute">
+            Real prices, real reviews, and a delivery date before you pay.
+          </motion.p>
+
+          <motion.div {...rise(0.45)} className="mt-[clamp(0.875rem,2.8svh,2rem)] flex flex-wrap items-center justify-center gap-3">
+            <Link
+              href="/search"
+              className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-ink px-7 text-body font-medium text-white shadow-[0_10px_24px_-10px_rgb(var(--rgb-ink)/0.6)] transition-[background-color,transform] duration-300 hover:bg-graphite-2 active:scale-[0.98]"
             >
-              <Icon name="chevronRight" size={17} />
-            </button>
-          </div>
+              Shop now
+              <Icon name="arrowRight" size={17} className="transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+            <Link href="/search?deal=1" className="inline-flex h-12 items-center rounded-full bg-white px-6 text-body font-medium text-ink ring-1 ring-line-strong transition-[box-shadow,transform] duration-300 hover:ring-ink active:scale-[0.98]">
+              Today&apos;s deals
+            </Link>
+          </motion.div>
+
+          <motion.p {...rise(0.55, 10)} className="mt-[clamp(0.625rem,1.8svh,1.25rem)] flex items-center gap-2 text-support text-mute">
+            <span className="flex items-center gap-0.5 text-brand-deep" aria-hidden>
+              {Array.from({ length: 5 }, (_, i) => (
+                <Icon key={i} name="star" size={14} />
+              ))}
+            </span>
+            <span>
+              <span className="num font-medium text-ink">{averageRating.toFixed(1)}</span> average from {reviewTotal.toLocaleString("en-US")} reviews
+            </span>
+          </motion.p>
+        </div>
+
+        {/* The fan: fills what is left under the message, and sizes its cards to fit that space */}
+        <div className="relative min-h-0 flex-1 [container-type:size]">
+          <motion.ul
+            style={{ x: lean }}
+            aria-label="Featured products"
+            className="absolute inset-0 [--cw:clamp(5.5rem,min(17cqw,70cqh),16.5rem)] max-sm:[--cw:min(11.5rem,66cqh)]"
+          >
+            {FAN.map((slug, i) => (
+              <FanCard key={slug} slug={slug} index={i - 2} hovered={hovered === null ? null : hovered - 2} onHover={(h) => setHovered(h ? i : null)} reduce={Boolean(reduce)} />
+            ))}
+          </motion.ul>
         </div>
       </div>
-
-      <style>{`
-        @keyframes hero-progress {
-          from { width: 0%; }
-          to { width: 100%; }
-        }
-      `}</style>
     </section>
+  );
+}
+
+function FanCard({ slug, index, hovered, onHover, reduce }: { slug: string; index: number; hovered: number | null; onHover: (h: boolean) => void; reduce: boolean }) {
+  const p = productBySlug(slug);
+  const photo = p && productPhoto(p, undefined, "hero");
+  if (!p || !photo) return null;
+
+  const abs = Math.abs(index);
+  const active = hovered === index;
+  // Neighbours step away from the card under the pointer.
+  const step = hovered === null || active ? 0 : index > hovered ? 7 : -7;
+  const rest = { x: `${index * 66 + step}%`, y: `${abs * abs * 5}%`, rotate: index * 7, opacity: 1 };
+  const lifted = { x: `${index * 66}%`, y: `${abs * abs * 5 - 9}%`, rotate: index * 1.5, opacity: 1 };
+
+  return (
+    <motion.li
+      className={`absolute bottom-0 w-[var(--cw)] ${abs === 2 ? "max-sm:hidden" : ""}`}
+      style={{ left: "50%", marginLeft: "calc(var(--cw) / -2)", transformOrigin: "50% 135%", zIndex: active ? 10 : 5 - abs }}
+      initial={reduce ? false : { x: "0%", y: "130%", rotate: 0, opacity: 0 }}
+      animate={active ? lifted : rest}
+      transition={reduce ? { duration: 0 } : { type: "spring", stiffness: active || hovered !== null ? 220 : 85, damping: active || hovered !== null ? 22 : 17, delay: hovered === null ? 0.5 + abs * 0.09 : 0 }}
+      onHoverStart={() => onHover(true)}
+      onHoverEnd={() => onHover(false)}
+    >
+      <Link
+        href={`/p/${p.slug}`}
+        onFocus={() => onHover(true)}
+        onBlur={() => onHover(false)}
+        aria-label={`${p.brand} ${p.name}`}
+        className="group relative block aspect-[4/5] overflow-hidden rounded-[1.1rem] bg-mist shadow-[0_24px_50px_-18px_rgb(var(--rgb-ink)/0.45)] ring-4 ring-white"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element -- Unsplash CDN crop at 4:5 around the photo's focal point */}
+        <img
+          src={photoUrl(photo, 520, 80, 1.25)}
+          srcSet={`${photoUrl(photo, 360, 78, 1.25)} 360w, ${photoUrl(photo, 520, 80, 1.25)} 520w, ${photoUrl(photo, 760, 82, 1.25)} 760w`}
+          sizes="(min-width: 1024px) 15vw, 30vw"
+          alt=""
+          loading="eager"
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover transition-transform duration-[900ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.05]"
+        />
+        <span aria-hidden className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-ink/70 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
+        <span className="absolute inset-x-0 top-0 -translate-y-2 p-3.5 text-white opacity-0 transition-[opacity,transform] duration-500 ease-[var(--ease-out-expo)] group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+          <span className="block truncate font-mono text-[10px] uppercase tracking-[0.14em] text-white/70">{p.brand}</span>
+          <span className="mt-0.5 flex items-baseline justify-between gap-2">
+            <span className="truncate text-support font-medium">{p.name}</span>
+            <Money usd={p.price} className="shrink-0 text-support font-medium" />
+          </span>
+        </span>
+      </Link>
+    </motion.li>
   );
 }

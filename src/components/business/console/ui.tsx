@@ -1,10 +1,12 @@
 "use client";
 
 import { clsx } from "clsx";
+import { motion } from "framer-motion";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { useHydrated } from "@/lib/store";
 import { createPortal } from "react-dom";
 import { Icon, type IconName } from "@/components/ui/icon";
+import { EASE } from "@/components/motion/primitives";
 
 /* ─── Page header for each console view ─── */
 
@@ -20,14 +22,22 @@ export function PageHead({
   actions?: React.ReactNode;
 }) {
   return (
-    <header className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
+    <motion.header
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.7, ease: EASE }}
+      className="biz-deck flex flex-wrap items-end justify-between gap-x-8 gap-y-5 p-6 sm:p-8"
+    >
       <div className="min-w-0 max-w-2xl">
-        <p className="eyebrow">{eyebrow}</p>
+        <p className="eyebrow flex items-center gap-2.5 !text-mute-dark">
+          <span className="biz-live" aria-hidden />
+          {eyebrow}
+        </p>
         <h1 className="display mt-3 text-heading sm:text-display-sm">{title}</h1>
-        {description && <p className="mt-3 text-body leading-relaxed text-mute">{description}</p>}
+        {description && <p className="mt-3 text-body leading-relaxed text-mute-dark">{description}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
-    </header>
+    </motion.header>
   );
 }
 
@@ -50,7 +60,12 @@ export function Panel({
   flush?: boolean;
 }) {
   return (
-    <section className={clsx("rounded-surface bg-white shadow-[var(--shadow-hair)]", className)}>
+    <motion.section
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: EASE }}
+      className={clsx("rounded-surface bg-white shadow-[var(--shadow-hair)]", className)}
+    >
       {(title || action) && (
         <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4 sm:px-6">
           <div className="min-w-0">
@@ -61,7 +76,7 @@ export function Panel({
         </div>
       )}
       <div className={flush ? "" : "p-5 sm:p-6"}>{children}</div>
-    </section>
+    </motion.section>
   );
 }
 
@@ -95,11 +110,14 @@ export function Stat({
   tone?: "ink" | "alert";
   onClick?: () => void;
 }) {
-  const Tag = onClick ? "button" : "div";
+  const Tag = onClick ? motion.button : motion.div;
   return (
     <Tag
       type={onClick ? "button" : undefined}
       onClick={onClick}
+      whileHover={onClick ? { y: -2 } : undefined}
+      whileTap={onClick ? { scale: 0.985 } : undefined}
+      transition={{ duration: 0.25, ease: EASE }}
       className={clsx(
         "group flex flex-col rounded-surface p-5 text-left transition-shadow",
         tone === "ink" ? "panel-ink" : "bg-white shadow-[var(--shadow-hair)]",
