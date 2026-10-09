@@ -179,8 +179,8 @@ export function ProductCard({
                 data-on={on}
                 aria-hidden={!on}
                 className={clsx(
-                  "pc-layer absolute inset-0 block transition-opacity duration-300",
-                  on ? "opacity-100" : "opacity-0",
+                  "pc-layer absolute inset-0 block",
+                  on ? "opacity-100" : "opacity-0 pointer-events-none",
                   soldOut && "grayscale-[35%] opacity-80",
                 )}
               >
@@ -242,7 +242,7 @@ export function ProductCard({
           suppressHydrationWarning
           data-on={wished}
           className={clsx(
-            "pc-heart glass glass-btn absolute right-2.5 top-2.5 z-20 grid h-8 w-8 place-items-center rounded-full text-ink transition-all duration-200 hover:scale-105 active:scale-95 shadow-sm",
+            "pc-heart glass glass-btn absolute right-2.5 top-2.5 z-20 grid h-8 w-8 place-items-center rounded-full text-ink",
             wished ? "opacity-100 text-ink" : "opacity-85 group-hover/card:opacity-100",
             "[@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:w-9",
           )}
@@ -366,8 +366,7 @@ export function ProductCard({
           aria-pressed={soldOut ? wished : undefined}
           suppressHydrationWarning
           className={clsx(
-            "glass glass-btn absolute right-2.5 bottom-2.5 z-20 grid h-8 w-8 place-items-center rounded-full text-ink transition-all duration-200",
-            "hover:scale-105 active:scale-95 shadow-sm",
+            "glass glass-btn absolute right-2.5 bottom-2.5 z-20 grid h-8 w-8 place-items-center rounded-full text-ink",
             "opacity-0 group-hover/card:opacity-100",
             "[@media(hover:none)]:opacity-100 [@media(pointer:coarse)]:h-9 [@media(pointer:coarse)]:w-9",
             added && "![background:var(--color-ink)] !text-white shadow-md",

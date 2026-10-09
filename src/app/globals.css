@@ -252,6 +252,32 @@
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
     scroll-padding-top: 96px;
+    scroll-behavior: smooth;
+  }
+
+  /* Luxury scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 9999px;
+    transition: background-color 300ms ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-mute);
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line-strong) transparent;
   }
 
   body {
@@ -406,16 +432,20 @@
     font-weight: 500;
     white-space: nowrap;
     transition:
-      background-color 200ms var(--ease-out-expo),
-      color 200ms var(--ease-out-expo),
-      transform 200ms var(--ease-out-expo),
-      box-shadow 200ms var(--ease-out-expo),
-      border-color 200ms;
+      background-color 220ms var(--ease-out-expo),
+      color 220ms var(--ease-out-expo),
+      transform 220ms var(--ease-spring),
+      box-shadow 220ms var(--ease-out-expo),
+      border-color 220ms;
     -webkit-tap-highlight-color: transparent;
   }
 
+  .btn:hover:not(:disabled) {
+    transform: translate3d(0, -1px, 0);
+  }
+
   .btn:active:not(:disabled) {
-    transform: scale(0.98);
+    transform: scale(0.975) translate3d(0, 0, 0);
   }
 
   .btn:disabled {
@@ -588,6 +618,11 @@
      and highly readable. */
   .pc {
     contain: layout style;
+    transition:
+      transform 450ms var(--ease-out-expo),
+      box-shadow 450ms var(--ease-out-expo),
+      border-color 300ms ease;
+    will-change: transform;
   }
 
   .pc-stage {
@@ -634,8 +669,16 @@
       border-color: var(--color-ink);
     }
 
+    .pc:hover {
+      transform: translate3d(0, -4px, 0);
+      box-shadow:
+        0 14px 34px -10px rgb(var(--rgb-ink) / 0.1),
+        0 2px 6px -2px rgb(var(--rgb-ink) / 0.04);
+      border-color: var(--color-line-hover);
+    }
+
     .pc:hover .pc-layer[data-on="true"] {
-      transform: scale(1.025);
+      transform: scale(1.03);
     }
 
     .pc:hover .pc-reveal,
@@ -919,13 +962,24 @@
     color: var(--color-ink-2);
     background: var(--color-white);
     border: 1px solid var(--color-line);
-    transition: all 200ms var(--ease-out-expo);
+    transition:
+      background-color 200ms var(--ease-out-expo),
+      color 200ms var(--ease-out-expo),
+      border-color 200ms var(--ease-out-expo),
+      transform 200ms var(--ease-spring),
+      box-shadow 200ms var(--ease-out-expo);
     white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .chip:hover {
     border-color: var(--color-line-hover);
     color: var(--color-ink);
+    transform: translate3d(0, -1px, 0);
+  }
+
+  .chip:active {
+    transform: scale(0.96) translate3d(0, 0, 0);
   }
 
   .chip[aria-pressed="true"],
@@ -1134,6 +1188,24 @@
   .thin-scroll {
     scrollbar-width: thin;
     scrollbar-color: var(--color-line-strong) transparent;
+  }
+
+  .thin-scroll::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .thin-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .thin-scroll::-webkit-scrollbar-thumb {
+    background: var(--color-line-strong);
+    border-radius: 9999px;
+  }
+
+  .thin-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--color-mute);
   }
 
   /* Primary nav items: ink-2 at rest, ink + a hairline underline drawn from

@@ -52,7 +52,7 @@
 .copy {
   position: absolute;
   inset: auto var(--pad-x) calc(var(--progress-bottom) + 44px + clamp(1rem, 4vh, 3rem));
-  z-index: 2;
+  z-index: 10;
   display: grid;
   pointer-events: none;
 }
@@ -96,6 +96,14 @@
 .headingInner {
   display: block;
   will-change: transform;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.headingInner:hover {
+  opacity: 0.82;
 }
 
 .desc {
@@ -280,7 +288,7 @@
 .progress {
   position: absolute;
   inset: auto 0 var(--progress-bottom);
-  z-index: 2;
+  z-index: 10;
   display: flex;
   align-items: center;
   justify-content: center;

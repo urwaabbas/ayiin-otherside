@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { clsx } from "clsx";
+import { AnimatePresence, motion } from "framer-motion";
 import { useHydrated, useShop } from "@/lib/store";
 import { useAccount } from "@/lib/account-store";
 import { Icon, type IconName } from "@/components/ui/icon";
@@ -108,18 +109,25 @@ export function AccountCommandCenter() {
       </div>
 
       {/* Active Tab Panel */}
-      <div
-        role="tabpanel"
-        id={`panel-${activeTab}`}
-        aria-labelledby={`tab-${activeTab}`}
-        className="outline-none"
-      >
-        {activeTab === "orders" && <OrdersManager />}
-        {activeTab === "saved" && <SavedManager />}
-        {activeTab === "addresses" && <AddressManager />}
-        {activeTab === "billing" && <PaymentManager />}
-        {activeTab === "settings" && <PreferencesManager />}
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={activeTab}
+          role="tabpanel"
+          id={`panel-${activeTab}`}
+          aria-labelledby={`tab-${activeTab}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+          className="outline-none"
+        >
+          {activeTab === "orders" && <OrdersManager />}
+          {activeTab === "saved" && <SavedManager />}
+          {activeTab === "addresses" && <AddressManager />}
+          {activeTab === "billing" && <PaymentManager />}
+          {activeTab === "settings" && <PreferencesManager />}
+        </motion.div>
+      </AnimatePresence>
 
       {/* Profile Edit Modal */}
       <ProfileEditModal

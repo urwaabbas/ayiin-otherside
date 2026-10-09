@@ -25,9 +25,14 @@ export function CategoryCopy({ items, active }: CategoryCopyProps) {
         >
           <h2 className={styles.heading}>
             <span className={styles.mask}>
-              <span data-heading className={styles.headingInner}>
+              <Link
+                href={item.href}
+                data-heading
+                className={styles.headingInner}
+                title={`Explore ${item.category}`}
+              >
                 {item.category}
-              </span>
+              </Link>
             </span>
           </h2>
           <div data-desc className={styles.desc}>
