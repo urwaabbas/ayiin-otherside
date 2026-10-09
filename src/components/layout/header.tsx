@@ -197,6 +197,12 @@ export function Header() {
 
   const isTop = scroll.atTop;
   const isCompressed = !scroll.atTop;
+  const isHome = pathname === "/";
+  const overlayActive =
+    activeMenu !== null ||
+    (searchOpen && typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
+  const isGlass = isHome && isTop && !overlayActive;
+
   // Deep scroll state: past 280px the navbar is reduced to AYIIN + Search + Bag, and stays that way
   // after a small scroll up. Scrolling up FULL_NAV_TRAVEL px restores every item.
   const isDeep = scroll.past280 && !scroll.expanded && !activeMenu && !searchOpen;
@@ -209,10 +215,6 @@ export function Header() {
     (localNav && scroll.past80 && !activeMenu && !searchOpen && !menuOpen) ||
     (scroll.past120 && scroll.moving && !activeMenu && !searchOpen && !menuOpen);
 
-  const overlayActive =
-    activeMenu !== null ||
-    (searchOpen && typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
-
   const submitSearch = () => {
     const q = search.query.trim();
     if (q) search.navigate(`/search?q=${encodeURIComponent(q)}`, q);
@@ -221,8 +223,8 @@ export function Header() {
 
   return (
     <>
-      {/* Spacer to prevent layout jump: accounts for top strip + navbar */}
-      <div aria-hidden className="h-[100px] lg:h-[104px]" />
+      {/* Spacer to prevent layout jump on non-landing pages: accounts for top strip + navbar */}
+      {!isHome && <div aria-hidden className="h-[100px] lg:h-[104px]" />}
 
       {/* Scrim for desktop dropdowns & search */}
       <div
@@ -258,14 +260,17 @@ export function Header() {
             isTop ? "max-h-8 opacity-100" : "max-h-0 opacity-0 pointer-events-none",
           )}
         >
-          <ContextStrip />
+          <ContextStrip transparent={isGlass} />
         </div>
 
         {/* ── 02 · PRIMARY NAVBAR ── */}
         <div
           className={clsx(
-            "border-b border-line/80 bg-porcelain/90 backdrop-blur-xl backdrop-saturate-150 transition-all duration-300",
-            isCompressed && "shadow-[0_10px_30px_-18px_rgb(var(--rgb-ink)/0.25)]",
+            "border-b transition-all duration-500 ease-[var(--ease-out-expo)]",
+            isGlass
+              ? "border-white/15 bg-white/[0.08] backdrop-blur-2xl backdrop-saturate-150 shadow-[0_8px_32px_0_rgba(0,0,0,0.12),inset_0_1px_0_0_rgba(255,255,255,0.18)]"
+              : "border-line/80 bg-porcelain/90 backdrop-blur-xl backdrop-saturate-150",
+            isCompressed && !isGlass && "shadow-[0_10px_30px_-18px_rgb(var(--rgb-ink)/0.25)]",
           )}
         >
           <div
@@ -282,7 +287,10 @@ export function Header() {
                 aria-label="Open navigation menu"
                 onClick={() => setMenu(true)}
                 suppressHydrationWarning
-                className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft lg:hidden"
+                className={clsx(
+                  "grid h-10 w-10 place-items-center rounded-full transition-colors lg:hidden",
+                  isGlass ? "text-white hover:bg-white/15" : "hover:bg-soft text-ink",
+                )}
               >
                 <Icon name="menu" size={20} />
               </button>
@@ -290,7 +298,7 @@ export function Header() {
               {/* AYIIN Brand Logo */}
               <Link href="/" aria-label="Ayiin homepage" className="flex items-center transition-opacity duration-200 hover:opacity-80">
                 <AyiinLogo
-                  on="light"
+                  on={isGlass ? "dark" : "light"}
                   priority
                   className={clsx(
                     "transition-all duration-300",
@@ -319,15 +327,19 @@ export function Header() {
                     closeSearch();
                     setActiveMenu((curr) => (curr === "discover" && (e.detail === 0 || !canHover()) ? null : "discover"));
                   }}
-                  className="nav-item group flex items-center gap-1.5 px-3.5 py-2 text-support font-medium"
+                  className={clsx(
+                    "nav-item group flex items-center gap-1.5 px-3.5 py-2 text-support font-medium transition-colors",
+                    isGlass ? "!text-white/85 hover:!text-white" : "",
+                  )}
                 >
                   <span>Discover</span>
                   <Icon
                     name="chevronDown"
                     size={13}
                     className={clsx(
-                      "transition-[transform,color] duration-200 text-mute group-hover:text-ink",
-                      activeMenu === "discover" && "rotate-180 text-ink",
+                      "transition-[transform,color] duration-200",
+                      isGlass ? "text-white/70 group-hover:text-white" : "text-mute group-hover:text-ink",
+                      activeMenu === "discover" && (isGlass ? "rotate-180 text-white" : "rotate-180 text-ink"),
                     )}
                   />
                 </button>
@@ -342,15 +354,19 @@ export function Header() {
                     closeSearch();
                     setActiveMenu((curr) => (curr === "departments" && (e.detail === 0 || !canHover()) ? null : "departments"));
                   }}
-                  className="nav-item group flex items-center gap-1.5 px-3.5 py-2 text-support font-medium"
+                  className={clsx(
+                    "nav-item group flex items-center gap-1.5 px-3.5 py-2 text-support font-medium transition-colors",
+                    isGlass ? "!text-white/85 hover:!text-white" : "",
+                  )}
                 >
                   <span>Departments</span>
                   <Icon
                     name="chevronDown"
                     size={13}
                     className={clsx(
-                      "transition-[transform,color] duration-200 text-mute group-hover:text-ink",
-                      activeMenu === "departments" && "rotate-180 text-ink",
+                      "transition-[transform,color] duration-200",
+                      isGlass ? "text-white/70 group-hover:text-white" : "text-mute group-hover:text-ink",
+                      activeMenu === "departments" && (isGlass ? "rotate-180 text-white" : "rotate-180 text-ink"),
                     )}
                   />
                 </button>
@@ -359,7 +375,10 @@ export function Header() {
                 <Link
                   href="/search?deal=1"
                   onPointerEnter={(e) => hoverOpen(e, null)}
-                  className="nav-item flex items-center gap-1.5 px-3.5 py-2 text-support font-medium"
+                  className={clsx(
+                    "nav-item flex items-center gap-1.5 px-3.5 py-2 text-support font-medium transition-colors",
+                    isGlass ? "!text-white/85 hover:!text-white" : "",
+                  )}
                 >
                   <span className="h-1.5 w-1.5 rounded-full bg-brand" />
                   <span>Deals</span>
@@ -374,9 +393,14 @@ export function Header() {
                 e.preventDefault();
                 submitSearch();
               }}
-              className="relative hidden h-11 min-w-0 max-w-[620px] flex-1 items-center rounded-full bg-white px-2 py-1 shadow-[var(--shadow-hair)] transition-shadow duration-200 hover:shadow-[0_0_0_1px_var(--color-line-hover)] focus-within:!shadow-[0_0_0_2px_rgb(var(--rgb-ink)/0.25)] lg:flex"
+              className={clsx(
+                "relative hidden h-11 min-w-0 max-w-[620px] flex-1 items-center rounded-full px-2 py-1 transition-all duration-300 lg:flex",
+                isGlass
+                  ? "bg-white/15 border border-white/25 text-white backdrop-blur-md shadow-[inset_0_1px_1px_rgba(255,255,255,0.2)] hover:bg-white/20 hover:border-white/35 focus-within:!bg-white/25 focus-within:!border-white/50 focus-within:!shadow-[0_0_0_2px_rgba(255,255,255,0.3)]"
+                  : "bg-white shadow-[var(--shadow-hair)] hover:shadow-[0_0_0_1px_var(--color-line-hover)] focus-within:!shadow-[0_0_0_2px_rgb(var(--rgb-ink)/0.25)]",
+              )}
             >
-              <span className="grid h-8 w-8 shrink-0 place-items-center text-mute pl-1">
+              <span className={clsx("grid h-8 w-8 shrink-0 place-items-center pl-1 transition-colors duration-200", isGlass ? "text-white/75" : "text-mute")}>
                 <Icon name="search" size={17} strokeWidth={2} />
               </span>
 
@@ -401,7 +425,10 @@ export function Header() {
                 }}
                 onKeyDown={search.onKeyDown}
                 placeholder={business ? "Search products, bulk SKUs or specs" : rotatingPlaceholder}
-                className="h-full min-w-0 flex-1 bg-transparent px-2.5 text-body text-ink outline-none placeholder:text-mute"
+                className={clsx(
+                  "h-full min-w-0 flex-1 bg-transparent px-2.5 text-body outline-none transition-colors duration-200",
+                  isGlass ? "text-white placeholder:text-white/65" : "text-ink placeholder:text-mute",
+                )}
               />
 
             </form>
@@ -429,7 +456,10 @@ export function Header() {
                   requestAnimationFrame(() => mobileInputRef.current?.focus());
                 }}
                 aria-label="Search"
-                className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft text-ink lg:hidden"
+                className={clsx(
+                  "grid h-10 w-10 place-items-center rounded-full transition-colors lg:hidden",
+                  isGlass ? "text-white hover:bg-white/15" : "hover:bg-soft text-ink",
+                )}
               >
                 <Icon name="search" size={19} />
               </button>
@@ -443,7 +473,7 @@ export function Header() {
                     : "opacity-100 translate-x-0",
                 )}
               >
-                <ModeSwitch compact className="min-w-[176px]" />
+                <ModeSwitch compact tone={isGlass ? "dark" : "light"} className="min-w-[176px]" />
               </div>
 
               {/* Secondary Navigation (Deep scroll hides Saved & Account to focus on Bag) */}
@@ -456,12 +486,15 @@ export function Header() {
                 )}
               >
                 {/* Saved / Wishlist */}
-                <SavedButton />
+                <SavedButton isGlass={isGlass} />
 
                 {/* Account / Business */}
                 <Link
                   href={business ? "/business" : "/account"}
-                  className="nav-item hidden md:flex h-10 items-center gap-2 px-3.5 text-support font-medium"
+                  className={clsx(
+                    "nav-item hidden md:flex h-10 items-center gap-2 px-3.5 text-support font-medium transition-colors",
+                    isGlass ? "!text-white/85 hover:!text-white" : "",
+                  )}
                 >
                   <Icon name={business ? "building" : "user"} size={17} />
                   <span>{business ? "Business" : "Account"}</span>
@@ -469,7 +502,7 @@ export function Header() {
               </div>
 
               {/* Bag / Cart Action Button (Always visible) */}
-              <CartButton />
+              <CartButton isGlass={isGlass} />
             </div>
           </div>
         </div>
@@ -581,7 +614,7 @@ function DropdownPanel({
   );
 }
 
-function SavedButton() {
+function SavedButton({ isGlass }: { isGlass?: boolean }) {
   const hydrated = useHydrated();
   const count = useShop((s) => s.wishlist.length);
   const shown = hydrated ? count : 0;
@@ -589,12 +622,20 @@ function SavedButton() {
     <Link
       href="/wishlist"
       aria-label={`Saved pieces (${shown})`}
-      className="nav-item relative flex h-10 items-center gap-1.5 px-3.5 text-support font-medium"
+      className={clsx(
+        "nav-item relative flex h-10 items-center gap-1.5 px-3.5 text-support font-medium transition-colors",
+        isGlass ? "!text-white/85 hover:!text-white" : "",
+      )}
     >
       <Icon name="heart" size={17} />
       <span className="hidden sm:inline">Saved</span>
       {shown > 0 && (
-        <span className="grid h-4 min-w-4 place-items-center rounded-full bg-ink px-1 font-mono text-[10px] font-bold text-white">
+        <span
+          className={clsx(
+            "grid h-4 min-w-4 place-items-center rounded-full px-1 font-mono text-[10px] font-bold",
+            isGlass ? "bg-brand text-ink" : "bg-ink text-white",
+          )}
+        >
           {shown}
         </span>
       )}
@@ -602,7 +643,7 @@ function SavedButton() {
   );
 }
 
-function CartButton() {
+function CartButton({ isGlass }: { isGlass?: boolean }) {
   const hydrated = useHydrated();
   const count = useShop((s) => s.cart.reduce((n, l) => n + l.qty, 0));
   const openCart = useUI((s) => s.openCart);
@@ -613,7 +654,12 @@ function CartButton() {
       onClick={openCart}
       aria-label={`Shopping bag (${shown} items)`}
       suppressHydrationWarning
-      className="group relative flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-support font-medium text-white transition-all hover:bg-graphite active:scale-95"
+      className={clsx(
+        "group relative flex h-10 items-center gap-2 rounded-full px-4 text-support font-medium transition-all active:scale-95",
+        isGlass
+          ? "bg-white/15 border border-white/25 text-white backdrop-blur-md hover:bg-white/25 shadow-[0_4px_16px_rgba(0,0,0,0.12)]"
+          : "bg-ink text-white hover:bg-graphite",
+      )}
     >
       <Icon name="bag" size={17} />
       <span>Bag</span>

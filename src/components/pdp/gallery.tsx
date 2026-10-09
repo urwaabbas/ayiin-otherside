@@ -3,7 +3,7 @@
 import { clsx } from "clsx";
 import { useId, useRef, useState } from "react";
 import type { Product, Variant } from "@/lib/types";
-import { productPhoto, productViews, type ImageView } from "@/lib/images";
+import { photoUrl, productPhoto, productViews, type ImageView } from "@/lib/images";
 import { ProductImage } from "@/components/product/product-image";
 import { Icon } from "@/components/ui/icon";
 
@@ -86,6 +86,11 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
           className="relative aspect-square w-full cursor-pointer"
           onClick={() => dialogRef.current?.showModal()}
         >
+          {/* A soft blur of the same photo fills whatever the square leaves free, so the photo can be shown whole */}
+          {photo && (
+            // eslint-disable-next-line @next/next/no-img-element -- tiny CDN thumbnail, blurred into a backdrop
+            <img key={`bg-${variant.id}-${view}`} src={photoUrl(photo, 96, 40)} alt="" aria-hidden decoding="async" draggable={false} className="absolute inset-0 h-full w-full scale-125 object-cover opacity-90 blur-2xl" />
+          )}
           <ProductImage
             key={`${variant.id}-${view}`}
             product={p}
@@ -93,6 +98,7 @@ export function ProductGallery({ product: p, variant, overlay }: { product: Prod
             view={view}
             preload={view === "hero"}
             alt={alt}
+            bare
             sizes="(min-width: 1024px) 50vw, 100vw"
             className="h-full w-full animate-fade"
           />

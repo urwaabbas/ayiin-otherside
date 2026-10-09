@@ -37,7 +37,13 @@ const MESSAGES: ContextMessage[] = [
   },
 ];
 
-export function ContextStrip({ className }: { className?: string }) {
+export function ContextStrip({
+  className,
+  transparent = false,
+}: {
+  className?: string;
+  transparent?: boolean;
+}) {
   const [index, setIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -56,7 +62,11 @@ export function ContextStrip({ className }: { className?: string }) {
       aria-label="Marketplace live context"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className={`relative h-8 w-full overflow-hidden bg-ink text-white/90 ${className ?? ""}`}
+      className={`relative h-8 w-full overflow-hidden transition-colors duration-300 ${
+        transparent
+          ? "bg-black/25 text-white/90 backdrop-blur-md border-b border-white/10"
+          : "bg-ink text-white/90"
+      } ${className ?? ""}`}
     >
       <div className="mx-auto flex h-full max-w-[1520px] items-center justify-between px-4 sm:px-6 text-[12px] tracking-[0.01em]">
         {/* Animated dynamic context item */}

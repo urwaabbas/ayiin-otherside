@@ -1,0 +1,528 @@
+/* ---------------------------------------------------------------- shell */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  /* On a colour field the neutrals become white at different strengths. */
+  --hero-bg: #0e0e10;
+  --hero-text: #fff;
+  --hero-muted: rgb(255 255 255 / 0.74);
+  --hero-line: rgb(255 255 255 / 0.3);
+  --hero-accent: #fff;
+  --pad-x: clamp(1.25rem, 5vw, 5rem);
+  --progress-bottom: clamp(0.75rem, 2.5vh, 2rem);
+  --nav-clearance: clamp(88px, 11svh, 114px);
+  height: 100svh;
+  min-height: 560px;
+  max-height: 1200px;
+  overflow: hidden;
+  background-color: var(--hero-bg);
+  color: var(--hero-text);
+  font-family: var(--font-geist, var(--font-geist-sans)), system-ui, sans-serif;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* film grain — static, one small tile */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* no blend mode: blending a full-screen layer costs every animated frame */
+  opacity: 0.045;
+  pointer-events: none;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ----------------------------------------------------------------- copy */
+
+/* Sits in a bottom corner; which one is the product's call (data-side). */
+.copy {
+  position: absolute;
+  inset: auto var(--pad-x) calc(var(--progress-bottom) + 44px + clamp(1rem, 4vh, 3rem));
+  z-index: 2;
+  display: grid;
+  pointer-events: none;
+}
+
+.copyItem {
+  grid-area: 1 / 1;
+  align-self: end;
+  justify-self: start;
+  max-width: 19rem;
+  text-align: left;
+  visibility: hidden;
+  pointer-events: auto;
+}
+
+.copyItem[data-side="right"] {
+  justify-self: end;
+  text-align: right;
+}
+
+.copyItem:first-child {
+  visibility: visible;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-funnel), var(--font-display), var(--font-geist, var(--font-geist-sans)), sans-serif;
+  font-size: clamp(1.5rem, 1.15rem + 1.25vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+}
+
+/* overflow mask the heading rises through; padding keeps descenders intact */
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.06em 0.16em;
+  margin-block: -0.06em -0.16em;
+}
+
+.headingInner {
+  display: block;
+  will-change: transform;
+}
+
+.desc {
+  margin-top: 0.6rem;
+}
+
+.desc p {
+  margin: 0;
+  color: rgb(255 255 255 / 0.86);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.55rem 0.25rem;
+  color: var(--hero-text);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-decoration-color: var(--hero-line);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.4em;
+  transition: text-decoration-color 0.25s ease;
+}
+
+.cta:hover {
+  text-decoration-color: var(--hero-accent);
+}
+
+/* ---------------------------------------------------------------- stage */
+
+.stage {
+  position: absolute;
+  inset: 0;
+}
+
+/* backdrop colour, one layer per product; only opacity ever changes */
+.bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.bg:first-child {
+  opacity: 1;
+}
+
+/* the one studio light lifting the middle of the colour field, plus vignette */
+.spot {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(
+      46% 54% at 50% 50%,
+      rgba(255, 246, 234, 0.2),
+      rgba(255, 246, 234, 0.07) 50%,
+      transparent 76%
+    ),
+    radial-gradient(120% 90% at 50% 52%, transparent 38%, rgba(0, 0, 0, 0.36) 100%);
+  pointer-events: none;
+}
+
+.ghosts {
+  position: absolute;
+  inset: var(--nav-clearance) 0 8svh;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ghost {
+  grid-area: 1 / 1;
+  /* sized so any category name spans about the same width */
+  font-family: var(--font-funnel), var(--font-display), var(--font-geist, var(--font-geist-sans)), sans-serif;
+  font-size: min(calc(132vw / var(--chars, 8)), 27vw, 40svh);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: rgb(255 255 255 / 0.1);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.ghost:first-child {
+  opacity: 1;
+}
+
+.floor {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 4%;
+  width: min(86%, 900px);
+  height: 16%;
+  translate: -50% 0;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(255, 246, 235, 0.1),
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.shadow {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: 9.5%;
+  width: calc(var(--w, 0.4) * min(100%, 1100px));
+  height: 5%;
+  translate: -50% 0;
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(0, 0, 0, 0.6),
+    rgba(0, 0, 0, 0.24) 45%,
+    transparent 72%
+  );
+  filter: blur(9px);
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.camera {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+
+.rig {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.scene:first-child {
+  visibility: visible;
+}
+
+.idle {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: var(--nav-clearance);
+  padding-bottom: 8svh;
+  transform-style: preserve-3d;
+}
+
+.visual {
+  position: relative;
+  top: calc(var(--offset-y, 0) * 100%);
+  left: calc(var(--offset-x, 0) * 100%);
+  width: auto;
+  height: auto;
+  max-width: calc(min(100%, 1180px) * var(--fit-w, 1));
+  max-height: calc(66% * var(--fit-h, 1));
+  object-fit: contain;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------- progress */
+
+.progress {
+  position: absolute;
+  inset: auto 0 var(--progress-bottom);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+}
+
+.count {
+  min-width: 2ch;
+  color: var(--hero-muted);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25rem;
+  text-align: center;
+}
+
+.countWindow {
+  display: block;
+  height: 1.25rem;
+  overflow: hidden;
+  color: var(--hero-text);
+}
+
+.countReel {
+  display: flex;
+  flex-direction: column;
+}
+
+.countReel > span {
+  height: 1.25rem;
+}
+
+.segments {
+  display: flex;
+  gap: 6px;
+  width: min(44vw, 264px);
+  margin-inline: 0.375rem;
+}
+
+.segment {
+  flex: 1;
+  display: grid;
+  align-items: center;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+.segmentTrack {
+  display: block;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--hero-line);
+  overflow: hidden;
+  transition: background-color 0.25s ease;
+}
+
+.segment:hover .segmentTrack {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.segmentFill {
+  display: block;
+  height: 100%;
+  background: var(--hero-accent);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+}
+
+.iconBtn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: none;
+  color: var(--hero-muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.iconBtn:hover {
+  color: var(--hero-text);
+}
+
+.iconBtn svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hero :focus-visible {
+  outline: 1.5px solid var(--hero-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ------------------------------------------------- first-paint arrival
+   Pure CSS so the first product is animating before hydration. The hero
+   sets data-started on the first transition, which hands control to GSAP. */
+
+.hero:not([data-started]) .scene:first-child {
+  animation: arrive 1.5s cubic-bezier(0.25, 0.6, 0.3, 1) backwards;
+}
+
+/* The drop runs ahead of the sideways travel and dips past its mark, so the
+   two together draw the near arm of the U the GSAP transitions use. */
+.hero:not([data-started]) .scene:first-child .idle {
+  animation: drop 1.5s cubic-bezier(0.3, 0.75, 0.35, 1.1) backwards;
+}
+
+.hero:not([data-started]) .scene:first-child .visual {
+  animation: resolve 0.5s ease-out backwards;
+}
+
+.hero:not([data-started]) .copyItem:first-child .headingInner {
+  animation: rise 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+}
+
+.hero:not([data-started]) .copyItem:first-child .desc {
+  animation: settle 0.8s cubic-bezier(0.33, 1, 0.68, 1) 0.42s backwards;
+}
+
+.hero:not([data-started]) .shadow {
+  animation: ground 1.2s ease-out 0.35s backwards;
+}
+
+@keyframes arrive {
+  from {
+    transform: translateX(60%) rotateY(34deg) rotateX(11deg) rotateZ(14deg) scale(0.5);
+  }
+}
+
+@keyframes drop {
+  from {
+    transform: translateY(-78%);
+  }
+}
+
+@keyframes resolve {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(105%);
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes ground {
+  from {
+    opacity: 0;
+    scale: 0.6 1;
+  }
+}
+
+/* --------------------------------------------------------------- mobile */
+
+/* Narrow screens: product up top and centred, copy across the bottom. */
+@media (max-width: 900px) {
+  .idle {
+    padding-top: var(--nav-clearance);
+    padding-bottom: 24svh;
+  }
+
+  .visual {
+    max-height: calc(68% * var(--fit-h, 1));
+  }
+
+  .ghosts {
+    inset: var(--nav-clearance) 0 20svh;
+  }
+
+  .shadow {
+    bottom: 25svh;
+  }
+
+  .floor {
+    bottom: 20svh;
+  }
+
+  .copyItem {
+    max-width: 17rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .camera {
+    perspective: 1000px;
+  }
+
+  .shadow {
+    filter: blur(6px);
+  }
+}
+
+/* prev/next give way to swipe + segment taps on the narrowest screens */
+@media (max-width: 420px) {
+  .progress > .iconBtn:first-child,
+  .progress > .iconBtn:nth-last-child(2) {
+    display: none;
+  }
+}
+
+@media (max-height: 640px) {
+  .cta {
+    margin-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero:not([data-started]) .scene:first-child,
+  .hero:not([data-started]) .scene:first-child .idle,
+  .hero:not([data-started]) .copyItem:first-child .headingInner,
+  .hero:not([data-started]) .shadow {
+    animation: none;
+  }
+
+  .hero:not([data-started]) .scene:first-child .visual,
+  .hero:not([data-started]) .copyItem:first-child .desc {
+    animation: fade 0.5s ease-out backwards;
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}

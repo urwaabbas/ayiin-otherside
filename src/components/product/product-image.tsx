@@ -2,7 +2,7 @@
 
 import Image, { type ImageLoader } from "next/image";
 import { clsx } from "clsx";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Product } from "@/lib/types";
 import { photoFullUrl, photoUrl, productImageSrc, productPhoto, type ImageView } from "@/lib/images";
 import { AyiinMark } from "@/components/brand/ayiin-logo";
@@ -62,8 +62,27 @@ export function ProductImage({
   const photo = productPhoto(p, variant, view) ?? productPhoto(p, variant, "hero");
   const src = photo ? photo.src : productImageSrc(p, variant, view);
   const loader: ImageLoader | undefined = photo
-    ? ({ width, quality }) => (focal ? photoFullUrl(photo, Math.min(1800, Math.round(width * 1.6)), quality ?? 82) : photoUrl(photo, width, quality ?? 82, ratio))
+    ? ({ width, quality }) =>
+        focal
+          ? photoFullUrl(photo, Math.min(1800, Math.round(width * 1.6)), quality ?? 82)
+          : zoom
+            ? photoUrl(photo, width, quality ?? 82, ratio)
+            : // The whole photograph: it is framed by CSS below so no product is ever cut off by a CDN crop
+              photoFullUrl(photo, Math.min(1800, Math.round(width * 1.25)), quality ?? 82)
     : undefined;
+
+  // Whole-photo framing: cover only when the photo's shape is within 12% of the frame's, otherwise contain.
+  const [fit, setFit] = useState<"cover" | "contain">("cover");
+  const frame = useRef<HTMLSpanElement>(null);
+  const measureFit = useCallback(
+    (img: HTMLImageElement | null) => {
+      const box = frame.current;
+      if (focal || zoom || !img || !box || !img.naturalWidth || !box.clientWidth || !box.clientHeight) return;
+      const diff = Math.abs(img.naturalWidth / img.naturalHeight / (box.clientWidth / box.clientHeight) - 1);
+      setFit(diff <= 0.12 ? "cover" : "contain");
+    },
+    [focal, zoom],
+  );
 
   const [settled, setSettled] = useState<{ src: string; ok: boolean } | null>(null);
   const loaded = settled?.src === src && settled.ok;
@@ -71,9 +90,12 @@ export function ProductImage({
 
   const settleIfLoaded = useCallback(
     (img: HTMLImageElement | null) => {
-      if (img?.complete && img.naturalWidth > 0) setSettled({ src, ok: true });
+      if (img?.complete && img.naturalWidth > 0) {
+        measureFit(img);
+        setSettled({ src, ok: true });
+      }
     },
-    [src],
+    [src, measureFit],
   );
 
   useEffect(() => {
@@ -88,6 +110,7 @@ export function ProductImage({
 
   return (
     <span
+      ref={frame}
       className={clsx(
         "block overflow-hidden",
         !positioned && "relative",
@@ -106,7 +129,10 @@ export function ProductImage({
         sizes={sizes}
         preload={preload}
         draggable={false}
-        onLoad={() => setSettled({ src, ok: true })}
+        onLoad={(e) => {
+          measureFit(e.currentTarget);
+          setSettled({ src, ok: true });
+        }}
         onError={() => setSettled({ src, ok: false })}
         style={{
           ...(focal && photo ? { objectPosition: `${(photo.fp?.[0] ?? 0.5) * 100}% ${(photo.fp?.[1] ?? 0.5) * 100}%` } : null),
@@ -114,7 +140,8 @@ export function ProductImage({
           ...imgStyle,
         }}
         className={clsx(
-          "object-cover transition-opacity duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
+          fit === "contain" ? "object-contain" : "object-cover",
+          "transition-opacity duration-500 ease-[var(--ease-out-expo)] motion-reduce:transition-none",
           loaded ? "opacity-100" : "opacity-0",
           imgClassName,
         )}

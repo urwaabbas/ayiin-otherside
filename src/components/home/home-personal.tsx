@@ -9,7 +9,7 @@ import { hasView } from "@/lib/images";
 import { COMPARE_SLUGS, BRIDGE_SLUG } from "@/lib/home-plan";
 
 // Hero & Discovery Modules
-import { CampaignHero } from "@/components/home/campaign-hero";
+import { Hero } from "@/components/hero/Hero";
 import { DiscoveryTiles } from "@/components/home/discovery-tiles";
 import { ShopByIntent } from "@/components/home/shop-by-intent";
 
@@ -110,8 +110,8 @@ export function HomePersonal() {
 
   return (
     <div className="pb-24">
-      {/* ── 01 · PRIMARY MARKETPLACE CAMPAIGN HERO ── */}
-      <CampaignHero />
+      {/* ── 01 · HERO ── */}
+      <Hero />
 
       {/* On laptops each section below is a `.fold` — one screen tall — separated by --fold-gap */}
       <div className="shell mt-10 space-y-12 sm:mt-14 sm:space-y-16 lg:space-y-[var(--fold-gap)]">

@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { AyiinLogo } from "@/components/brand/ayiin-logo";
 import { Icon, type IconName } from "@/components/ui/icon";
 import type { Mode } from "@/lib/types";
@@ -134,7 +135,14 @@ export function Footer(_props: { mode: Mode }) {
           <div className="flex flex-col justify-between lg:col-span-5">
             <div>
               <Link href="/" aria-label="Ayiin home" className="inline-block transition-opacity hover:opacity-90">
-                <AyiinLogo on="dark" className="h-10" />
+                <Image
+                  src="/icon.svg"
+                  alt="Ayiin"
+                  width={40}
+                  height={40}
+                  unoptimized
+                  className="h-10 w-10 rounded-[10px] object-contain shadow-sm"
+                />
               </Link>
 
 

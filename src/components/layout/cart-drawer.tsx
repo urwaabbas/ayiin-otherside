@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { clsx } from "clsx";
 import { useEffect, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Icon } from "@/components/ui/icon";
 import { ProductImage } from "@/components/product/product-image";
 import { usePrefs } from "@/components/providers";
@@ -20,7 +21,6 @@ import {
   FREE_SHIPPING_THRESHOLD,
   nextTier,
 } from "@/lib/commerce";
-import { SignalDot } from "@/components/ui/signal";
 import { QtyStepper } from "@/components/ui/qty-stepper";
 
 export function CartDrawer() {
@@ -71,16 +71,14 @@ export function CartDrawer() {
           open ? "translate-x-0" : "translate-x-[105%]",
         )}
       >
-        <div className="flex items-center justify-between px-6 pb-4 pt-5">
-          <div>
-            <h2 className="text-emphasis font-medium tracking-[-0.02em]">
-              {business ? "Purchase cart" : "Your cart"}{" "}
-              <span className="num text-mute">({sum.count})</span>
+        <div className="flex items-center justify-between px-6 pb-3 pt-5">
+          <div className="min-w-0">
+            <h2 className="flex items-center gap-2 text-emphasis font-medium tracking-[-0.02em]">
+              {business ? "Purchase cart" : "Your cart"}
+              <span className="num inline-flex items-center rounded-full bg-mist px-2.5 py-0.5 text-meta font-medium text-ink-2">({sum.count})</span>
             </h2>
             {business && (
-              <p className="text-meta text-mute">
-                Northwind Studio · Contract & volume pricing applied
-              </p>
+              <p className="mt-0.5 truncate text-meta text-mute">Northwind Studio · Contract & volume pricing</p>
             )}
           </div>
           <button
@@ -88,66 +86,69 @@ export function CartDrawer() {
             aria-label="Close bag"
             onClick={close}
             suppressHydrationWarning
-            className="grid h-10 w-10 place-items-center rounded-full hover:bg-soft"
+            className="grid h-10 w-10 place-items-center rounded-full transition-colors hover:bg-soft"
           >
             <Icon name="close" size={20} />
           </button>
         </div>
 
         {!business && lines.length > 0 && (
-          <div className="mx-6 mb-3 rounded-surface bg-white p-3.5 shadow-[var(--shadow-hair)]">
-            <p className="text-support text-ink-2">
+          <div className="px-6 pb-4">
+            <p className="flex items-center gap-2 text-support text-ink-2">
               {remaining > 0 ? (
                 <>
-                  <span className="num font-medium text-ink">
-                    {fmt(remaining)}
-                  </span>{" "}
-                  away from free delivery
+                  <Icon name="truck" size={15} className="text-mute" />
+                  <span>
+                    <span className="num font-medium text-ink">{fmt(remaining)}</span> to free delivery
+                  </span>
                 </>
               ) : (
-                <span className="flex items-center gap-2 font-medium text-ink">
-                  <SignalDot /> Free delivery unlocked — no surprises at
-                  checkout
-                </span>
+                <>
+                  <span className="grid h-4 w-4 place-items-center rounded-full bg-success-soft text-success">
+                    <Icon name="check" size={11} />
+                  </span>
+                  <span className="font-medium text-ink">Free delivery unlocked</span>
+                </>
               )}
             </p>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-soft">
-              <div
-                className="bg-brand-gradient h-full rounded-full transition-[width] duration-700 ease-[var(--ease-out-expo)]"
-                style={{
-                  width: `${Math.min(100, (sum.subtotal / FREE_SHIPPING_THRESHOLD) * 100)}%`,
-                  boxShadow: "inset 0 0 0 1px rgb(var(--rgb-ink) / 0.12)",
-                }}
+            <div className="relative mt-2.5 h-1 rounded-full bg-soft">
+              <motion.div
+                className="absolute inset-y-0 left-0 rounded-full"
+                style={{ background: "var(--gradient-brand)" }}
+                initial={false}
+                animate={{ width: `${Math.min(100, (sum.subtotal / FREE_SHIPPING_THRESHOLD) * 100)}%` }}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               />
             </div>
           </div>
         )}
 
-        <div className="flex-1 overflow-y-auto px-6 thin-scroll">
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 thin-scroll">
           {lines.length === 0 ? (
             <div className="flex h-full flex-col items-center justify-center pb-16 text-center">
-              <div className="grid h-16 w-16 place-items-center rounded-full bg-white shadow-[var(--shadow-hair)]">
+              <div className="grid h-16 w-16 place-items-center rounded-full bg-brand-soft text-brand-deep ring-1 ring-brand/30">
                 <Icon name="bag" size={26} />
               </div>
-              <p className="mt-5 text-body font-medium">Nothing here yet</p>
+              <p className="mt-5 text-body font-medium">Your cart is empty</p>
               <p className="mt-1 max-w-[260px] text-support text-mute">
-                Items you add appear here with their exact delivery date and
-                total cost.
+                Add something and you will see its delivery date and total here.
               </p>
               <Link
                 href="/search"
                 onClick={close}
                 className="btn btn-primary mt-6"
               >
-                Start discovering
+                Start shopping
               </Link>
             </div>
           ) : (
             <>
-              <ul className="divide-y divide-line">
-                {lines.map((l) => (
-                  <DrawerLine key={l.key} line={l} business={business} />
-                ))}
+              <ul className="border-t border-line">
+                <AnimatePresence initial={false}>
+                  {lines.map((l) => (
+                    <DrawerLine key={l.key} line={l} business={business} />
+                  ))}
+                </AnimatePresence>
               </ul>
               {!business && <PairsWell lines={lines} remaining={remaining} />}
             </>
@@ -155,22 +156,14 @@ export function CartDrawer() {
         </div>
 
         {lines.length > 0 && (
-          <div className="border-t border-line bg-porcelain px-6 pb-6 pt-4 sm:rounded-b-[28px]">
+          <div className="border-t border-line bg-white px-6 pb-5 pt-4 sm:rounded-b-surface">
             <dl className="space-y-1.5 text-support">
               <div className="flex justify-between">
-                <dt className="text-ink-2">Subtotal</dt>
+                <dt className="text-mute">Subtotal</dt>
                 <dd className="num">{fmt(sum.subtotal, { cents: true })}</dd>
               </div>
-              {sum.volumeSavings > 0 && (
-                <div className="flex justify-between">
-                  <dt className="text-ink-2">Volume savings</dt>
-                  <dd className="num text-sale">
-                    −{fmt(sum.volumeSavings, { cents: true })}
-                  </dd>
-                </div>
-              )}
               <div className="flex justify-between">
-                <dt className="text-ink-2">Delivery</dt>
+                <dt className="text-mute">Delivery</dt>
                 <dd className="num">
                   {sum.shipping > 0
                     ? fmt(sum.shipping)
@@ -179,39 +172,37 @@ export function CartDrawer() {
                       : "Free"}
                 </dd>
               </div>
-              <div className="flex justify-between pt-1.5 text-body font-medium">
-                <dt>Total {business ? "(excl. tax)" : ""}</dt>
-                <dd className="num">
-                  {fmt(
-                    sum.subtotal +
-                      (sum.shipping || (remaining > 0 && !business ? 5.99 : 0)),
-                    { cents: true },
-                  )}
-                </dd>
-              </div>
+              {sum.volumeSavings > 0 && (
+                <div className="flex items-center justify-between pt-0.5">
+                  <dt>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-2.5 py-1 text-meta font-medium text-brand-deep">
+                      <Icon name="percent" size={12} /> You save <span className="num">{fmt(sum.volumeSavings, { cents: true })}</span>
+                    </span>
+                  </dt>
+                  <dd className="text-meta text-mute">volume pricing</dd>
+                </div>
+              )}
             </dl>
-            <p className="mt-1 text-meta text-mute">
-              {business
-                ? "Tax calculated from your exemption certificate at checkout."
-                : "Taxes calculated at checkout. No hidden fees."}
-            </p>
-            <div className="mt-4 grid gap-2">
-              <Link
-                href="/checkout"
-                onClick={close}
-                className="btn btn-primary w-full"
-              >
-                <Icon name="lock" size={16} />
-                {business
-                  ? "Checkout with PO or terms"
-                  : "Checkout — no account needed"}
-              </Link>
-              <Link
-                href="/cart"
-                onClick={close}
-                className="btn btn-secondary w-full"
-              >
-                {business ? "Review cart & send for approval" : "View cart"}
+            <div className="mt-3 flex items-baseline justify-between border-t border-line pt-3">
+              <span className="text-body font-medium">Total{business ? " (excl. tax)" : ""}</span>
+              <span className="num text-section font-medium tracking-[-0.02em]">
+                {fmt(sum.subtotal + (sum.shipping || (remaining > 0 && !business ? 5.99 : 0)), { cents: true })}
+              </span>
+            </div>
+            <Link
+              href="/checkout"
+              onClick={close}
+              className="group relative mt-4 flex h-[3.25rem] w-full items-center justify-center gap-2.5 overflow-hidden rounded-control text-body font-semibold text-ink shadow-[0_10px_24px_-12px_rgb(var(--rgb-brand)/0.8)] transition-transform duration-300 active:scale-[0.99]"
+              style={{ background: "var(--gradient-brand)" }}
+            >
+              <span aria-hidden className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/45 to-transparent transition-transform duration-700 ease-[var(--ease-out-expo)] group-hover:translate-x-full" />
+              <Icon name="lock" size={16} className="relative" />
+              <span className="relative">{business ? "Checkout with PO or terms" : "Checkout"}</span>
+            </Link>
+            <div className="mt-3 flex items-center justify-between gap-3 text-meta text-mute">
+              <span>{business ? "Tax from your exemption certificate" : "No account needed · Tax at checkout"}</span>
+              <Link href="/cart" onClick={close} className="shrink-0 font-medium text-ink underline decoration-brand decoration-2 underline-offset-4 transition-colors hover:text-brand-deep">
+                {business ? "Review & send for approval" : "View cart"}
               </Link>
             </div>
           </div>
@@ -234,80 +225,54 @@ function DrawerLine({ line, business }: { line: CartLine; business: boolean }) {
   const unit = lineUnitPrice(line);
   const nt = line.business ? nextTier(p, line.qty) : undefined;
   return (
-    <li className="flex gap-4 py-4">
-      <Link
-        href={`/p/${p.slug}`}
-        onClick={close}
-        aria-label={p.name}
-        tabIndex={-1}
-        className="shrink-0"
-      >
-        <ProductImage
-          product={p}
-          variant={variant.id}
-          sizes="96px"
-          className="h-24 w-24 rounded-surface"
-        />
+    <motion.li
+      layout="position"
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, x: 40, height: 0, paddingTop: 0, paddingBottom: 0 }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      className="flex gap-3.5 overflow-hidden border-b border-line py-4"
+    >
+      <Link href={`/p/${p.slug}`} onClick={close} aria-label={p.name} tabIndex={-1} className="shrink-0">
+        <ProductImage product={p} variant={variant.id} sizes="80px" className="h-20 w-20 rounded-control" />
       </Link>
       <div className="min-w-0 flex-1">
         <div className="flex justify-between gap-3">
-          <Link
-            href={`/p/${p.slug}`}
-            onClick={close}
-            className="text-support font-medium leading-snug hover:underline"
-          >
+          <Link href={`/p/${p.slug}`} onClick={close} className="text-support font-medium leading-snug transition-colors hover:text-brand-deep">
             {p.name}
           </Link>
-          <span className="num shrink-0 text-support font-medium">
-            {fmt(unit * line.qty, { cents: true })}
-          </span>
+          <span className="num shrink-0 text-support font-medium">{fmt(unit * line.qty, { cents: true })}</span>
         </div>
         <p className="mt-0.5 text-meta text-mute">
           {variant.name}
           {line.business && (
             <>
               {" "}
-              · <span className="num">{fmt(unit, { cents: true })}</span>/
-              {p.b2b.unit}
+              · <span className="num">{fmt(unit, { cents: true })}</span>/{p.b2b.unit}
             </>
           )}
         </p>
         <p className="mt-1 flex items-center gap-1.5 text-meta text-ink-2">
-          <SignalDot /> Arrives {deliveryLabel(p)}
+          <Icon name="truck" size={13} className="text-mute" /> Arrives {deliveryLabel(p)}
         </p>
         {nt && business && (
           <p className="mt-1 text-meta text-info">
-            Add {nt.min - line.qty} more for{" "}
-            <span className="num">{fmt(nt.price, { cents: true })}</span>/unit
+            Add {nt.min - line.qty} more for <span className="num">{fmt(nt.price, { cents: true })}</span>/unit
           </p>
         )}
-        <div className="mt-2.5 flex items-center justify-between">
-          <QtyStepper
-            value={line.qty}
-            onChange={(q) => setQty(line.key, q)}
-            size="sm"
-            allowZero
-            label={`Quantity for ${p.name}`}
-          />
-          <div className="flex gap-3 text-meta text-mute">
-            <button
-              type="button"
-              onClick={() => save(line.key)}
-              className="hover:text-ink"
-            >
-              Save for later
+        <div className="mt-2.5 flex items-center justify-between gap-3">
+          <QtyStepper value={line.qty} onChange={(q) => setQty(line.key, q)} size="sm" allowZero label={`Quantity for ${p.name}`} />
+          <div className="flex gap-1 text-meta text-mute">
+            <button type="button" onClick={() => save(line.key)} className="rounded-full px-2.5 py-1.5 transition-colors hover:bg-soft hover:text-ink">
+              Save
             </button>
-            <button
-              type="button"
-              onClick={() => remove(line.key)}
-              className="hover:text-ink"
-            >
+            <button type="button" onClick={() => remove(line.key)} className="rounded-full px-2.5 py-1.5 transition-colors hover:bg-soft hover:text-ink">
               Remove
             </button>
           </div>
         </div>
       </div>
-    </li>
+    </motion.li>
   );
 }
 
@@ -345,24 +310,19 @@ function PairsWell({
   return (
     <section
       aria-labelledby="pairs-h"
-      className="mt-2 border-t border-line py-5"
+      className="py-5"
     >
       <h3
         id="pairs-h"
         className="flex items-baseline justify-between gap-3 text-support font-medium"
       >
-        Pairs well with
-        {remaining > 0 && (
-          <span className="text-meta font-normal text-mute">
-            Any of these unlocks free delivery
-          </span>
-        )}
+        {remaining > 0 ? "Add to unlock free delivery" : "You might also like"}
       </h3>
       <ul className="mt-3 space-y-2">
         {picks.map((p) => (
           <li
             key={p.id}
-            className="flex items-center gap-3 rounded-surface bg-white p-2 pr-3 shadow-[var(--shadow-hair)]"
+            className="flex items-center gap-3 rounded-surface bg-white p-2 pr-3 shadow-[var(--shadow-hair)] transition-shadow hover:shadow-[var(--shadow-soft)]"
           >
             <ProductImage
               product={p}
@@ -382,7 +342,7 @@ function PairsWell({
               type="button"
               onClick={() => addToCart(p.id, p.variants[0].id, 1, false)}
               aria-label={`Add ${p.name} to bag`}
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-ink text-white transition-transform hover:scale-105"
+              className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand text-ink transition-[transform,background-color] hover:scale-105 hover:bg-brand-hover active:scale-95"
             >
               <Icon name="plus" size={16} />
             </button>

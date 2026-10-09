@@ -4,7 +4,6 @@ import type { Product } from "@/lib/types";
 import { ProductImage } from "@/components/product/product-image";
 import { SectionHeader } from "@/components/ui/section";
 import { Reveal } from "@/components/ui/reveal";
-import { Price } from "@/components/ui/money";
 import { Icon } from "@/components/ui/icon";
 
 /**
@@ -37,20 +36,14 @@ export function Lookbook({ items }: { items: Product[] }) {
                   className="absolute inset-0 transition-transform duration-[1400ms] ease-[var(--ease-out-expo)] group-hover:scale-[1.04]"
                 />
                 <span
-                  className={clsx(
-                    "absolute bottom-3 left-3 right-3 flex items-center gap-3 rounded-surface bg-white/88 p-2.5 pr-3.5 shadow-[var(--shadow-hair)] backdrop-blur-md transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-translate-y-1",
-                    big ? "sm:bottom-5 sm:left-5 sm:right-auto sm:max-w-[380px]" : "",
-                  )}
+                  aria-hidden
+                  className="absolute bottom-3.5 right-3.5 sm:bottom-4 sm:right-4 grid h-8 w-8 sm:h-9 sm:w-9 place-items-center rounded-full bg-black/30 text-white backdrop-blur-md border border-white/25 shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-all duration-300 ease-[var(--ease-out-expo)] group-hover:scale-110 group-hover:bg-black/50 group-hover:border-white/40"
                 >
-                  <ProductImage product={p} sizes="48px" className="hidden h-11 w-11 shrink-0 rounded-control sm:block" />
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-support font-medium">{p.name}</span>
-                    <span className="mt-0.5 flex items-center gap-2 text-meta text-ink-2">
-                      <Price usd={p.price} size="sm" />
-                      <span className="text-mute">· {p.brand}</span>
-                    </span>
-                  </span>
-                  <Icon name="arrowUpRight" size={16} className="shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  <Icon
+                    name="arrowUpRight"
+                    size={16}
+                    className="transition-transform duration-300 ease-[var(--ease-out-expo)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  />
                 </span>
               </Link>
             </Reveal>
