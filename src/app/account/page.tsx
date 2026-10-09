@@ -1,15 +1,36 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { AccountView } from "@/components/checkout/account-view";
+import { Loading, Skeleton } from "@/components/ui/skeleton";
 
-export const metadata: Metadata = { title: "Account" };
+export const metadata: Metadata = {
+  title: "Customer Account · AYIIN Marketplace",
+  description: "Manage orders, multi-brand shipments, saved pieces, delivery addresses, and security settings.",
+};
 
 export default function AccountPage() {
   return (
-    <div className="shell pt-6 lg:pt-8">
-      <p className="eyebrow">Account</p>
-      <h1 className="display mt-3 text-display-sm sm:text-display-lg">Everything in one place.</h1>
-      <p className="mt-3 max-w-lg text-body text-mute">No password needed — sign in with a one-time link. Guest orders appear here automatically on this device.</p>
-      <AccountView />
+    <div className="shell pt-6 lg:pt-8 pb-20">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <p className="eyebrow">Customer Command Center</p>
+          <h1 className="display mt-1 text-2xl sm:text-3xl text-ink">
+            Account Management
+          </h1>
+        </div>
+      </div>
+
+      <Suspense
+        fallback={
+          <Loading label="Loading Account" className="space-y-6">
+            <Skeleton className="h-44 w-full !rounded-panel" />
+            <Skeleton className="h-12 w-96 !rounded-control" />
+            <Skeleton className="h-64 w-full !rounded-surface" />
+          </Loading>
+        }
+      >
+        <AccountView />
+      </Suspense>
     </div>
   );
 }

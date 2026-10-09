@@ -28,14 +28,8 @@ import { categories } from "@/lib/catalog/categories";
  * - Deep scroll (>280px scrolling down): Minimizes distraction to essentials: AYIIN + Search + Bag.
  * - Scrolling up: Smoothly restores full navigation (Discover, Departments, Deals, Saved, Account).
  */
-type ScrollBands = { atTop: boolean; past80: boolean; past120: boolean; past280: boolean; down: boolean; expanded: boolean; moving: boolean };
-const INITIAL_BANDS: ScrollBands = { atTop: true, past80: false, past120: false, past280: false, down: false, expanded: false, moving: false };
-/** Upward scroll distance (px) after which the full navbar returns — about three wheel notches. */
-const FULL_NAV_TRAVEL = 300;
-/** Quiet time (ms) after the last scroll event before the bar slides back down from the top. */
-const SETTLE_MS = 160;
-/** Pause (ms) after scrolling up before the minimal bar opens into the full one. */
-const IDLE_EXPAND_MS = 900;
+type ScrollBands = { atTop: boolean; past80: boolean; past120: boolean; past280: boolean; down: boolean; expanded: boolean };
+const INITIAL_BANDS: ScrollBands = { atTop: true, past80: false, past120: false, past280: false, down: false, expanded: true };
 
 export function Header() {
   const pathname = usePathname();
@@ -46,9 +40,6 @@ export function Header() {
   // Only coarse bands are kept in state, so the header re-renders when a band changes — not on every scroll frame.
   const [scroll, setScroll] = useState<ScrollBands>(INITIAL_BANDS);
   const lastScrollY = useRef(0);
-  const upTravel = useRef(0);
-  const idleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const settleTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const hoverTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Overlay state: "discover" | "departments" | null
@@ -94,7 +85,10 @@ export function Header() {
   const mobileSearch = useSearchController(mobileInputRef);
   const rotatingPlaceholder = useRotatingPlaceholder(!searchOpen);
 
-  // Scroll dynamics: down → hidden · a little up → minimal bar · a lot up → full bar
+  // Scroll dynamics:
+  // - Down: navbar collapses and stays hidden when stopped.
+  // - Up: navbar appears smoothly with the full search bar.
+  // - Top: spacious relaxed navbar.
   useEffect(() => {
     let raf = 0;
     const onScroll = () => {
@@ -106,35 +100,19 @@ export function Header() {
         lastScrollY.current = y;
         setScroll((prev) => {
           let { down, expanded } = prev;
-          const moving = diff !== 0;
           if (y <= 60) {
             down = false;
-            expanded = false;
-            upTravel.current = 0;
+            expanded = true;
           } else if (diff > 5) {
             down = true;
-            expanded = false;
-            upTravel.current = 0;
-          } else if (diff < 0) {
-            if (diff < -5) down = false;
-            if (!down) {
-              upTravel.current += -diff;
-              if (upTravel.current >= FULL_NAV_TRAVEL) expanded = true;
-            }
+            expanded = true;
+          } else if (diff < -5) {
+            down = false;
+            expanded = true;
           }
-          const next: ScrollBands = { atTop: y < 24, past80: y > 80, past120: y > 120, past280: y > 280, down, expanded, moving: moving || prev.moving };
+          const next: ScrollBands = { atTop: y < 24, past80: y > 80, past120: y > 120, past280: y > 280, down, expanded };
           return (Object.keys(next) as (keyof ScrollBands)[]).every((k) => next[k] === prev[k]) ? prev : next;
         });
-        // The bar stays away while the page moves and drops in from the top once it stops.
-        clearTimeout(settleTimer.current);
-        settleTimer.current = setTimeout(() => {
-          setScroll((p) => (p.moving ? { ...p, moving: false } : p));
-        }, SETTLE_MS);
-        // Stop scrolling while the bar is back in its minimal form and, after a beat, it opens up fully.
-        clearTimeout(idleTimer.current);
-        idleTimer.current = setTimeout(() => {
-          setScroll((p) => (p.past280 && !p.down && !p.expanded ? { ...p, expanded: true } : p));
-        }, IDLE_EXPAND_MS);
       });
     };
 
@@ -143,8 +121,6 @@ export function Header() {
     return () => {
       window.removeEventListener("scroll", onScroll);
       cancelAnimationFrame(raf);
-      clearTimeout(idleTimer.current);
-      clearTimeout(settleTimer.current);
       clearTimeout(hoverTimer.current);
     };
   }, []);
@@ -202,18 +178,13 @@ export function Header() {
     activeMenu !== null ||
     (searchOpen && typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
   const isGlass = isHome && isTop && !overlayActive;
+  const isDeep = !isTop && !activeMenu;
 
-  // Deep scroll state: past 280px the navbar is reduced to AYIIN + Search + Bag, and stays that way
-  // after a small scroll up. Scrolling up FULL_NAV_TRAVEL px restores every item.
-  const isDeep = scroll.past280 && !scroll.expanded && !activeMenu && !searchOpen;
-
-  // Past the compressed state the whole header leaves while the page is moving, in either direction,
-  // and slides back down from the top the moment scrolling stops. Open menus/search/drawer keep it in place.
+  // When scrolling down past the top, the navbar collapses and stays away even after scrolling stops.
+  // When scrolling up, it smoothly slides back down. Active menus/search keep it visible.
   const isHidden =
-    // A page with its own pinned local nav (product pages) owns the top edge once you leave the top: the
-    // main navbar stays away, scrolling up or down, and comes back only at the very top.
     (localNav && scroll.past80 && !activeMenu && !searchOpen && !menuOpen) ||
-    (scroll.past120 && scroll.moving && !activeMenu && !searchOpen && !menuOpen);
+    (!isTop && scroll.down && !activeMenu && !searchOpen && !menuOpen);
 
   const submitSearch = () => {
     const q = search.query.trim();
