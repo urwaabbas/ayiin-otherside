@@ -4,13 +4,7 @@ import { geist, geistMono, funnel } from "./fonts";
 import { getPrefs } from "@/lib/server-prefs";
 import { BRAND_COLORS } from "@/lib/brand-colors";
 import { Providers } from "@/components/providers";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { CartDrawer } from "@/components/layout/cart-drawer";
-import { MobileNav } from "@/components/layout/mobile-nav";
-import { Toast } from "@/components/layout/toast";
-import { CompareTray } from "@/components/layout/compare-tray";
-import { PageMotion } from "@/components/motion/page-motion";
+import { AppShell } from "@/components/layout/app-shell";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ayiin.com"),
@@ -57,14 +51,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           Skip to content
         </a>
         <Providers initial={prefs}>
-          <Header />
-          <main id="main">{children}</main>
-          <Footer mode={prefs.mode} />
-          <CartDrawer />
-          <MobileNav />
-          <CompareTray />
-          <Toast />
-          <PageMotion />
+          <AppShell mode={prefs.mode}>
+            {children}
+          </AppShell>
         </Providers>
       </body>
     </html>

@@ -1,0 +1,1764 @@
+{
+  "products": [
+    {
+      "_id": "ay-1007",
+      "id": "ay-1007",
+      "title": "Aurel ANC Over-Ear Headphones",
+      "slug": "aurel-anc-over-ear",
+      "description": "Adaptive noise cancelling that measurably outperforms headphones twice the price, with 40 hours of battery and a fold-flat design.",
+      "price": 249,
+      "discountPrice": 299,
+      "stock": 212,
+      "images": [
+        "/products/aurel-anc-over-ear.jpg"
+      ],
+      "category": {
+        "_id": "cat-audio-tech",
+        "name": "Audio Tech",
+        "slug": "audio-tech"
+      },
+      "subcategory": "Headphones",
+      "brand": "Northform",
+      "rating": 4.8,
+      "reviewCount": 3184,
+      "createdAt": "2026-10-07T15:29:22.031Z"
+    },
+    {
+      "_id": "ay-1014",
+      "id": "ay-1014",
+      "title": "Aurel Buds Pro",
+      "slug": "aurel-buds-pro",
+      "description": "Compact earbuds with the same adaptive ANC engine as the Aurel over-ears, in a pocketable case.",
+      "price": 169,
+      "discountPrice": null,
+      "stock": 38,
+      "images": [
+        "/products/aurel-buds-pro.jpg"
+      ],
+      "category": {
+        "_id": "cat-audio-tech",
+        "name": "Audio Tech",
+        "slug": "audio-tech"
+      },
+      "subcategory": "Headphones",
+      "brand": "Northform",
+      "rating": 4.6,
+      "reviewCount": 1422,
+      "createdAt": "2026-10-05T15:29:22.032Z"
+    },
+    {
+      "_id": "ay-1021",
+      "id": "ay-1021",
+      "title": "Halo Speaker Mini",
+      "slug": "halo-speaker-mini",
+      "description": "A room-filling 360° speaker the size of a coffee cup, waterproof and good for 20 hours.",
+      "price": 119,
+      "discountPrice": 139,
+      "stock": 520,
+      "images": [
+        "/products/halo-speaker-mini.jpg"
+      ],
+      "category": {
+        "_id": "cat-audio-tech",
+        "name": "Audio Tech",
+        "slug": "audio-tech"
+      },
+      "subcategory": "Speakers",
+      "brand": "Northform",
+      "rating": 4.7,
+      "reviewCount": 2210,
+      "createdAt": "2026-10-03T15:29:22.032Z"
+    },
+    {
+      "_id": "ay-1028",
+      "id": "ay-1028",
+      "title": "Kova Book 14 Air",
+      "slug": "kova-book-14-air",
+      "description": "A 1.1 kg, fanless 14\" laptop with an all-day battery and a matte 2.8K display.",
+      "price": 1249,
+      "discountPrice": null,
+      "stock": 64,
+      "images": [
+        "/products/kova-book-14-air.jpg"
+      ],
+      "category": {
+        "_id": "cat-audio-tech",
+        "name": "Audio Tech",
+        "slug": "audio-tech"
+      },
+      "subcategory": "Laptops",
+      "brand": "Kova",
+      "rating": 4.7,
+      "reviewCount": 986,
+      "createdAt": "2026-10-01T15:29:22.032Z"
+    },
+    {
+      "_id": "ay-1035",
+      "id": "ay-1035",
+      "title": "Kova Keys Low-Profile",
+      "slug": "kova-keys-low-profile",
+      "description": "A quiet, low-profile mechanical keyboard that pairs with three devices.",
+      "price": 139,
+      "discountPrice": null,
+      "stock": 1200,
+      "images": [
+        "/products/kova-keys-low-profile.jpg"
+      ],
+      "category": {
+        "_id": "cat-office",
+        "name": "Office",
+        "slug": "office"
+      },
+      "subcategory": "Peripherals",
+      "brand": "Kova",
+      "rating": 4.6,
+      "reviewCount": 1830,
+      "createdAt": "2026-09-29T15:29:22.032Z"
+    },
+    {
+      "_id": "ay-1042",
+      "id": "ay-1042",
+      "title": "Kova Vista 27\" 4K Monitor",
+      "slug": "kova-vista-27-4k",
+      "description": "Colour-accurate 27\" 4K with USB-C 90 W — one cable for power, display and peripherals.",
+      "price": 429,
+      "discountPrice": 479,
+      "stock": 180,
+      "images": [
+        "/products/kova-vista-27-4k.jpg"
+      ],
+      "category": {
+        "_id": "cat-audio-tech",
+        "name": "Audio Tech",
+        "slug": "audio-tech"
+      },
+      "subcategory": "Monitors",
+      "brand": "Kova",
+      "rating": 4.7,
+      "reviewCount": 1102,
+      "createdAt": "2026-09-27T15:29:22.032Z"
+    },
+    {
+      "_id": "ay-1049",
+      "id": "ay-1049",
+      "title": "Kova One",
+      "slug": "kova-one",
+      "description": "A clean, unlocked phone with 5 years of updates and a 2-day battery.",
+      "price": 699,
+      "discountPrice": null,
+      "stock": 12,
+      "images": [
+        "/products/kova-one.jpg"
+      ],
+      "category": {
+        "_id": "cat-audio-tech",
+        "name": "Audio Tech",
+        "slug": "audio-tech"
+      },
+      "subcategory": "Phones",
+      "brand": "Kova",
+      "rating": 4.5,
+      "reviewCount": 2640,
+      "createdAt": "2026-09-25T15:29:22.032Z"
+    },
+    {
+      "_id": "ay-1056",
+      "id": "ay-1056",
+      "title": "Arc Table Lamp",
+      "slug": "arc-table-lamp",
+      "description": "A sculptural table lamp with a hand-finished base and a dimmable warm LED.",
+      "price": 189,
+      "discountPrice": null,
+      "stock": 46,
+      "images": [
+        "/products/arc-table-lamp.jpg"
+      ],
+      "category": {
+        "_id": "cat-home-living",
+        "name": "Home Living",
+        "slug": "home-living"
+      },
+      "subcategory": "Lighting",
+      "brand": "Atelier Mesa",
+      "rating": 4.8,
+      "reviewCount": 742,
+      "createdAt": "2026-09-23T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1063",
+      "id": "ay-1063",
+      "title": "Loom Lounge Chair",
+      "slug": "loom-lounge-chair",
+      "description": "A low, generous lounge chair in solid oak with a removable, washable cover.",
+      "price": 689,
+      "discountPrice": 790,
+      "stock": 9,
+      "images": [
+        "/products/loom-lounge-chair.jpg"
+      ],
+      "category": {
+        "_id": "cat-home-living",
+        "name": "Home Living",
+        "slug": "home-living"
+      },
+      "subcategory": "Seating",
+      "brand": "Atelier Mesa",
+      "rating": 4.7,
+      "reviewCount": 318,
+      "createdAt": "2026-09-21T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1070",
+      "id": "ay-1070",
+      "title": "Stoneware Bud Vase Trio",
+      "slug": "stoneware-bud-vases",
+      "description": "Three wheel-thrown bud vases in a speckled reactive glaze. Each set is unique.",
+      "price": 54,
+      "discountPrice": null,
+      "stock": 300,
+      "images": [
+        "/products/stoneware-bud-vases.jpg"
+      ],
+      "category": {
+        "_id": "cat-home-living",
+        "name": "Home Living",
+        "slug": "home-living"
+      },
+      "subcategory": "Decor",
+      "brand": "Kindred",
+      "rating": 4.9,
+      "reviewCount": 1206,
+      "createdAt": "2026-09-19T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1077",
+      "id": "ay-1077",
+      "title": "Ember Soy Candle — Fig & Cedar",
+      "slug": "ember-soy-candle",
+      "description": "A clean-burning soy candle with a cotton wick and a 60-hour burn.",
+      "price": 38,
+      "discountPrice": null,
+      "stock": 740,
+      "images": [
+        "/products/ember-soy-candle.jpg"
+      ],
+      "category": {
+        "_id": "cat-home-living",
+        "name": "Home Living",
+        "slug": "home-living"
+      },
+      "subcategory": "Candles",
+      "brand": "Kindred",
+      "rating": 4.8,
+      "reviewCount": 2904,
+      "createdAt": "2026-09-17T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1084",
+      "id": "ay-1084",
+      "title": "Olive Tree in Terracotta",
+      "slug": "olive-tree-terracotta",
+      "description": "A 70 cm indoor olive tree, nursery-grown and shipped in climate-controlled boxes.",
+      "price": 79,
+      "discountPrice": null,
+      "stock": 70,
+      "images": [
+        "/products/olive-tree-terracotta.jpg"
+      ],
+      "category": {
+        "_id": "cat-home-living",
+        "name": "Home Living",
+        "slug": "home-living"
+      },
+      "subcategory": "Plants",
+      "brand": "Kindred",
+      "rating": 4.6,
+      "reviewCount": 488,
+      "createdAt": "2026-09-15T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1091",
+      "id": "ay-1091",
+      "title": "Pour Gooseneck Kettle",
+      "slug": "pour-gooseneck-kettle",
+      "description": "A precise electric gooseneck with ±1° temperature hold and a 60-minute keep-warm.",
+      "price": 95,
+      "discountPrice": 115,
+      "stock": 260,
+      "images": [
+        "/products/pour-gooseneck-kettle.jpg"
+      ],
+      "category": {
+        "_id": "cat-kitchen",
+        "name": "Kitchen",
+        "slug": "kitchen"
+      },
+      "subcategory": "Kettles",
+      "brand": "Oro",
+      "rating": 4.8,
+      "reviewCount": 1530,
+      "createdAt": "2026-09-13T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1098",
+      "id": "ay-1098",
+      "title": "Everyday Stoneware Mugs, Set of 4",
+      "slug": "everyday-stoneware-mugs",
+      "description": "Stackable 350 ml mugs with a comfortable handle and a satin glaze.",
+      "price": 42,
+      "discountPrice": null,
+      "stock": 1600,
+      "images": [
+        "/products/everyday-stoneware-mugs.jpg"
+      ],
+      "category": {
+        "_id": "cat-kitchen",
+        "name": "Kitchen",
+        "slug": "kitchen"
+      },
+      "subcategory": "Tableware",
+      "brand": "Kindred",
+      "rating": 4.8,
+      "reviewCount": 3302,
+      "createdAt": "2026-09-11T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1105",
+      "id": "ay-1105",
+      "title": "Ethiopia Guji Single Origin, 1 kg",
+      "slug": "guji-single-origin-1kg",
+      "description": "Washed Guji with notes of bergamot, peach and black tea. Roasted to order within 48 hours.",
+      "price": 36,
+      "discountPrice": null,
+      "stock": 480,
+      "images": [
+        "/products/guji-single-origin-1kg.jpg"
+      ],
+      "category": {
+        "_id": "cat-kitchen",
+        "name": "Kitchen",
+        "slug": "kitchen"
+      },
+      "subcategory": "Coffee",
+      "brand": "Oro",
+      "rating": 4.9,
+      "reviewCount": 2180,
+      "createdAt": "2026-09-09T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1112",
+      "id": "ay-1112",
+      "title": "Stride Runner 2",
+      "slug": "stride-runner-2",
+      "description": "A lightweight daily trainer with a recycled knit upper and a responsive foam midsole.",
+      "price": 148,
+      "discountPrice": null,
+      "stock": 880,
+      "images": [
+        "/products/stride-runner-2.jpg"
+      ],
+      "category": {
+        "_id": "cat-fashion",
+        "name": "Fashion",
+        "slug": "fashion"
+      },
+      "subcategory": "Sneakers",
+      "brand": "Fieldwork",
+      "rating": 4.7,
+      "reviewCount": 5120,
+      "createdAt": "2026-09-07T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1119",
+      "id": "ay-1119",
+      "title": "Transit Daypack 22L",
+      "slug": "transit-daypack-22",
+      "description": "A weatherproof commuter pack with a padded 16\" laptop sleeve and clamshell opening.",
+      "price": 129,
+      "discountPrice": null,
+      "stock": 410,
+      "images": [
+        "/products/transit-daypack-22.jpg"
+      ],
+      "category": {
+        "_id": "cat-fashion",
+        "name": "Fashion",
+        "slug": "fashion"
+      },
+      "subcategory": "Bags",
+      "brand": "Fieldwork",
+      "rating": 4.8,
+      "reviewCount": 2760,
+      "createdAt": "2026-09-05T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1126",
+      "id": "ay-1126",
+      "title": "Meridian Automatic 38mm",
+      "slug": "meridian-automatic-38",
+      "description": "A 38 mm automatic with sapphire crystal, 100 m water resistance and a quick-release strap.",
+      "price": 395,
+      "discountPrice": null,
+      "stock": 22,
+      "images": [
+        "/products/meridian-automatic-38.jpg"
+      ],
+      "category": {
+        "_id": "cat-fashion",
+        "name": "Fashion",
+        "slug": "fashion"
+      },
+      "subcategory": "Watches",
+      "brand": "Meridian",
+      "rating": 4.8,
+      "reviewCount": 612,
+      "createdAt": "2026-09-03T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1133",
+      "id": "ay-1133",
+      "title": "Solstice Polarized Sunglasses",
+      "slug": "solstice-sunglasses",
+      "description": "Hand-polished acetate frames with polarized mineral glass lenses.",
+      "price": 165,
+      "discountPrice": null,
+      "stock": 150,
+      "images": [
+        "/products/solstice-sunglasses.jpg"
+      ],
+      "category": {
+        "_id": "cat-fashion",
+        "name": "Fashion",
+        "slug": "fashion"
+      },
+      "subcategory": "Eyewear",
+      "brand": "Fieldwork",
+      "rating": 4.6,
+      "reviewCount": 840,
+      "createdAt": "2026-09-01T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1140",
+      "id": "ay-1140",
+      "title": "Trail Insulated Bottle 750 ml",
+      "slug": "trail-bottle-750",
+      "description": "Double-wall steel bottle that keeps drinks cold for 24 hours — and takes custom logos.",
+      "price": 34,
+      "discountPrice": null,
+      "stock": 3200,
+      "images": [
+        "/products/trail-bottle-750.jpg"
+      ],
+      "category": {
+        "_id": "cat-fashion",
+        "name": "Fashion",
+        "slug": "fashion"
+      },
+      "subcategory": "Bottles",
+      "brand": "Fieldwork",
+      "rating": 4.8,
+      "reviewCount": 4410,
+      "createdAt": "2026-08-30T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1147",
+      "id": "ay-1147",
+      "title": "Clarity Serum — 10% Niacinamide",
+      "slug": "clarity-niacinamide-serum",
+      "description": "A lightweight serum that visibly refines pores and evens tone in 4 weeks.",
+      "price": 28,
+      "discountPrice": null,
+      "stock": 2100,
+      "images": [
+        "/products/clarity-niacinamide-serum.jpg"
+      ],
+      "category": {
+        "_id": "cat-beauty",
+        "name": "Beauty",
+        "slug": "beauty"
+      },
+      "subcategory": "Skincare",
+      "brand": "Solace Labs",
+      "rating": 4.7,
+      "reviewCount": 6120,
+      "createdAt": "2026-08-28T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1154",
+      "id": "ay-1154",
+      "title": "Night Recovery Facial Oil",
+      "slug": "night-recovery-oil",
+      "description": "Squalane and bakuchiol in a fast-absorbing oil for overnight repair.",
+      "price": 46,
+      "discountPrice": null,
+      "stock": 640,
+      "images": [
+        "/products/night-recovery-oil.jpg"
+      ],
+      "category": {
+        "_id": "cat-beauty",
+        "name": "Beauty",
+        "slug": "beauty"
+      },
+      "subcategory": "Skincare",
+      "brand": "Solace Labs",
+      "rating": 4.8,
+      "reviewCount": 1480,
+      "createdAt": "2026-08-26T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1161",
+      "id": "ay-1161",
+      "title": "Ergo Task Chair Pro",
+      "slug": "ergo-task-chair-pro",
+      "description": "BIFMA-certified ergonomic chair with adaptive lumbar support and 4D arms.",
+      "price": 549,
+      "discountPrice": 649,
+      "stock": 340,
+      "images": [
+        "/products/ergo-task-chair-pro.jpg"
+      ],
+      "category": {
+        "_id": "cat-office",
+        "name": "Office",
+        "slug": "office"
+      },
+      "subcategory": "Seating",
+      "brand": "Brightline",
+      "rating": 4.7,
+      "reviewCount": 2860,
+      "createdAt": "2026-08-24T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1168",
+      "id": "ay-1168",
+      "title": "Premium Copy Paper A4, 80 gsm — 5 Reams",
+      "slug": "premium-copy-paper-a4",
+      "description": "Jam-free, FSC-certified 80 gsm copy paper. 2,500 sheets per case.",
+      "price": 32.99,
+      "discountPrice": null,
+      "stock": 24000,
+      "images": [
+        "/products/premium-copy-paper-a4.jpg"
+      ],
+      "category": {
+        "_id": "cat-office",
+        "name": "Office",
+        "slug": "office"
+      },
+      "subcategory": "Paper",
+      "brand": "Brightline",
+      "rating": 4.8,
+      "reviewCount": 9210,
+      "createdAt": "2026-08-22T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1175",
+      "id": "ay-1175",
+      "title": "Scanline 2D Wireless Barcode Scanner",
+      "slug": "scanline-barcode-scanner",
+      "description": "A rugged 2D scanner that reads damaged labels and screens, with a 2-metre drop rating.",
+      "price": 89,
+      "discountPrice": null,
+      "stock": 900,
+      "images": [
+        "/products/scanline-barcode-scanner.jpg"
+      ],
+      "category": {
+        "_id": "cat-office",
+        "name": "Office",
+        "slug": "office"
+      },
+      "subcategory": "Scanning",
+      "brand": "Brightline",
+      "rating": 4.6,
+      "reviewCount": 1270,
+      "createdAt": "2026-08-20T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1182",
+      "id": "ay-1182",
+      "title": "Double-Wall Shipping Cartons 12×10×8\" — 25 pack",
+      "slug": "double-wall-cartons-12x10x8",
+      "description": "ECT-32 double-wall cartons rated to 30 kg, stocked in Reno and Allentown.",
+      "price": 48,
+      "discountPrice": null,
+      "stock": 18000,
+      "images": [
+        "/products/double-wall-cartons-12x10x8.jpg"
+      ],
+      "category": {
+        "_id": "cat-supplies",
+        "name": "Supplies",
+        "slug": "supplies"
+      },
+      "subcategory": "Shipping cartons",
+      "brand": "Parcel & Crate",
+      "rating": 4.8,
+      "reviewCount": 3410,
+      "createdAt": "2026-08-18T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1189",
+      "id": "ay-1189",
+      "title": "Kraft Mailer Boxes 9×6×3\" — 50 pack",
+      "slug": "kraft-mailer-boxes",
+      "description": "Tuck-front mailers that assemble without tape — custom print available from 500.",
+      "price": 39,
+      "discountPrice": null,
+      "stock": 9600,
+      "images": [
+        "/products/kraft-mailer-boxes.jpg"
+      ],
+      "category": {
+        "_id": "cat-supplies",
+        "name": "Supplies",
+        "slug": "supplies"
+      },
+      "subcategory": "Mailers",
+      "brand": "Parcel & Crate",
+      "rating": 4.7,
+      "reviewCount": 1890,
+      "createdAt": "2026-08-16T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1196",
+      "id": "ay-1196",
+      "title": "Nitrile Exam Gloves 4 mil — Box of 100",
+      "slug": "nitrile-gloves-4mil",
+      "description": "Powder-free, latex-free nitrile gloves certified for food handling and medical exam.",
+      "price": 14.5,
+      "discountPrice": null,
+      "stock": 64000,
+      "images": [
+        "/products/nitrile-gloves-4mil.jpg"
+      ],
+      "category": {
+        "_id": "cat-safety",
+        "name": "Safety",
+        "slug": "safety"
+      },
+      "subcategory": "Gloves",
+      "brand": "Guardline",
+      "rating": 4.8,
+      "reviewCount": 7840,
+      "createdAt": "2026-08-14T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1203",
+      "id": "ay-1203",
+      "title": "Vented Safety Helmet, Type II",
+      "slug": "vented-safety-helmet",
+      "description": "A lightweight Type II helmet with ratchet suspension and adjustable venting.",
+      "price": 29,
+      "discountPrice": null,
+      "stock": 8800,
+      "images": [
+        "/products/vented-safety-helmet.jpg"
+      ],
+      "category": {
+        "_id": "cat-safety",
+        "name": "Safety",
+        "slug": "safety"
+      },
+      "subcategory": "Head protection",
+      "brand": "Guardline",
+      "rating": 4.7,
+      "reviewCount": 2210,
+      "createdAt": "2026-08-12T15:29:22.033Z"
+    },
+    {
+      "_id": "ay-1210",
+      "id": "ay-1210",
+      "title": "Eco Surface Cleaner — 4 × 750 ml",
+      "slug": "eco-surface-cleaner",
+      "description": "Plant-based multi-surface cleaner, EPA Safer Choice certified, in refillable bottles.",
+      "price": 24,
+      "discountPrice": null,
+      "stock": 12000,
+      "images": [
+        "/products/eco-surface-cleaner.jpg"
+      ],
+      "category": {
+        "_id": "cat-safety",
+        "name": "Safety",
+        "slug": "safety"
+      },
+      "subcategory": "Cleaning",
+      "brand": "Guardline",
+      "rating": 4.6,
+      "reviewCount": 1640,
+      "createdAt": "2026-08-10T15:29:22.033Z"
+    }
+  ],
+  "orders": [
+    {
+      "_id": "AY-TEST-999",
+      "id": "AY-TEST-999",
+      "user": {
+        "name": "Zain Haider",
+        "email": "zain@ayiin.com"
+      },
+      "items": [
+        {
+          "price": 249,
+          "title": "Aurel ANC Over-Ear Headphones",
+          "quantity": 2,
+          "productId": "ay-1007"
+        }
+      ],
+      "total": 498,
+      "status": "processing",
+      "mode": "personal",
+      "createdAt": "2026-10-09T15:29:54.687Z"
+    },
+    {
+      "_id": "AY-849201",
+      "id": "AY-849201",
+      "user": {
+        "name": "Haider Urwa",
+        "email": "haider@ayiin.com"
+      },
+      "items": [
+        {
+          "title": "Aurel ANC Over-Ear Headphones",
+          "quantity": 1,
+          "price": 249
+        },
+        {
+          "title": "Loom Lounge Chair",
+          "quantity": 1,
+          "price": 689
+        }
+      ],
+      "total": 938,
+      "status": "processing",
+      "mode": "personal",
+      "createdAt": "2026-10-06T14:22:00.000Z"
+    },
+    {
+      "_id": "AY-791024",
+      "id": "AY-791024",
+      "user": {
+        "name": "Haider Urwa",
+        "email": "haider@ayiin.com"
+      },
+      "items": [
+        {
+          "title": "Halo Speaker Mini",
+          "quantity": 1,
+          "price": 119
+        },
+        {
+          "title": "Arc Table Lamp",
+          "quantity": 1,
+          "price": 189
+        }
+      ],
+      "total": 308,
+      "status": "completed",
+      "mode": "personal",
+      "createdAt": "2026-09-18T10:14:00.000Z"
+    }
+  ],
+  "users": [
+    {
+      "_id": "u-admin",
+      "name": "Admin Haider",
+      "email": "admin@ayiin.com",
+      "role": "admin",
+      "isVerified": true,
+      "createdAt": "2026-08-01T10:00:00.000Z"
+    },
+    {
+      "_id": "u-2",
+      "name": "Sarah Jenkins",
+      "email": "sarah.j@example.com",
+      "role": "user",
+      "isVerified": true,
+      "createdAt": "2026-08-15T14:20:00.000Z"
+    },
+    {
+      "_id": "u-3",
+      "name": "Marcus Chen",
+      "email": "m.chen@studioline.design",
+      "role": "user",
+      "isVerified": true,
+      "createdAt": "2026-09-02T09:12:00.000Z"
+    },
+    {
+      "_id": "u-4",
+      "name": "Amina Al-Mansoor",
+      "email": "amina@harbor.ae",
+      "role": "user",
+      "isVerified": true,
+      "createdAt": "2026-09-18T16:45:00.000Z"
+    },
+    {
+      "_id": "u-5",
+      "name": "Elena Rostova",
+      "email": "elena@nordicform.com",
+      "role": "user",
+      "isVerified": false,
+      "createdAt": "2026-10-01T11:30:00.000Z"
+    }
+  ],
+  "reviews": [
+    {
+      "_id": "rev-ay-1007-0",
+      "product": {
+        "_id": "ay-1007",
+        "title": "Aurel ANC Over-Ear Headphones",
+        "images": [
+          "/products/aurel-anc-over-ear.jpg"
+        ]
+      },
+      "author": "Maya R.",
+      "rating": 5,
+      "title": "Quieter than my old flagship pair",
+      "comment": "Flew SFO → JFK and heard nothing but my podcast. Clamping force is gentle enough to sleep in.",
+      "createdAt": "2026-08-30T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1007-1",
+      "product": {
+        "_id": "ay-1007",
+        "title": "Aurel ANC Over-Ear Headphones",
+        "images": [
+          "/products/aurel-anc-over-ear.jpg"
+        ]
+      },
+      "author": "Devon K.",
+      "rating": 5,
+      "title": "Rolled out to 60 people",
+      "comment": "Volume pricing kicked in at 50 units and the multipoint pairing means no more helpdesk tickets about switching devices.",
+      "createdAt": "2026-08-12T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1014-0",
+      "product": {
+        "_id": "ay-1014",
+        "title": "Aurel Buds Pro",
+        "images": [
+          "/products/aurel-buds-pro.jpg"
+        ]
+      },
+      "author": "Jonah P.",
+      "rating": 5,
+      "title": "Stay put on runs",
+      "comment": "Three sizes of tips and the medium locked in. ANC on the subway is genuinely impressive.",
+      "createdAt": "2026-09-02T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1014-1",
+      "product": {
+        "_id": "ay-1014",
+        "title": "Aurel Buds Pro",
+        "images": [
+          "/products/aurel-buds-pro.jpg"
+        ]
+      },
+      "author": "Leila S.",
+      "rating": 4,
+      "title": "Great, minor quibble",
+      "comment": "Sound and battery are excellent. Tap controls trigger when adjusting fit.",
+      "createdAt": "2026-08-21T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1021-0",
+      "product": {
+        "_id": "ay-1021",
+        "title": "Halo Speaker Mini",
+        "images": [
+          "/products/halo-speaker-mini.jpg"
+        ]
+      },
+      "author": "Theo M.",
+      "rating": 5,
+      "title": "Punches above its weight",
+      "comment": "Paired two for stereo on the patio. Sounds like a much bigger unit.",
+      "createdAt": "2026-08-19T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1021-1",
+      "product": {
+        "_id": "ay-1021",
+        "title": "Halo Speaker Mini",
+        "images": [
+          "/products/halo-speaker-mini.jpg"
+        ]
+      },
+      "author": "Rina A.",
+      "rating": 4,
+      "title": "Great gift",
+      "comment": "Bought three for the family. Signal colour is even better in person.",
+      "createdAt": "2026-07-28T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1028-0",
+      "product": {
+        "_id": "ay-1028",
+        "title": "Kova Book 14 Air",
+        "images": [
+          "/products/kova-book-14-air.jpg"
+        ]
+      },
+      "author": "Sam W.",
+      "rating": 5,
+      "title": "Silent and fast",
+      "comment": "No fan noise at all in video calls. The matte screen is great outdoors.",
+      "createdAt": "2026-09-05T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1028-1",
+      "product": {
+        "_id": "ay-1028",
+        "title": "Kova Book 14 Air",
+        "images": [
+          "/products/kova-book-14-air.jpg"
+        ]
+      },
+      "author": "Priya N.",
+      "rating": 5,
+      "title": "Fleet program was painless",
+      "comment": "Asset tags, pre-enrolled MDM and 3-year warranty on 40 units. Arrived in two days.",
+      "createdAt": "2026-08-15T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1035-0",
+      "product": {
+        "_id": "ay-1035",
+        "title": "Kova Keys Low-Profile",
+        "images": [
+          "/products/kova-keys-low-profile.jpg"
+        ]
+      },
+      "author": "Ari F.",
+      "rating": 5,
+      "title": "Finally, a quiet mechanical",
+      "comment": "Nobody on my calls can hear me type anymore.",
+      "createdAt": "2026-08-08T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1035-1",
+      "product": {
+        "_id": "ay-1035",
+        "title": "Kova Keys Low-Profile",
+        "images": [
+          "/products/kova-keys-low-profile.jpg"
+        ]
+      },
+      "author": "Nadia E.",
+      "rating": 4,
+      "title": "Great for hot desks",
+      "comment": "Bought 30 for our hot-desking floor. Pairing is simple.",
+      "createdAt": "2026-07-30T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1042-0",
+      "product": {
+        "_id": "ay-1042",
+        "title": "Kova Vista 27\" 4K Monitor",
+        "images": [
+          "/products/kova-vista-27-4k.jpg"
+        ]
+      },
+      "author": "Colette B.",
+      "rating": 5,
+      "title": "Colours are spot-on",
+      "comment": "Matched my calibrated reference out of the box.",
+      "createdAt": "2026-08-26T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1042-1",
+      "product": {
+        "_id": "ay-1042",
+        "title": "Kova Vista 27\" 4K Monitor",
+        "images": [
+          "/products/kova-vista-27-4k.jpg"
+        ]
+      },
+      "author": "Omar T.",
+      "rating": 4,
+      "title": "Great hub monitor",
+      "comment": "Laptop charges over the one cable. Wish it did 120 Hz.",
+      "createdAt": "2026-08-02T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1049-0",
+      "product": {
+        "_id": "ay-1049",
+        "title": "Kova One",
+        "images": [
+          "/products/kova-one.jpg"
+        ]
+      },
+      "author": "Hana L.",
+      "rating": 5,
+      "title": "Two days, genuinely",
+      "comment": "Ended day two at 18%. The electric blue is stunning.",
+      "createdAt": "2026-09-10T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1049-1",
+      "product": {
+        "_id": "ay-1049",
+        "title": "Kova One",
+        "images": [
+          "/products/kova-one.jpg"
+        ]
+      },
+      "author": "Marco D.",
+      "rating": 4,
+      "title": "Solid everyday phone",
+      "comment": "No bloat, fast updates. Night photos are just okay.",
+      "createdAt": "2026-08-29T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1056-0",
+      "product": {
+        "_id": "ay-1056",
+        "title": "Arc Table Lamp",
+        "images": [
+          "/products/arc-table-lamp.jpg"
+        ]
+      },
+      "author": "Iris W.",
+      "rating": 5,
+      "title": "Heirloom quality",
+      "comment": "The travertine base is gorgeous and the dimmer is smooth all the way down.",
+      "createdAt": "2026-08-11T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1056-1",
+      "product": {
+        "_id": "ay-1056",
+        "title": "Arc Table Lamp",
+        "images": [
+          "/products/arc-table-lamp.jpg"
+        ]
+      },
+      "author": "Ben C.",
+      "rating": 5,
+      "title": "Ordered 48 for our rooms",
+      "comment": "Seller offered a quote within the hour and split delivery over two dates.",
+      "createdAt": "2026-07-19T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1063-0",
+      "product": {
+        "_id": "ay-1063",
+        "title": "Loom Lounge Chair",
+        "images": [
+          "/products/loom-lounge-chair.jpg"
+        ]
+      },
+      "author": "Noor H.",
+      "rating": 5,
+      "title": "The comfiest chair I own",
+      "comment": "Arrived fully assembled, white-glove delivery was on time to the hour.",
+      "createdAt": "2026-08-04T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1063-1",
+      "product": {
+        "_id": "ay-1063",
+        "title": "Loom Lounge Chair",
+        "images": [
+          "/products/loom-lounge-chair.jpg"
+        ]
+      },
+      "author": "Felix G.",
+      "rating": 4,
+      "title": "Beautiful, heavy",
+      "comment": "Solid build, takes two people to move. Worth it.",
+      "createdAt": "2026-07-14T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1070-0",
+      "product": {
+        "_id": "ay-1070",
+        "title": "Stoneware Bud Vase Trio",
+        "images": [
+          "/products/stoneware-bud-vases.jpg"
+        ]
+      },
+      "author": "Clara J.",
+      "rating": 5,
+      "title": "Even better in person",
+      "comment": "The speckled glaze is so subtle and lovely. Packaged beautifully.",
+      "createdAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1070-1",
+      "product": {
+        "_id": "ay-1070",
+        "title": "Stoneware Bud Vase Trio",
+        "images": [
+          "/products/stoneware-bud-vases.jpg"
+        ]
+      },
+      "author": "Tom V.",
+      "rating": 5,
+      "title": "Perfect housewarming gift",
+      "comment": "Arrived in two days, gift-wrapped with a handwritten note.",
+      "createdAt": "2026-08-18T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1077-0",
+      "product": {
+        "_id": "ay-1077",
+        "title": "Ember Soy Candle — Fig & Cedar",
+        "images": [
+          "/products/ember-soy-candle.jpg"
+        ]
+      },
+      "author": "Eve S.",
+      "rating": 5,
+      "title": "My third one",
+      "comment": "Burns evenly to the bottom. The fig is subtle, not sweet.",
+      "createdAt": "2026-09-06T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1077-1",
+      "product": {
+        "_id": "ay-1077",
+        "title": "Ember Soy Candle — Fig & Cedar",
+        "images": [
+          "/products/ember-soy-candle.jpg"
+        ]
+      },
+      "author": "Lucas R.",
+      "rating": 4,
+      "title": "Lovely scent",
+      "comment": "Wish the lid was included, otherwise perfect.",
+      "createdAt": "2026-08-20T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1084-0",
+      "product": {
+        "_id": "ay-1084",
+        "title": "Olive Tree in Terracotta",
+        "images": [
+          "/products/olive-tree-terracotta.jpg"
+        ]
+      },
+      "author": "Grace T.",
+      "rating": 5,
+      "title": "Arrived perfect",
+      "comment": "Not a single leaf dropped. Clever box design.",
+      "createdAt": "2026-08-24T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1084-1",
+      "product": {
+        "_id": "ay-1084",
+        "title": "Olive Tree in Terracotta",
+        "images": [
+          "/products/olive-tree-terracotta.jpg"
+        ]
+      },
+      "author": "Omid Z.",
+      "rating": 4,
+      "title": "Healthy tree",
+      "comment": "Smaller than expected but thriving after a month.",
+      "createdAt": "2026-07-26T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1091-0",
+      "product": {
+        "_id": "ay-1091",
+        "title": "Pour Gooseneck Kettle",
+        "images": [
+          "/products/pour-gooseneck-kettle.jpg"
+        ]
+      },
+      "author": "Yuki O.",
+      "rating": 5,
+      "title": "Pour-over game changer",
+      "comment": "The flow rate is so controllable. Holds temperature exactly.",
+      "createdAt": "2026-08-27T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1091-1",
+      "product": {
+        "_id": "ay-1091",
+        "title": "Pour Gooseneck Kettle",
+        "images": [
+          "/products/pour-gooseneck-kettle.jpg"
+        ]
+      },
+      "author": "Rosa P.",
+      "rating": 5,
+      "title": "Six on our bar",
+      "comment": "Case pricing via RFQ saved us 18%. Durable under café use.",
+      "createdAt": "2026-07-22T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1098-0",
+      "product": {
+        "_id": "ay-1098",
+        "title": "Everyday Stoneware Mugs, Set of 4",
+        "images": [
+          "/products/everyday-stoneware-mugs.jpg"
+        ]
+      },
+      "author": "Anya K.",
+      "rating": 5,
+      "title": "Perfect everyday mugs",
+      "comment": "The handle fits four fingers. Stack beautifully in a small cupboard.",
+      "createdAt": "2026-09-08T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1098-1",
+      "product": {
+        "_id": "ay-1098",
+        "title": "Everyday Stoneware Mugs, Set of 4",
+        "images": [
+          "/products/everyday-stoneware-mugs.jpg"
+        ]
+      },
+      "author": "Chris L.",
+      "rating": 5,
+      "title": "Restocked our kitchen",
+      "comment": "Ordered 30 sets with our net-30 account. Zero breakages.",
+      "createdAt": "2026-08-09T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1105-0",
+      "product": {
+        "_id": "ay-1105",
+        "title": "Ethiopia Guji Single Origin, 1 kg",
+        "images": [
+          "/products/guji-single-origin-1kg.jpg"
+        ]
+      },
+      "author": "Dario F.",
+      "rating": 5,
+      "title": "Roast date was 2 days old",
+      "comment": "Blooming like crazy. Peach note is very real.",
+      "createdAt": "2026-09-11T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1105-1",
+      "product": {
+        "_id": "ay-1105",
+        "title": "Ethiopia Guji Single Origin, 1 kg",
+        "images": [
+          "/products/guji-single-origin-1kg.jpg"
+        ]
+      },
+      "author": "Kim N.",
+      "rating": 5,
+      "title": "Our house filter now",
+      "comment": "Standing order every 2 weeks, never missed a delivery.",
+      "createdAt": "2026-08-28T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1112-0",
+      "product": {
+        "_id": "ay-1112",
+        "title": "Stride Runner 2",
+        "images": [
+          "/products/stride-runner-2.jpg"
+        ]
+      },
+      "author": "Ivy C.",
+      "rating": 5,
+      "title": "Fits exactly like my old pair",
+      "comment": "Ayiin Fit said 8.5 and it was spot on. Super light.",
+      "createdAt": "2026-09-09T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1112-1",
+      "product": {
+        "_id": "ay-1112",
+        "title": "Stride Runner 2",
+        "images": [
+          "/products/stride-runner-2.jpg"
+        ]
+      },
+      "author": "Paul E.",
+      "rating": 4,
+      "title": "Great, a little narrow",
+      "comment": "Love the ride, went half a size up for wide feet.",
+      "createdAt": "2026-08-17T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1119-0",
+      "product": {
+        "_id": "ay-1119",
+        "title": "Transit Daypack 22L",
+        "images": [
+          "/products/transit-daypack-22.jpg"
+        ]
+      },
+      "author": "Rae D.",
+      "rating": 5,
+      "title": "Survived a downpour",
+      "comment": "Laptop bone dry after a 20-minute bike ride in heavy rain.",
+      "createdAt": "2026-08-31T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1119-1",
+      "product": {
+        "_id": "ay-1119",
+        "title": "Transit Daypack 22L",
+        "images": [
+          "/products/transit-daypack-22.jpg"
+        ]
+      },
+      "author": "Jules M.",
+      "rating": 5,
+      "title": "Onboarding kit hero",
+      "comment": "Custom-branded 120 packs for new hires. Proof approved in a day.",
+      "createdAt": "2026-07-11T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1126-0",
+      "product": {
+        "_id": "ay-1126",
+        "title": "Meridian Automatic 38mm",
+        "images": [
+          "/products/meridian-automatic-38.jpg"
+        ]
+      },
+      "author": "Adrian Q.",
+      "rating": 5,
+      "title": "Punches way above its price",
+      "comment": "Dial finishing is exceptional. Keeps +4 s/day.",
+      "createdAt": "2026-09-03T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1126-1",
+      "product": {
+        "_id": "ay-1126",
+        "title": "Meridian Automatic 38mm",
+        "images": [
+          "/products/meridian-automatic-38.jpg"
+        ]
+      },
+      "author": "Sofia G.",
+      "rating": 5,
+      "title": "Perfect anniversary gift",
+      "comment": "Engraving was free and it still arrived in 3 days.",
+      "createdAt": "2026-08-13T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1133-0",
+      "product": {
+        "_id": "ay-1133",
+        "title": "Solstice Polarized Sunglasses",
+        "images": [
+          "/products/solstice-sunglasses.jpg"
+        ]
+      },
+      "author": "Leo B.",
+      "rating": 5,
+      "title": "Glass lenses make a difference",
+      "comment": "So much sharper than my old pair. Case is lovely too.",
+      "createdAt": "2026-08-22T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1133-1",
+      "product": {
+        "_id": "ay-1133",
+        "title": "Solstice Polarized Sunglasses",
+        "images": [
+          "/products/solstice-sunglasses.jpg"
+        ]
+      },
+      "author": "Mina Y.",
+      "rating": 4,
+      "title": "Great quality",
+      "comment": "A bit heavy on long days but beautiful frames.",
+      "createdAt": "2026-07-31T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1140-0",
+      "product": {
+        "_id": "ay-1140",
+        "title": "Trail Insulated Bottle 750 ml",
+        "images": [
+          "/products/trail-bottle-750.jpg"
+        ]
+      },
+      "author": "Zoe A.",
+      "rating": 5,
+      "title": "Ice still there next morning",
+      "comment": "Left it in a hot car, still ice cold. The signal colour is great.",
+      "createdAt": "2026-09-12T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1140-1",
+      "product": {
+        "_id": "ay-1140",
+        "title": "Trail Insulated Bottle 750 ml",
+        "images": [
+          "/products/trail-bottle-750.jpg"
+        ]
+      },
+      "author": "Ethan W.",
+      "rating": 5,
+      "title": "Conference merch done right",
+      "comment": "500 laser-engraved bottles. Proof in 24h, delivered in 11 days.",
+      "createdAt": "2026-08-06T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1147-0",
+      "product": {
+        "_id": "ay-1147",
+        "title": "Clarity Serum — 10% Niacinamide",
+        "images": [
+          "/products/clarity-niacinamide-serum.jpg"
+        ]
+      },
+      "author": "Lena F.",
+      "rating": 5,
+      "title": "Pores visibly smaller",
+      "comment": "Four weeks in and my T-zone is so much calmer.",
+      "createdAt": "2026-09-07T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1147-1",
+      "product": {
+        "_id": "ay-1147",
+        "title": "Clarity Serum — 10% Niacinamide",
+        "images": [
+          "/products/clarity-niacinamide-serum.jpg"
+        ]
+      },
+      "author": "Aisha M.",
+      "rating": 4,
+      "title": "Works well",
+      "comment": "Great under makeup, slightly sticky right after applying.",
+      "createdAt": "2026-08-25T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1154-0",
+      "product": {
+        "_id": "ay-1154",
+        "title": "Night Recovery Facial Oil",
+        "images": [
+          "/products/night-recovery-oil.jpg"
+        ]
+      },
+      "author": "Beatrice H.",
+      "rating": 5,
+      "title": "Woke up glowing",
+      "comment": "Absorbs quickly and no breakouts.",
+      "createdAt": "2026-09-04T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1154-1",
+      "product": {
+        "_id": "ay-1154",
+        "title": "Night Recovery Facial Oil",
+        "images": [
+          "/products/night-recovery-oil.jpg"
+        ]
+      },
+      "author": "Nina P.",
+      "rating": 5,
+      "title": "Worth it",
+      "comment": "A few drops last all night. Lovely bottle.",
+      "createdAt": "2026-08-14T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1161-0",
+      "product": {
+        "_id": "ay-1161",
+        "title": "Ergo Task Chair Pro",
+        "images": [
+          "/products/ergo-task-chair-pro.jpg"
+        ]
+      },
+      "author": "Hugo S.",
+      "rating": 5,
+      "title": "Back pain gone",
+      "comment": "The lumbar actually follows you when you lean back.",
+      "createdAt": "2026-08-23T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1161-1",
+      "product": {
+        "_id": "ay-1161",
+        "title": "Ergo Task Chair Pro",
+        "images": [
+          "/products/ergo-task-chair-pro.jpg"
+        ]
+      },
+      "author": "Tara J.",
+      "rating": 5,
+      "title": "Outfitted 120 desks",
+      "comment": "Approval flow and staggered delivery across 3 floors worked perfectly.",
+      "createdAt": "2026-07-18T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1168-0",
+      "product": {
+        "_id": "ay-1168",
+        "title": "Premium Copy Paper A4, 80 gsm — 5 Reams",
+        "images": [
+          "/products/premium-copy-paper-a4.jpg"
+        ]
+      },
+      "author": "Walt R.",
+      "rating": 5,
+      "title": "Auto-reorder saves us",
+      "comment": "Scheduled 12 cases monthly. Never think about it anymore.",
+      "createdAt": "2026-09-01T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1168-1",
+      "product": {
+        "_id": "ay-1168",
+        "title": "Premium Copy Paper A4, 80 gsm — 5 Reams",
+        "images": [
+          "/products/premium-copy-paper-a4.jpg"
+        ]
+      },
+      "author": "Gina D.",
+      "rating": 5,
+      "title": "Great paper",
+      "comment": "Bright, crisp, next-day as promised.",
+      "createdAt": "2026-08-10T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1175-0",
+      "product": {
+        "_id": "ay-1175",
+        "title": "Scanline 2D Wireless Barcode Scanner",
+        "images": [
+          "/products/scanline-barcode-scanner.jpg"
+        ]
+      },
+      "author": "Luis O.",
+      "rating": 5,
+      "title": "Survives the floor",
+      "comment": "Dropped daily on concrete, still going. Reads scuffed labels instantly.",
+      "createdAt": "2026-08-19T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1175-1",
+      "product": {
+        "_id": "ay-1175",
+        "title": "Scanline 2D Wireless Barcode Scanner",
+        "images": [
+          "/products/scanline-barcode-scanner.jpg"
+        ]
+      },
+      "author": "Kate I.",
+      "rating": 4,
+      "title": "Easy setup",
+      "comment": "Plugged in, worked. Beep volume took some finding.",
+      "createdAt": "2026-07-24T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1182-0",
+      "product": {
+        "_id": "ay-1182",
+        "title": "Double-Wall Shipping Cartons 12×10×8\" — 25 pack",
+        "images": [
+          "/products/double-wall-cartons-12x10x8.jpg"
+        ]
+      },
+      "author": "Bea N.",
+      "rating": 5,
+      "title": "Our default box",
+      "comment": "Consistent quality every shipment. Pallet pricing is excellent.",
+      "createdAt": "2026-09-05T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1182-1",
+      "product": {
+        "_id": "ay-1182",
+        "title": "Double-Wall Shipping Cartons 12×10×8\" — 25 pack",
+        "images": [
+          "/products/double-wall-cartons-12x10x8.jpg"
+        ]
+      },
+      "author": "Mo K.",
+      "rating": 5,
+      "title": "Great for moving",
+      "comment": "Held heavy books without bulging.",
+      "createdAt": "2026-08-03T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1189-0",
+      "product": {
+        "_id": "ay-1189",
+        "title": "Kraft Mailer Boxes 9×6×3\" — 50 pack",
+        "images": [
+          "/products/kraft-mailer-boxes.jpg"
+        ]
+      },
+      "author": "June P.",
+      "rating": 5,
+      "title": "Customers love them",
+      "comment": "Custom print run turned around in 9 days.",
+      "createdAt": "2026-08-21T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1189-1",
+      "product": {
+        "_id": "ay-1189",
+        "title": "Kraft Mailer Boxes 9×6×3\" — 50 pack",
+        "images": [
+          "/products/kraft-mailer-boxes.jpg"
+        ]
+      },
+      "author": "Ray T.",
+      "rating": 4,
+      "title": "Great mailers",
+      "comment": "Sturdy, no tape needed. Ink version scuffs a little.",
+      "createdAt": "2026-07-27T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1196-0",
+      "product": {
+        "_id": "ay-1196",
+        "title": "Nitrile Exam Gloves 4 mil — Box of 100",
+        "images": [
+          "/products/nitrile-gloves-4mil.jpg"
+        ]
+      },
+      "author": "Dr. Ana V.",
+      "rating": 5,
+      "title": "Consistent quality",
+      "comment": "We go through 40 cases a month. Standing order has never slipped.",
+      "createdAt": "2026-09-08T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1196-1",
+      "product": {
+        "_id": "ay-1196",
+        "title": "Nitrile Exam Gloves 4 mil — Box of 100",
+        "images": [
+          "/products/nitrile-gloves-4mil.jpg"
+        ]
+      },
+      "author": "Jamal B.",
+      "rating": 4,
+      "title": "Good gloves",
+      "comment": "Size up if between sizes.",
+      "createdAt": "2026-08-12T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1203-0",
+      "product": {
+        "_id": "ay-1203",
+        "title": "Vented Safety Helmet, Type II",
+        "images": [
+          "/products/vented-safety-helmet.jpg"
+        ]
+      },
+      "author": "Rick H.",
+      "rating": 5,
+      "title": "Crew actually wears them",
+      "comment": "Light enough that nobody complains. Logo print looks sharp.",
+      "createdAt": "2026-08-15T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1203-1",
+      "product": {
+        "_id": "ay-1203",
+        "title": "Vented Safety Helmet, Type II",
+        "images": [
+          "/products/vented-safety-helmet.jpg"
+        ]
+      },
+      "author": "Sven L.",
+      "rating": 4,
+      "title": "Comfortable",
+      "comment": "Ratchet is smooth. Solid value.",
+      "createdAt": "2026-07-29T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1210-0",
+      "product": {
+        "_id": "ay-1210",
+        "title": "Eco Surface Cleaner — 4 × 750 ml",
+        "images": [
+          "/products/eco-surface-cleaner.jpg"
+        ]
+      },
+      "author": "Petra W.",
+      "rating": 5,
+      "title": "Staff prefer it",
+      "comment": "No more chemical smell in the office. Refills cut our plastic by 80%.",
+      "createdAt": "2026-08-30T00:00:00.000Z"
+    },
+    {
+      "_id": "rev-ay-1210-1",
+      "product": {
+        "_id": "ay-1210",
+        "title": "Eco Surface Cleaner — 4 × 750 ml",
+        "images": [
+          "/products/eco-surface-cleaner.jpg"
+        ]
+      },
+      "author": "Owen F.",
+      "rating": 4,
+      "title": "Works great",
+      "comment": "Streak-free on our glass doors.",
+      "createdAt": "2026-08-07T00:00:00.000Z"
+    }
+  ],
+  "subscribers": [
+    {
+      "_id": "sub-1791559899009",
+      "email": "test-buyer@gmail.com",
+      "createdAt": "2026-10-09T15:31:39.009Z"
+    },
+    {
+      "_id": "sub-1",
+      "email": "design@studiomay.com",
+      "createdAt": "2026-09-10T11:00:00.000Z"
+    },
+    {
+      "_id": "sub-2",
+      "email": "procurement@atelier-mesa.de",
+      "createdAt": "2026-09-15T14:30:00.000Z"
+    },
+    {
+      "_id": "sub-3",
+      "email": "buyer@northform.co",
+      "createdAt": "2026-09-22T08:15:00.000Z"
+    },
+    {
+      "_id": "sub-4",
+      "email": "alexa@harboroffice.org",
+      "createdAt": "2026-10-01T17:45:00.000Z"
+    }
+  ],
+  "notifications": [
+    {
+      "_id": "notif-1791559794687",
+      "title": "New Order Placed",
+      "message": "Order #AY-TEST-999 for $498.00 placed by Zain Haider",
+      "type": "new_order",
+      "orderId": "AY-TEST-999",
+      "isRead": false,
+      "createdAt": "2026-10-09T15:29:54.687Z"
+    },
+    {
+      "_id": "notif-1",
+      "title": "Low Stock Alert",
+      "message": "Atelier Mesa Pour-Over Carafe has only 4 units remaining!",
+      "type": "low_stock",
+      "productId": "ay-1056",
+      "isRead": false,
+      "createdAt": "2026-10-08T12:00:00.000Z"
+    },
+    {
+      "_id": "notif-2",
+      "title": "Low Stock Alert",
+      "message": "Lumina Matte Task Lamp has only 3 units remaining!",
+      "type": "low_stock",
+      "productId": "ay-1021",
+      "isRead": false,
+      "createdAt": "2026-10-08T15:30:00.000Z"
+    }
+  ]
+}

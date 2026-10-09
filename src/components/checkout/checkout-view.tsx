@@ -227,6 +227,37 @@ export function CheckoutView() {
         price: lineUnitPrice(l),
       })),
     });
+
+    // Sync order with backend so it immediately appears in Admin Dashboard & Orders
+    try {
+      const customerName = `${v("firstName") || ""} ${v("lastName") || ""}`.trim() || (business ? viewer.name : "Customer");
+      const customerEmail = (business ? viewer.email : v("email")) || "customer@example.com";
+      fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id,
+          user: { name: customerName, email: customerEmail },
+          items: cart.map((l) => {
+            const prod = productById(l.productId);
+            return {
+              title: prod?.name || l.productId,
+              quantity: l.qty,
+              price: lineUnitPrice(l),
+              productId: l.productId,
+              variantId: l.variantId,
+            };
+          }),
+          total,
+          mode,
+          po: business ? v("po") : undefined,
+          status: needsApproval ? "pending" : "paid",
+        }),
+      }).catch((err) => console.error("Error syncing order to admin backend:", err));
+    } catch (e) {
+      console.error(e);
+    }
+
     router.push(`/checkout/confirmation?order=${id}`);
   };
 

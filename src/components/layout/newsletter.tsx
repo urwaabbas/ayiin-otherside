@@ -19,7 +19,14 @@ export function NewsletterForm() {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if (/\S+@\S+\.\S+/.test(email)) setDone(true);
+        if (/\S+@\S+\.\S+/.test(email)) {
+          setDone(true);
+          fetch("/api/newsletter", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          }).catch((err) => console.error("Error subscribing to newsletter:", err));
+        }
       }}
       className="mt-5 flex max-w-sm items-center gap-2 rounded-full border border-graphite-line bg-graphite p-1.5 focus-within:border-mute-dark"
     >
